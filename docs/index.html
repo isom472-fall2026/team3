@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <!--
-  TEAM: replace every line of placeholder text below with your proposal content. The eight
-  headings stay exactly as they are — same wording, same order.
-
-  This page is checked only as REACHABLE. It is not judged on how it looks. Do not spend
-  time on design here; spend it on the proposal.
-
-  Do not add external stylesheets, fonts, scripts or images. This page loads nothing.
+  ISOM 472 — Kuwait University Bus Tracking System
+  Project Proposal
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proposal — ISOM 472</title>
+<title>Kuwait University Bus Tracking System — Proposal</title>
 <style>
   body {
     max-width: 40em;
@@ -25,32 +20,142 @@
 </head>
 <body>
 
-<h1>TODO: the system's name — Proposal</h1>
-<p>TODO: your team name and members.</p>
+<h1>Kuwait University Bus Tracking System — Proposal</h1>
+<p>Team 3 · ISOM 472 · Fall 2026/2027 · Kuwait University</p>
 
 <h2>1. The client, and how you reach them</h2>
-<p>TODO</p>
+
+<p>
+Our proposed client is Kuwait University's Transportation and Operations Office
+at Sabah Al-Salem University City (Shadadiya). Our contact is
+[name and position to be confirmed]. We will arrange a meeting through
+[actual communication channel] to discuss campus bus operations and
+collect requirements.
+</p>
 
 <h2>2. What happens today, and what goes wrong</h2>
-<p>TODO</p>
+
+<p>
+Students use campus buses to travel between parking areas and academic
+buildings. We need to confirm how the current schedules and bus information
+are communicated. The problem we want to investigate is that students may
+not know when the next bus will arrive or whether it has enough space.
+This can leave students waiting without reliable arrival information,
+particularly during busy hours. We will verify the problem with students
+and transportation staff before development.
+</p>
 
 <h2>3. Who is better off, and how you would know</h2>
-<p>TODO</p>
+
+<p>
+Students waiting at bus stops and transportation staff managing the routes.
+The main signal is the average student waiting time during peak hours.
+We will record waiting times before testing the system and compare them
+with waiting times during a pilot. We will also measure how closely
+estimated arrival times match actual arrivals.
+</p>
 
 <h2>4. What the system does, in outline</h2>
-<p>TODO</p>
+
+<ul>
+  <li>Display active buses on a campus map using their latest reported locations.</li>
+  <li>Show estimated arrival times for each bus stop.</li>
+  <li>Allow drivers to update their current stop and trip status.</li>
+  <li>Show bus capacity: Seats Available, Standing Room Only, or Full.</li>
+  <li>Flag buses that are running behind schedule.</li>
+  <li>Show the past week's trip records for transportation staff.</li>
+</ul>
 
 <h2>5. What it records</h2>
-<p>TODO</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Thing</th>
+      <th>What it holds</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Stop</td>
+      <td>Name, location, campus zone</td>
+    </tr>
+    <tr>
+      <td>Route</td>
+      <td>Name, ordered stops, operating hours</td>
+    </tr>
+    <tr>
+      <td>Bus</td>
+      <td>Vehicle identifier, capacity, assigned route</td>
+    </tr>
+    <tr>
+      <td>Driver</td>
+      <td>Name, assigned vehicle</td>
+    </tr>
+    <tr>
+      <td>Trip</td>
+      <td>Bus, driver, route, start time, completion time</td>
+    </tr>
+    <tr>
+      <td>Trip Update</td>
+      <td>Trip, reported stop, timestamp, capacity status</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+One route has many stops, and a stop may belong to several routes.
+Each trip has one bus and one driver. Every update records the
+reported location, capacity status, and time.
+</p>
 
 <h2>6. In scope by the final week — and what is not</h2>
-<p>TODO</p>
+
+<p><strong>Working by the final week:</strong></p>
+
+<ul>
+  <li>A mobile-friendly website showing active buses and reported locations.</li>
+  <li>Estimated arrival times and capacity status for students.</li>
+  <li>A driver interface for updating location and capacity while stopped.</li>
+  <li>Trip records and delay flags for transportation staff.</li>
+  <li>Email and password authentication for drivers and administrators.</li>
+</ul>
+
+<p><strong>Deliberately not:</strong></p>
+
+<ul>
+  <li>Native iOS or Android applications.</li>
+  <li>Automatic GPS hardware installation.</li>
+  <li>Automated passenger counting.</li>
+  <li>Online ticketing and push notifications.</li>
+  <li>Integration with university student records.</li>
+</ul>
+
+<p>
+Bus locations will be updated manually by drivers rather than
+tracked continuously.
+</p>
 
 <h2>7. After the semester</h2>
-<p>TODO</p>
+
+<p>
+The transportation office could continue using the website if it
+approves deployment and assigns someone to maintain it. The code
+and documentation will remain in the team's GitHub repository so
+future MIS teams can improve the system. Future versions could add
+automatic GPS tracking and more accurate arrival predictions.
+</p>
 
 <h2>8. What you told the client this is</h2>
-<p>TODO</p>
+
+<p>
+<strong>Client discussion: Not yet confirmed.</strong>
+We will explain that this is an academic project developed by MIS
+students for ISOM 472 over one semester; that the initial system
+is a prototype using sample data; and that maintenance after the
+final evaluation in December is not guaranteed. We will document
+the client's agreement and feedback after the first meeting.
+</p>
 
 </body>
 </html>
