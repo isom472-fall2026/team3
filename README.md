@@ -1,17 +1,18 @@
-# TODO: the system's name
+# KU Bus Tracking System
 
-**Client:** TODO: who the client is — the organisation and the person you deal with.
+**Team:** Code it.
 
-TODO: what the system does, in two lines. Plain language, no jargon. Someone who has
-never met your client should understand what it is for after reading these two lines.
+**Client:** Kuwait University Transportation and Operations Office, Sabah Al-Salem University City (proposed; contact person to be confirmed).
+
+A web-based system that allows Kuwait University students to check bus arrival times, reported locations, and available capacity. Drivers update bus information, while transportation staff monitor trips and delays.
 
 > **Next due: Wednesday 23 September — your proposal.**
 > Write it in `docs/proposal.md`, then publish it. Steps: [docs/how-we-work.md](docs/how-we-work.md#phase-1--the-proposal)
 > Update this line at the start of every phase. It is the first thing your team sees.
 
-- **Proposal page:** TODO: link to the published page (`https://<owner>.github.io/<repo>/docs/`)
-- **Running system:** TODO: link to the deployed system once it exists
-- **Board:** TODO: link to your Project board
+- **Proposal page:** https://isom472-fall2026.github.io/team3/docs/
+- **Running system:** Not deployed yet.
+- **Board:** TODO: Add your GitHub Project board link.
 
 ## Where do I go?
 
@@ -52,12 +53,12 @@ cuts the tag.
 
 | Phase | Phase Lead | Due |
 |---|---|---|
-| 1 — team, environment, proposal | TODO | Wed 23 Sep |
-| 2 — design sprint | TODO | Wed 7 Oct |
-| 3 — sprint 1 | TODO | Wed 21 Oct |
-| 4 — sprint 2 | TODO | Wed 4 Nov |
-| 5 — sprint 3 | TODO | Wed 18 Nov |
-| 6 — final sprint | TODO | Wed 9 Dec |
+| 1 — team, environment, proposal | Jumana Shams | Wed 23 Sep |
+| 2 — design sprint | Ayah Reda | Wed 7 Oct |
+| 3 — sprint 1 | Abdulrahman Alyaseen | Wed 21 Oct |
+| 4 — sprint 2 | Zeinab Mohammed Sharif | Wed 4 Nov |
+| 5 — sprint 3 | Roqaya Aldurai | Wed 18 Nov |
+| 6 — final sprint | Sara Alshamsi | Wed 9 Dec |
 
 ## What is in this repository
 
