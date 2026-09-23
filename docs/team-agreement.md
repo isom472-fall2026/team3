@@ -16,7 +16,7 @@ than in week 10.
 ## What each of us commits to
 
 | Name | Standing role | Hours per week I can give | How to reach me fastest | Signed — by hand | Signed again — through Antigravity |
-|---|---|---|---|---|---|
+|Ayah |---|---|---|---|---|
 |  |  |  |  |  |  |
 |  |  |  |  |  |  |
 |  |  |  |  |  |  |
