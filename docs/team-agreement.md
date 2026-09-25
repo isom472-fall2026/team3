@@ -17,7 +17,7 @@ than in week 10.
 
 | Name | Standing role | Hours per week I can give | How to reach me fastest | Signed — by hand | Signed again — through Antigravity |
 |---|---|---|---|---|---|
-|  |  |  |  |  |  |
+| zeinab mohammad | design lead | 21  | whatsapp | zeinab  |  |
 |  |  |  |  |  |  |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman |  |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana |  |
