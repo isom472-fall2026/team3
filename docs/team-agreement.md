@@ -21,6 +21,7 @@ than in week 10.
 |  |  |  |  |  |  |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman |  |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana |  |
+|  Ayah Reda | Quilty lead | 6 | WhatsApp and Teams | Ayah |  |
 | Roqaya Aldurai| Finops Lead  | 8 |whatsApp  | roqaya |  |
 |  |  |  |  |  |  |
 
