@@ -18,12 +18,12 @@ than in week 10.
 | Name | Standing role | Hours per week I can give | How to reach me fastest | Signed — by hand | Signed again — through Antigravity |
 |---|---|---|---|---|---|
 | zeinab mohammad | design lead | 21  | whatsapp | zeinab  |  |
-|  |  |  |  |  |  |
+| Sara alshamsi | Data Lead | 5 | Whatsapp | Sara |  |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman |  |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana |  |
 |  Ayah Reda | Quilty lead | 6 | WhatsApp and Teams | Ayah |  |
 | Roqaya Aldurai| Finops Lead  | 8 |whatsApp  | roqaya |  |
-|  |  |  |  |  |  |
+| |  |  |  |  |
 
 Type your own name in the fifth column, in your own commit. Have Antigravity write your
 GitHub handle and today's date in the sixth, in a second commit. Nobody signs for anybody
