@@ -21,7 +21,7 @@ than in week 10.
 |  |  |  |  |  |  |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman |  |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana |  |
-|  |  |  |  |  |  |
+| Roqaya Aldurai| Finops Lead  | 8 |whatsApp  | roqaya |  |
 |  |  |  |  |  |  |
 
 Type your own name in the fifth column, in your own commit. Have Antigravity write your
