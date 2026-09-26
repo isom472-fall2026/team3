@@ -41,7 +41,7 @@ it. Do not delete it.
 | Design Lead | TODO | the prototype and the screen list |
 | Data Lead | sara alshamsi| the schema and seed data in Supabase |
 | Build Lead | Abdulrahman Alyaseen | the running system and release notes |
-| FinOps Lead | TODO | the ledger |
+| FinOps Lead | Roqaya Aldurai| the ledger |
 | Quality Lead | Ayah Reda | bug issues, each closed as fixed, will-not-fix or not-a-bug |
 
 At six members, every role is held by one person. At five, one person holds a combined
