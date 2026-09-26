@@ -21,7 +21,7 @@ than in week 10.
 | Sara alshamsi | Data Lead | 5 | Whatsapp | Sara | 2221141586-Sara alshamsi 2026-09-26 |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman | a-alyaseen 2026-09-26 |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana | Jumana572 2026-09-26 |
-|  Ayah Reda | Quilty lead | 6 | WhatsApp and Teams | Ayah |  |
+|  Ayah Reda | Quilty lead | 6 | WhatsApp and Teams | Ayah | AyahReda 2026-09-26 |
 | Roqaya Aldurai| Finops Lead  | 8 |whatsApp  | roqaya |  |
 | |  |  |  |  |
 
