@@ -18,7 +18,7 @@ than in week 10.
 | Name | Standing role | Hours per week I can give | How to reach me fastest | Signed — by hand | Signed again — through Antigravity |
 |---|---|---|---|---|---|
 | zeinab mohammad | design lead | 21  | whatsapp | zeinab  |  |
-| Sara alshamsi | Data Lead | 5 | Whatsapp | Sara |  |
+| Sara alshamsi | Data Lead | 5 | Whatsapp | Sara | 2221141586-Sara alshamsi 2026-09-26 |
 | Abdulrahman Alyaseen | Build Lead |5  | Whatsapp | Abdulrahman | a-alyaseen 2026-09-26 |
 | Jumana shams | client Lead | 5 | WhatsApp  | Jumana | Jumana572 2026-09-26 |
 |  Ayah Reda | Quilty lead | 6 | WhatsApp and Teams | Ayah |  |
