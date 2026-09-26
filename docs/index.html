@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kuwait University Bus Tracking System — Proposal</title>
+
 <style>
   body {
     max-width: 40em;
@@ -12,8 +14,19 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     line-height: 1.6;
   }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    text-align: left;
+    vertical-align: top;
+  }
 </style>
 </head>
+
 <body>
 
 <h1>Kuwait University Bus Tracking System — Proposal</h1>
@@ -33,15 +46,23 @@ Roqaya Aldurai<br>
 Sara Alshamsi
 </p>
 
+
 <h2>1. The client, and how you reach them</h2>
 
 <p>
 Our proposed client is Kuwait University's Transportation and Operations Office
-at Sabah Al-Salem University City (Shadadiya). Our contact is
-[name and position to be confirmed]. We will arrange a meeting through
-[actual communication channel] to discuss campus bus operations and
-collect requirements.
+at Sabah Al-Salem University City (Shadadiya). The office is responsible for
+campus transportation operations, including the buses used to transport
+students between parking areas and academic buildings.
 </p>
+
+<p>
+Our team does not yet have a named contact within the office. We plan to contact
+the Transportation and Operations Office directly to introduce the project,
+identify the appropriate staff member, and arrange a meeting to discuss the
+current bus operations and collect requirements.
+</p>
+
 
 <h2>2. What happens today, and what goes wrong</h2>
 
@@ -51,19 +72,31 @@ buildings. We need to confirm how the current schedules and bus information
 are communicated. The problem we want to investigate is that students may
 not know when the next bus will arrive or whether it has enough space.
 This can leave students waiting without reliable arrival information,
-particularly during busy hours. We will verify the problem with students
-and transportation staff before development.
+particularly during busy hours.
 </p>
+
+<p>
+We will verify the current process and the extent of this problem with
+students and transportation staff before development.
+</p>
+
 
 <h2>3. Who is better off, and how you would know</h2>
 
 <p>
-Students waiting at bus stops and transportation staff managing the routes.
-The main signal is the average student waiting time during peak hours.
-We will record waiting times before testing the system and compare them
-with waiting times during a pilot. We will also measure how closely
-estimated arrival times match actual arrivals.
+The main beneficiaries are students waiting at bus stops and transportation
+staff managing campus bus routes. Students would have better information
+about when buses are expected to arrive and their reported capacity, while
+transportation staff would have a clearer view of active trips and delays.
 </p>
+
+<p>
+The main signal will be the average student waiting time during peak hours.
+We will record waiting times before testing the system and compare them with
+waiting times during a pilot. We will also measure how closely estimated
+arrival times match actual arrivals.
+</p>
+
 
 <h2>4. What the system does, in outline</h2>
 
@@ -71,10 +104,11 @@ estimated arrival times match actual arrivals.
   <li>Display active buses on a campus map using their latest reported locations.</li>
   <li>Show estimated arrival times for each bus stop.</li>
   <li>Allow drivers to update their current stop and trip status.</li>
-  <li>Show bus capacity: Seats Available, Standing Room Only, or Full.</li>
+  <li>Show bus capacity as Seats Available, Standing Room Only, or Full.</li>
   <li>Flag buses that are running behind schedule.</li>
   <li>Show the past week's trip records for transportation staff.</li>
 </ul>
+
 
 <h2>5. What it records</h2>
 
@@ -85,27 +119,33 @@ estimated arrival times match actual arrivals.
       <th>What it holds</th>
     </tr>
   </thead>
+
   <tbody>
     <tr>
       <td>Stop</td>
       <td>Name, location, campus zone</td>
     </tr>
+
     <tr>
       <td>Route</td>
       <td>Name, ordered stops, operating hours</td>
     </tr>
+
     <tr>
       <td>Bus</td>
       <td>Vehicle identifier, capacity, assigned route</td>
     </tr>
+
     <tr>
       <td>Driver</td>
       <td>Name, assigned vehicle</td>
     </tr>
+
     <tr>
       <td>Trip</td>
       <td>Bus, driver, route, start time, completion time</td>
     </tr>
+
     <tr>
       <td>Trip Update</td>
       <td>Trip, reported stop, timestamp, capacity status</td>
@@ -115,23 +155,26 @@ estimated arrival times match actual arrivals.
 
 <p>
 One route has many stops, and a stop may belong to several routes.
-Each trip has one bus and one driver. Every update records the
-reported location, capacity status, and time.
+Each trip has one bus and one driver. Every trip update records the
+reported location, capacity status, and time. These records will allow
+the system to display current bus information while also keeping a
+history of completed trips.
 </p>
+
 
 <h2>6. In scope by the final week — and what is not</h2>
 
 <p><strong>Working by the final week:</strong></p>
 
 <ul>
-  <li>A mobile-friendly website showing active buses and reported locations.</li>
+  <li>A mobile-friendly website showing active buses and their latest reported locations.</li>
   <li>Estimated arrival times and capacity status for students.</li>
-  <li>A driver interface for updating location and capacity while stopped.</li>
+  <li>A driver interface for updating location, trip status, and capacity while stopped.</li>
   <li>Trip records and delay flags for transportation staff.</li>
   <li>Email and password authentication for drivers and administrators.</li>
 </ul>
 
-<p><strong>Deliberately not:</strong></p>
+<p><strong>Deliberately not included:</strong></p>
 
 <ul>
   <li>Native iOS or Android applications.</li>
@@ -142,29 +185,45 @@ reported location, capacity status, and time.
 </ul>
 
 <p>
-Bus locations will be updated manually by drivers rather than
-tracked continuously.
+For the semester prototype, bus locations will be updated manually by
+drivers rather than tracked continuously through GPS hardware. This keeps
+the project realistic for one semester while still allowing the team to
+develop and test the main tracking and arrival-information features.
 </p>
+
 
 <h2>7. After the semester</h2>
 
 <p>
-The transportation office could continue using the website if it
-approves deployment and assigns someone to maintain it. The code
-and documentation will remain in the team's GitHub repository so
-future MIS teams can improve the system. Future versions could add
-automatic GPS tracking and more accurate arrival predictions.
+The Transportation and Operations Office could continue using the website
+if it approves deployment and assigns someone to maintain it. The code and
+documentation will remain in the team's GitHub repository so the system
+can be maintained or further developed.
 </p>
+
+<p>
+Future versions could add automatic GPS tracking, more accurate arrival
+predictions, automated passenger counting, notifications, and other
+features based on feedback from students and transportation staff.
+</p>
+
 
 <h2>8. What you told the client this is</h2>
 
 <p>
-<strong>Client discussion: Not yet confirmed.</strong>
-We will explain that this is an academic project developed by MIS
-students for ISOM 472 over one semester; that the initial system
-is a prototype using sample data; and that maintenance after the
-final evaluation in December is not guaranteed. We will document
-the client's agreement and feedback after the first meeting.
+<strong>Client discussion has not yet taken place.</strong>
+Our team does not currently have a named contact within the Transportation
+and Operations Office. When we meet with a representative, we will explain
+that this is an academic project developed by MIS students for ISOM 472
+over one semester.
+</p>
+
+<p>
+We will explain that the initial system is a prototype developed for
+academic purposes and that continued maintenance after the final evaluation
+in December is not guaranteed. We will also explain the proposed scope of
+the bus tracking system and document the client's feedback, requirements,
+and any requested changes after the meeting.
 </p>
 
 </body>
