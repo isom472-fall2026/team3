@@ -11,8 +11,8 @@ A web-based system that allows Kuwait University students to check bus arrival t
 > Update this line at the start of every phase. It is the first thing your team sees.
 
 - **Proposal page:** https://isom472-fall2026.github.io/team3/docs/
-- **Running system:** Not deployed yet.
-- **Board:** TODO: Add your GitHub Project board link.
+- **Running system:** Not deployed yet. To be released during the 3rd phase.
+- **Board:** https://github.com/isom472-fall2026/team3/issues
 
 ## Where do I go?
 
