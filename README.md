@@ -12,7 +12,7 @@ A web-based system that allows Kuwait University students to check bus arrival t
 
 - **Proposal page:** https://isom472-fall2026.github.io/team3/docs/
 - **Running system:** Not deployed yet. To be released during the 3rd phase.
-- **Board:** https://github.com/isom472-fall2026/team3/issues
+- **Board:** https://github.com/orgs/isom472-fall2026/projects/4
 
 ## Where do I go?
 
