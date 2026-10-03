@@ -50,51 +50,41 @@ Sara Alshamsi
 <h2>1. The client, and how you reach them</h2>
 
 <p>
-Our proposed client is Kuwait University's Transportation and Operations Office
-at Sabah Al-Salem University City (Shadadiya). The office is responsible for
-campus transportation operations, including the buses used to transport
-students between parking areas and academic buildings.
+Our proposed client is Kuwait University's Transportation and Operations Office at Sabah Al-Salem University City (Shadadiya). The office is responsible for campus transportation operations, including the buses used to transport students between parking areas and academic buildings.
 </p>
 
 <p>
-Our team does not yet have a named contact within the office. We plan to contact
-the Transportation and Operations Office directly to introduce the project,
-identify the appropriate staff member, and arrange a meeting to discuss the
-current bus operations and collect requirements.
+Our team does not yet have a named contact within the office. We plan to contact the Transportation and Operations Office directly to introduce the project, identify the appropriate staff member, and arrange a meeting to discuss the current bus operations and collect requirements.
 </p>
 
 
 <h2>2. What happens today, and what goes wrong</h2>
 
 <p>
-Students use campus buses to travel between parking areas and academic
-buildings. We need to confirm how the current schedules and bus information
-are communicated. The problem we want to investigate is that students may
-not know when the next bus will arrive or whether it has enough space.
-This can leave students waiting without reliable arrival information,
-particularly during busy hours.
+Students use campus buses to travel between parking areas and academic buildings. We need to confirm how the current schedules and bus information are communicated. The problem we want to investigate is that students may not know where the bus currently is, whether it has already passed their stop, or when the next bus is expected to arrive. This can leave students waiting without reliable arrival information, particularly during busy hours.
 </p>
 
 <p>
-We will verify the current process and the extent of this problem with
-students and transportation staff before development.
+We will verify the current process and the extent of this problem with students and transportation staff before development.
 </p>
 
 
 <h2>3. Who is better off, and how you would know</h2>
 
 <p>
-The main beneficiaries are students waiting at bus stops and transportation
-staff managing campus bus routes. Students would have better information
-about when buses are expected to arrive and their reported capacity, while
-transportation staff would have a clearer view of active trips and delays.
+The main beneficiaries are students waiting at bus stops and transportation staff managing campus bus routes. Students would have better information about bus locations and expected arrival times, while transportation staff would have a clearer view of active trips, actual stop arrivals, and delays.
 </p>
 
 <p>
-The main signal will be the average student waiting time during peak hours.
-We will record waiting times before testing the system and compare them with
-waiting times during a pilot. We will also measure how closely estimated
-arrival times match actual arrivals.
+The main signal will be the average student waiting time during peak hours. As a baseline, team members who currently use the university bus service will record how long they wait for the bus before the system is introduced.
+</p>
+
+<p>
+On [DATE], the observed waiting time was [WAITING TIME] minutes at [BUS STOP]. This will serve as our initial baseline for comparison during prototype testing.
+</p>
+
+<p>
+During the pilot, we will compare student waiting times with this baseline. We will also measure how closely the system's estimated arrival times match the actual arrival times recorded automatically when buses reach their stops.
 </p>
 
 
@@ -102,12 +92,18 @@ arrival times match actual arrivals.
 
 <ul>
   <li>Display active buses on a campus map using their latest reported locations.</li>
-  <li>Show estimated arrival times for each bus stop.</li>
-  <li>Allow drivers to update their current stop and trip status.</li>
-  <li>Show bus capacity as Seats Available, Standing Room Only, or Full.</li>
-  <li>Flag buses that are running behind schedule.</li>
+  <li>Automatically receive location updates from a device associated with an active bus.</li>
+  <li>Track the progress of each active bus along its assigned route.</li>
+  <li>Detect when a bus reaches a stop using its location and a defined geographic radius around the stop.</li>
+  <li>Automatically record the actual arrival time when a bus reaches a stop.</li>
+  <li>Show estimated arrival times for upcoming bus stops.</li>
+  <li>Flag buses that are running behind schedule by comparing scheduled and actual arrival times.</li>
   <li>Show the past week's trip records for transportation staff.</li>
 </ul>
+
+<p>
+The system is designed so that drivers do not need to manually update their current location or interact with the system while driving. This removes the need for a driver interface and allows location and stop-arrival information to be updated automatically.
+</p>
 
 
 <h2>5. What it records</h2>
@@ -123,42 +119,66 @@ arrival times match actual arrivals.
   <tbody>
     <tr>
       <td>Stop</td>
-      <td>Name, location, campus zone</td>
+      <td>Name, campus zone, latitude, longitude, geofence radius</td>
     </tr>
 
     <tr>
       <td>Route</td>
-      <td>Name, ordered stops, operating hours</td>
+      <td>Name, operating hours, active status</td>
+    </tr>
+
+    <tr>
+      <td>Route Stop</td>
+      <td>Route, stop, sequence order, default time offset</td>
+    </tr>
+
+    <tr>
+      <td>Schedule</td>
+      <td>Route, planned start time, operating days</td>
+    </tr>
+
+    <tr>
+      <td>Scheduled Stop Time</td>
+      <td>Schedule, route stop, expected arrival time</td>
     </tr>
 
     <tr>
       <td>Bus</td>
-      <td>Vehicle identifier, capacity, assigned route</td>
-    </tr>
-
-    <tr>
-      <td>Driver</td>
-      <td>Name, assigned vehicle</td>
+      <td>Bus number, plate number, capacity, status</td>
     </tr>
 
     <tr>
       <td>Trip</td>
-      <td>Bus, driver, route, start time, completion time</td>
+      <td>Schedule, bus, trip date, status, actual start and completion times</td>
     </tr>
 
     <tr>
-      <td>Trip Update</td>
-      <td>Trip, reported stop, timestamp, capacity status</td>
+      <td>Bus Location</td>
+      <td>Trip, latitude, longitude, recorded time</td>
+    </tr>
+
+    <tr>
+      <td>Trip Stop Update</td>
+      <td>Trip, route stop, actual arrival time, recorded time</td>
+    </tr>
+
+    <tr>
+      <td>Delay Log</td>
+      <td>Trip, route stop if applicable, delay duration, reason, logged time</td>
     </tr>
   </tbody>
 </table>
 
 <p>
-One route has many stops, and a stop may belong to several routes.
-Each trip has one bus and one driver. Every trip update records the
-reported location, capacity status, and time. These records will allow
-the system to display current bus information while also keeping a
-history of completed trips.
+One route has many stops, and a stop may belong to several routes. Route Stop records define which stops belong to a route and the order in which they are visited. A route may have multiple schedules, and scheduled stop times define when a bus is expected to reach each stop.
+</p>
+
+<p>
+Each actual trip is connected to a schedule and a bus. During an active trip, location updates are recorded automatically from a device associated with the bus.
+</p>
+
+<p>
+The system compares the bus's location with the known coordinates of the stops on its route. When the bus enters the defined geographic radius around the appropriate stop, the system recognizes that the bus has arrived and records the actual arrival time. These records allow the system to display current bus information, calculate delays, and maintain a history of completed trips.
 </p>
 
 
@@ -168,62 +188,65 @@ history of completed trips.
 
 <ul>
   <li>A mobile-friendly website showing active buses and their latest reported locations.</li>
-  <li>Estimated arrival times and capacity status for students.</li>
-  <li>A driver interface for updating location, trip status, and capacity while stopped.</li>
+  <li>Bus routes, stops, and schedule information.</li>
+  <li>Automatic location updates from a device representing an active bus during prototype testing.</li>
+  <li>Automatic detection of bus arrivals at stops using location-based geofencing.</li>
+  <li>Automatic recording of actual stop arrival times.</li>
+  <li>Estimated arrival times for upcoming stops.</li>
   <li>Trip records and delay flags for transportation staff.</li>
-  <li>Email and password authentication for drivers and administrators.</li>
+  <li>Administrator access for managing system information.</li>
 </ul>
 
 <p><strong>Deliberately not included:</strong></p>
 
 <ul>
   <li>Native iOS or Android applications.</li>
-  <li>Automatic GPS hardware installation.</li>
+  <li>Permanent GPS hardware installation on university buses.</li>
   <li>Automated passenger counting.</li>
   <li>Online ticketing and push notifications.</li>
   <li>Integration with university student records.</li>
 </ul>
 
 <p>
-For the semester prototype, bus locations will be updated manually by
-drivers rather than tracked continuously through GPS hardware. This keeps
-the project realistic for one semester while still allowing the team to
-develop and test the main tracking and arrival-information features.
+For the semester prototype, a mobile device will act as the location source for a bus during testing. The device will provide location coordinates while a trip is active. The system will use these coordinates to update the bus's location and automatically detect when it reaches a configured bus stop.
+</p>
+
+<p>
+This allows the team to develop and demonstrate automatic bus tracking and stop detection without requiring permanent GPS hardware to be installed on Kuwait University buses during the semester.
 </p>
 
 
 <h2>7. After the semester</h2>
 
 <p>
-The Transportation and Operations Office could continue using the website
-if it approves deployment and assigns someone to maintain it. The code and
-documentation will remain in the team's GitHub repository so the system
-can be maintained or further developed.
+The Transportation and Operations Office could continue using the website if it approves deployment and assigns someone to maintain it. The code and documentation will remain in the team's GitHub repository so the system can be maintained or further developed.
 </p>
 
 <p>
-Future versions could add automatic GPS tracking, more accurate arrival
-predictions, automated passenger counting, notifications, and other
-features based on feedback from students and transportation staff.
+Future versions could replace the prototype mobile location source with dedicated GPS devices installed on university buses. These devices could automatically transmit bus locations during normal operation without requiring drivers to interact with the system.
+</p>
+
+<p>
+Future versions could also include more accurate arrival predictions using historical trip data, automated passenger counting and capacity information, notifications for approaching or delayed buses, additional routes and buses, and other features based on feedback from students and transportation staff.
+</p>
+
+<p>
+The system could also potentially be adapted for other universities, colleges, schools, hospitals, large companies, or other organizations that operate fixed-route shuttle or bus services. The same tracking and geofencing approach could be used after adapting the routes, stops, schedules, and operational requirements to each organization's transportation service.
 </p>
 
 
 <h2>8. What you told the client this is</h2>
 
 <p>
-<strong>Client discussion has not yet taken place.</strong>
-Our team does not currently have a named contact within the Transportation
-and Operations Office. When we meet with a representative, we will explain
-that this is an academic project developed by MIS students for ISOM 472
-over one semester.
+<strong>Client discussion has not yet taken place.</strong> Our team does not currently have a named contact within the Transportation and Operations Office. When we meet with a representative, we will explain that this is an academic project developed by MIS students for ISOM 472 over one semester.
 </p>
 
 <p>
-We will explain that the initial system is a prototype developed for
-academic purposes and that continued maintenance after the final evaluation
-in December is not guaranteed. We will also explain the proposed scope of
-the bus tracking system and document the client's feedback, requirements,
-and any requested changes after the meeting.
+We will explain that the initial system is a prototype developed for academic purposes and that continued maintenance after the final evaluation in December is not guaranteed. We will also explain that the semester prototype will demonstrate automatic location tracking using a mobile device as the location source rather than permanently installed GPS hardware.
+</p>
+
+<p>
+We will explain the proposed scope of the bus tracking system and document the client's feedback, requirements, and any requested changes after the meeting.
 </p>
 
 </body>
