@@ -7,7 +7,7 @@ CREATE TABLE buses (
     status TEXT
 );
 CREATE TABLE stops (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),s
     name TEXT,
     campus_zone TEXT,
     latitude FLOAT8,
