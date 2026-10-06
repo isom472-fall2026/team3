@@ -24,7 +24,7 @@ Our limit: <!-- EXAMPLE — delete --> the free tier. If we hit it we stop and t
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| #40 — Student can sign up with their KU email | Antigravity | About 3 requests (which used all of my model usage for this week) | The full user story and acceptance criteria, the existing React app files in `/app`, the Supabase setup, and the SQL schema in `/db`. Antigravity analyzed the existing project and edited multiple files to implement the story. | Give Antigravity a narrower task per request and review each set of file changes before continuing, instead of letting one run analyze and modify several parts of the project at once. |
 
 ## Phase 3
 
