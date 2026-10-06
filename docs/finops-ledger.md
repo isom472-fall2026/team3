@@ -14,11 +14,11 @@ The FinOps Lead keeps it. Every member supplies their own rows.
 four lines. Revisit it in Phase 4 and say whether it held.*
 
 | Kind of work | What we use | Why |
-|---|---|---|
-| <!-- EXAMPLE — delete this row --> writing stories from the proposal | the browser assistant | it is free and no code is involved |
-| <!-- EXAMPLE — delete this row --> building a story | Antigravity | it edits the files directly |
+|Writing proposals, brainstorming, & summaries|Gemini / ChatGPT|Free, fast, and good for non-coding text tasks.|
+|Coding, project setup, & direct file edits|Antigravity|Edits files directly in the repository.|
+|Complex code analysis & technical documentation. we will also work on the schema|Cloude|Excellent reasoning and handling large context windows.|
 
-Our limit: <!-- EXAMPLE — delete --> the free tier. If we hit it we stop and tell the team.
+Our limit: <!The free tier. If we hit it, we stop and tell the team.
 
 ## Phase 2
 
