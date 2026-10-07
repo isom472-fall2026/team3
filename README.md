@@ -2,13 +2,17 @@
 
 **Team:** Code it.
 
-**Client:** Kuwait University Transportation and Operations Office, Sabah Al-Salem University City (proposed; contact person to be confirmed).
+**Client:** Kuwait University Transportation and Operations Office, Sabah Al-Salem University City (Shadadiya).
 
-A web-based system that allows Kuwait University students to check bus arrival times, reported locations, and available capacity. Drivers update bus information, while transportation staff monitor trips and delays.
+A web-based system that helps Kuwait University students view bus routes, stops, estimated arrival times, reported bus locations, and trip status. Transportation staff can manage buses, routes, schedules, trips, and delays through the system.
 
-> **Next due: Wednesday 23 September — your proposal.**
-> Write it in `docs/proposal.md`, then publish it. Steps: [docs/how-we-work.md](docs/how-we-work.md#phase-1--the-proposal)
-> Update this line at the start of every phase. It is the first thing your team sees.
+> **Current phase: Phase 2 — Design Sprint**
+>
+> We are currently working on the system backlog, database schema, Supabase setup, user stories, prototype/design, and development environment.
+>
+> See [`docs/how-we-work.md`](docs/how-we-work.md) for the project workflow and phase requirements.
+>
+> Update this section at the start of every phase. It is the first thing the team sees.
 
 - **Proposal page:** https://isom472-fall2026.github.io/team3/docs/
 - **Running system:** Not deployed yet. To be released during the 3rd phase.
