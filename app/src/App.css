@@ -503,6 +503,60 @@
   color: var(--text-secondary);
 }
 
+/* Route Operating Hours */
+.route-hours-section {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.route-hours-section h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-navy);
+  margin-bottom: 14px;
+}
+
+.route-hours-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .route-hours-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.route-hours-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.route-hours-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.route-hours-value {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.route-hours-unavailable {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
 /* Bus Placeholder Panel */
 .bus-placeholder-panel {
   background-color: #ffffff;

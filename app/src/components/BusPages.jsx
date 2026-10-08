@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase.js'
 
 function BusPages({ user, onSignOut }) {
   const [buses, setBuses] = useState([])
+  const [routes, setRoutes] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(user)
   const [dbError, setDbError] = useState(null)
@@ -29,8 +30,21 @@ function BusPages({ user, onSignOut }) {
         } else {
           setBuses(busData || [])
         }
+
+        const { data: routeData, error: routeError } = await supabase
+          .from('routes')
+          .select('id, name, operating_hours')
+          .eq('is_active', true)
+
+        if (routeError) {
+          setDbError((prev) => prev ? prev + ' | ' + routeError.message : routeError.message)
+          setRoutes([])
+        } else {
+          setRoutes(routeData || [])
+        }
       } else {
         setBuses([])
+        setRoutes([])
       }
     } catch (err) {
       setDbError(err?.message || 'Failed to fetch bus information.')
@@ -62,9 +76,23 @@ function BusPages({ user, onSignOut }) {
           } else {
             setBuses(busData || [])
           }
+
+          const { data: routeData, error: routeError } = await supabase
+            .from('routes')
+            .select('id, name, operating_hours')
+            .eq('is_active', true)
+
+          if (!isMounted) return
+          if (routeError) {
+            setDbError((prev) => prev ? prev + ' | ' + routeError.message : routeError.message)
+            setRoutes([])
+          } else {
+            setRoutes(routeData || [])
+          }
         } else {
           if (!isMounted) return
           setBuses([])
+          setRoutes([])
         }
       } catch (err) {
         if (!isMounted) return
@@ -162,6 +190,24 @@ function BusPages({ user, onSignOut }) {
           {dbError && (
             <div className="alert alert-error" role="alert">
               <div>Database notice: {dbError}</div>
+            </div>
+          )}
+
+          {routes && routes.length > 0 && (
+            <div className="route-hours-section" id="route-operating-hours">
+              <h3>Route Operating Hours</h3>
+              <div className="route-hours-grid">
+                {routes.map((route) => (
+                  <div key={route.id} className="route-hours-card" data-route-id={route.id}>
+                    <div className="route-hours-name">{route.name}</div>
+                    <div className="route-hours-value">
+                      {route.operating_hours
+                        ? route.operating_hours
+                        : <span className="route-hours-unavailable">Operating hours not available</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
