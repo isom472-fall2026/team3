@@ -25,8 +25,8 @@ Our limit: <!The free tier. If we hit it, we stop and tell the team.
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-| #40 — Student can sign up with their KU email | Antigravity | About 3 requests (which used all of my model usage for this week) | The full user story and acceptance criteria, the existing React app files in `/app`, the Supabase setup, and the SQL schema in `/db`. Antigravity analyzed the existing project and edited multiple files to implement the story. | Give Antigravity a narrower task per request and review each set of file changes before continuing, instead of letting one run analyze and modify several parts of the project at once. |
-
+| [#40](https://github.com/isom472-fall2026/team3/issues/40) — Student can sign up with their KU email | Antigravity Gemini Model | About 3 requests (which used all of my model usage for this week) | The full user story and acceptance criteria, the existing React app files in `/app`, the Supabase setup, and the SQL schema in `/db`. Antigravity analyzed the existing project and edited multiple files to implement the story. | Give Antigravity a narrower task per request and review each set of file changes before continuing, instead of letting one run analyze and modify several parts of the project at once. |
+| [#53](https://github.com/isom472-fall2026/team3/issues/53) — Student can view route operating hours | Antigravity Claude Model | 3 requests/prompts to complete the whole story | The user story and acceptance criteria, relevant React/Vite files, and the `routes` table structure | Paste the issue text directly into Antigravity, avoid broad repository searches, and stop each run once the acceptance criteria are satisfied. |
 ## Phase 3
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
