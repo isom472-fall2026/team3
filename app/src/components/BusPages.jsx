@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase.js'
+import WeeklyTripHistory from './WeeklyTripHistory.jsx'
 
 function BusPages({ user, onSignOut }) {
   const [buses, setBuses] = useState([])
@@ -7,6 +8,7 @@ function BusPages({ user, onSignOut }) {
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(user)
   const [dbError, setDbError] = useState(null)
+  const [activeTab, setActiveTab] = useState('history') // 'history' | 'fleet'
 
   const isConfirmed = Boolean(currentUser?.email_confirmed_at)
 
@@ -153,7 +155,32 @@ function BusPages({ user, onSignOut }) {
         </div>
       </header>
 
-      {!isConfirmed ? (
+      <nav className="bus-tabs-nav" role="tablist" aria-label="Portal Views">
+        <button
+          type="button"
+          role="tab"
+          id="tab-weekly-history"
+          aria-selected={activeTab === 'history'}
+          className={`bus-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
+          onClick={() => setActiveTab('history')}
+        >
+          📊 Weekly Trip History (Admin)
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-bus-fleet"
+          aria-selected={activeTab === 'fleet'}
+          className={`bus-tab-btn ${activeTab === 'fleet' ? 'active' : ''}`}
+          onClick={() => setActiveTab('fleet')}
+        >
+          🚌 Campus Bus Fleet & Routes
+        </button>
+      </nav>
+
+      {activeTab === 'history' ? (
+        <WeeklyTripHistory user={currentUser} />
+      ) : !isConfirmed ? (
         <div className="bus-unconfirmed-notice" id="unconfirmed-notice" role="alert">
           <div className="notice-icon">⚠️</div>
           <div className="notice-body">
