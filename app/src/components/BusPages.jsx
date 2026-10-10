@@ -147,7 +147,7 @@ function BusPages({ user, onSignOut }) {
           <button
             type="button"
             onClick={handleSignOut}
-            className="btn btn-outline"
+            className="btn btn-danger"
             id="bus-signout-btn"
           >
             Sign Out
