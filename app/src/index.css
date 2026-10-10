@@ -1,4 +1,22 @@
 :root {
+  /* Kuwait University logo colours. */
+  --ku-blue: #0EACE3;
+  --ku-gold: #F5D735;
+  --ku-black: #000000;
+
+  /* White text on --ku-blue is only 2.6:1, so blue buttons use black text,
+     and blue text on white uses this darker shade (5.3:1). */
+  --ku-blue-text: #08739A;
+  --ku-blue-hover: #0A93C2;
+  --ku-blue-50: #E7F7FD;
+  --ku-blue-100: #CFEFFA;
+  --ku-blue-200: #9FDFF5;
+
+  /* Gold text on white fails contrast; this darker gold passes (5.7:1). */
+  --ku-gold-text: #7A6400;
+  --ku-gold-light: #FDF7D7;
+  --ku-gold-border: rgba(245, 215, 53, 0.5);
+
   --primary-navy: #002855;
   --primary-blue: #1a56db;
   --primary-blue-hover: #1e429f;
