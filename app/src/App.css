@@ -647,6 +647,11 @@
 }
 
 /* Loading & Footer */
+.loading-logo {
+  height: 72px;
+  width: auto;
+}
+
 .loading-screen {
   display: flex;
   flex-direction: column;

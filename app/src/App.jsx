@@ -34,6 +34,7 @@ function App() {
   if (initializing) {
     return (
       <div className="loading-screen">
+        <img className="loading-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="Kuwait University logo" />
         <div className="spinner"></div>
         <p>Loading Kuwait University Bus System...</p>
       </div>
