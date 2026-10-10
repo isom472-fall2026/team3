@@ -42,7 +42,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
   return (
     <div className="auth-card">
       <div className="auth-header">
-        <div className="badge-ku">Kuwait University</div>
+        <img className="auth-logo" src={`${import.meta.env.BASE_URL}ku-logo.png`} alt="Kuwait University logo" />
         <h2>Student Sign In</h2>
         <p className="auth-subtitle">
           Sign in with your registered KU email to view bus routes and tracking.

@@ -123,6 +123,14 @@
   margin-bottom: 24px;
 }
 
+.auth-logo {
+  display: block;
+  height: 150px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 16px;
+}
+
 .badge-ku {
   display: inline-block;
   background-color: var(--accent-gold-light);
