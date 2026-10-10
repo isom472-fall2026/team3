@@ -34,6 +34,7 @@ function App() {
   if (initializing) {
     return (
       <div className="loading-screen">
+        <img className="loading-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="Kuwait University logo" />
         <div className="spinner"></div>
         <p>Loading Kuwait University Bus System...</p>
       </div>
@@ -45,7 +46,7 @@ function App() {
       <header className="app-navbar">
         <div className="navbar-container">
           <div className="brand">
-            <span className="brand-logo" aria-hidden="true">🚌</span>
+            <img className="brand-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="Kuwait University logo" />
             <div className="brand-text">
               <span className="brand-title">KU Bus Tracker</span>
               <span className="brand-subtitle">Kuwait University</span>
