@@ -21,6 +21,10 @@ Noura is responsible for organizing university bus routes and checking that buse
 ## Fatima, KU Staff Member and Bus Passenger
 
 Fatima works at Kuwait University and sometimes uses the university bus to move between campus locations. She usually has meetings and work tasks scheduled during the day, so delays can affect her schedule. Before leaving, she wants to know when the next bus will arrive and whether it is on time. Today, she has limited information about bus locations, so she may spend extra time waiting. She needs a simple way to check the bus location and expected arrival time before she leaves.
+
+ ## Sara, KU Student and Bus Passenger
+
+Sara is a Kuwait University student who uses the university bus to travel between campus buildings and attend her classes. She often has a limited amount of time between lectures, so waiting for a late bus can make her miss or arrive late to class. Today, she does not have an easy way to know where the bus is or when it will arrive. She needs a simple way to check the live bus location and estimated arrival time so she can plan her trip and reach her classes on time.
  
 
 ---
