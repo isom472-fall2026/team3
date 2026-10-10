@@ -7,7 +7,7 @@
 
 .app-navbar {
   background-color: var(--ku-black);
-  color: #ffffff;
+  color: var(--white);
   padding: 12px 16px;
   box-shadow: var(--shadow-sm);
   position: sticky;
@@ -45,7 +45,7 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .brand-subtitle {
@@ -58,7 +58,7 @@
 
 .auth-tab-group {
   display: flex;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--on-dark-12);
   border-radius: 8px;
   padding: 3px;
   gap: 4px;
@@ -67,7 +67,7 @@
 .tab-btn {
   background: none;
   border: none;
-  color: #e2e8f0;
+  color: var(--gray-200);
   padding: 6px 14px;
   font-size: 14px;
   font-weight: 500;
@@ -77,12 +77,12 @@
 }
 
 .tab-btn:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  background-color: var(--on-dark-10);
 }
 
 .tab-btn.active {
-  background-color: #ffffff;
+  background-color: var(--white);
   color: var(--ku-black);
   font-weight: 600;
   box-shadow: var(--shadow-sm);
@@ -174,7 +174,7 @@
   border: 1.5px solid var(--border-color);
   border-radius: 8px;
   outline: none;
-  background-color: #ffffff;
+  background-color: var(--white);
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
   min-height: 44px; /* Mobile touch friendly */
@@ -182,7 +182,7 @@
 
 .form-group input:focus {
   border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .field-hint {
@@ -195,8 +195,8 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background-color: #f8fafc;
-  border: 1px solid #cbd5e1;
+  background-color: var(--gray-50);
+  border: 1px solid var(--border-color);
   border-left: 3px solid var(--ku-gold);
   border-radius: 6px;
   padding: 8px 10px;
@@ -245,23 +245,23 @@
 }
 
 .btn-secondary {
-  background-color: #f1f5f9;
+  background-color: var(--gray-100);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #e2e8f0;
+  background-color: var(--gray-200);
 }
 
 .btn-outline {
   background-color: transparent;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
 }
 
 .btn-outline:hover {
-  background-color: #fef2f2;
+  background-color: var(--error-bg);
 }
 
 .btn-link {
@@ -327,7 +327,7 @@
 }
 
 .bus-header {
-  background-color: #ffffff;
+  background-color: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
@@ -385,7 +385,7 @@
 
 .bus-unconfirmed-notice p {
   font-size: 14.5px;
-  color: #78350f;
+  color: var(--warning-text);
   margin-bottom: 8px;
 }
 
@@ -394,8 +394,8 @@
 }
 
 .no-bus-info-panel {
-  background-color: #ffffff;
-  border: 1px dashed #d97706;
+  background-color: var(--white);
+  border: 1px dashed var(--warning-strong);
   border-radius: 8px;
   padding: 16px;
   text-align: center;
@@ -403,7 +403,7 @@
 
 .no-bus-text {
   font-weight: 600;
-  color: #b45309;
+  color: var(--warning-text);
   font-size: 14px;
 }
 
@@ -432,7 +432,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #059669;
+  background-color: var(--success-strong);
 }
 
 .bus-content-intro h2 {
@@ -460,7 +460,7 @@
 }
 
 .bus-card {
-  background-color: #ffffff;
+  background-color: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 16px;
@@ -494,7 +494,7 @@
 }
 
 .status-inactive {
-  background-color: #f1f5f9;
+  background-color: var(--gray-100);
   color: var(--text-muted);
 }
 
@@ -505,7 +505,7 @@
 
 /* Route Operating Hours */
 .route-hours-section {
-  background-color: #ffffff;
+  background-color: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
@@ -536,8 +536,8 @@
   flex-direction: column;
   gap: 4px;
   padding: 12px 14px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: 8px;
 }
 
@@ -559,7 +559,7 @@
 
 /* Bus Placeholder Panel */
 .bus-placeholder-panel {
-  background-color: #ffffff;
+  background-color: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
@@ -601,8 +601,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: 8px;
   gap: 12px;
 }
@@ -651,7 +651,7 @@
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid #e2e8f0;
+  border: 3px solid var(--gray-200);
   border-top-color: var(--ku-blue);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -667,7 +667,7 @@
   text-align: center;
   padding: 16px;
   font-size: 12.5px;
-  color: #ffffff;
+  color: var(--white);
   border-top: 4px solid var(--ku-gold);
   background-color: var(--ku-black);
 }
@@ -678,7 +678,7 @@
 .bus-tabs-nav {
   display: flex;
   gap: 8px;
-  background-color: #e2e8f0;
+  background-color: var(--gray-200);
   padding: 4px;
   border-radius: 10px;
   margin-bottom: 24px;
@@ -704,14 +704,14 @@
 
 .bus-tab-btn:hover {
   color: var(--ku-black);
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: var(--on-dark-60);
 }
 
 .bus-tab-btn.active {
-  background-color: #ffffff;
+  background-color: var(--white);
   color: var(--ku-black);
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--shadow-faint);
 }
 
 /* =========================================================
@@ -727,7 +727,7 @@
 .dashboard-intro-banner {
   background: var(--ku-black);
   border-bottom: 4px solid var(--ku-gold);
-  color: #ffffff;
+  color: var(--white);
   padding: 24px;
   border-radius: 14px;
   box-shadow: var(--shadow-md);
@@ -752,8 +752,8 @@
 }
 
 .badge-window {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background-color: var(--on-dark-20);
+  color: var(--white);
   font-size: 11px;
   font-weight: 600;
   padding: 4px 10px;
@@ -775,7 +775,7 @@
   font-size: 26px;
   font-weight: 800;
   margin-bottom: 6px;
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: -0.02em;
 }
 
@@ -794,7 +794,7 @@
 }
 
 .kpi-card {
-  background: #ffffff;
+  background: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 16px;
@@ -812,7 +812,7 @@
 
 .kpi-icon {
   font-size: 28px;
-  background: #f1f5f9;
+  background: var(--gray-100);
   width: 52px;
   height: 52px;
   display: flex;
@@ -849,7 +849,7 @@
 
 /* Filter and Sort Toolbar */
 .filter-sort-toolbar {
-  background: #ffffff;
+  background: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 18px 20px;
@@ -865,7 +865,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--gray-100);
   padding-bottom: 10px;
 }
 
@@ -909,7 +909,7 @@
   font-size: 13.5px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--white);
   color: var(--text-primary);
   font-family: inherit;
   outline: none;
@@ -919,7 +919,7 @@
 
 .form-select:focus {
   border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .control-actions {
@@ -935,7 +935,7 @@
 
 /* Trip Records Table Section */
 .trip-records-section {
-  background: #ffffff;
+  background: var(--white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
@@ -955,7 +955,7 @@
 }
 
 .trips-table thead {
-  background-color: #f8fafc;
+  background-color: var(--gray-50);
   border-bottom: 2px solid var(--border-color);
 }
 
@@ -970,12 +970,12 @@
 }
 
 .trips-table tbody tr {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--gray-100);
   transition: background-color 0.15s ease;
 }
 
 .trips-table tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--gray-50);
 }
 
 .trips-table td {
@@ -997,7 +997,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f1f5f9;
+  background: var(--gray-100);
   color: var(--ku-black);
   font-weight: 700;
   padding: 4px 10px;
@@ -1022,9 +1022,9 @@
 }
 
 .planned-tag {
-  background: #f1f5f9;
+  background: var(--gray-100);
   color: var(--text-secondary);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--gray-200);
 }
 
 .actual-start-tag {
@@ -1034,9 +1034,9 @@
 }
 
 .actual-completion-tag {
-  background: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
 }
 
 .status-badge-completed {
@@ -1088,7 +1088,7 @@
 }
 
 .dashboard-compliance-note {
-  background: #f8fafc;
+  background: var(--gray-50);
   border: 1px dashed var(--border-color);
   border-radius: 8px;
   padding: 12px 16px;
@@ -1097,7 +1097,7 @@
 }
 
 .dashboard-compliance-note code {
-  background: #e2e8f0;
+  background: var(--gray-200);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 11.5px;

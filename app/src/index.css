@@ -17,22 +17,28 @@
   --ku-gold-light: #FDF7D7;
   --ku-gold-border: rgba(245, 215, 53, 0.5);
 
-  --primary-navy: #002855;
-  --primary-blue: #1a56db;
-  --primary-blue-hover: #1e429f;
-  --accent-gold: #c69214;
-  --accent-gold-light: #fef3c7;
-  --bg-main: #f1f5f9;
-  --bg-card: #ffffff;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+
+  --bg-main: var(--gray-100);
+  --bg-card: var(--white);
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --border-color: #cbd5e1;
-  --border-focus: #3b82f6;
+  --focus-ring: rgba(14, 172, 227, 0.25);
+
+  --on-dark-10: rgba(255, 255, 255, 0.1);
+  --on-dark-12: rgba(255, 255, 255, 0.12);
+  --on-dark-20: rgba(255, 255, 255, 0.2);
+  --on-dark-60: rgba(255, 255, 255, 0.6);
 
   --success-bg: #ecfdf5;
   --success-border: #a7f3d0;
   --success-text: #065f46;
+  --success-strong: #059669;
 
   --error-bg: #fef2f2;
   --error-border: #fecaca;
@@ -41,8 +47,10 @@
   --warning-bg: #fffbeb;
   --warning-border: #fde68a;
   --warning-text: #92400e;
+  --warning-strong: #d97706;
 
   --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --shadow-faint: rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
