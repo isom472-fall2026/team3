@@ -32,8 +32,9 @@
 }
 
 .brand-logo {
-  font-size: 28px;
-  line-height: 1;
+  display: block;
+  height: 40px;
+  width: auto;
 }
 
 .brand-text {
@@ -120,6 +121,14 @@
 .auth-header {
   text-align: center;
   margin-bottom: 24px;
+}
+
+.auth-logo {
+  display: block;
+  height: 150px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 16px;
 }
 
 .badge-ku {
@@ -638,6 +647,11 @@
 }
 
 /* Loading & Footer */
+.loading-logo {
+  height: 72px;
+  width: auto;
+}
+
 .loading-screen {
   display: flex;
   flex-direction: column;
