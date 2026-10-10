@@ -10,8 +10,25 @@ the story ID, the title, who built it, and what happened to it.
 
 | Story | Title | Who | State at the tag |
 |---|---|---|---|
-| #1 | <!-- EXAMPLE — delete this row --> Flag duplicate orders | Sara | done |
-| #2 | <!-- EXAMPLE — delete this row --> Supervisor can log in | Ahmad | moved to phase 3 |
+| #29 | View route stops | Jumana | moved to phase 3 |
+| #30 | View delay info | Jumana | moved to phase 3 |
+| #31 | Live campus map | Abdulrahman | moved to phase 3 |
+| #32 | Arrival time estimate | Abdulrahman | moved to phase 3 |
+| #33 | Route schedule lookup | Ayah | moved to phase 3 |
+| #34 | Weekly trip history | Ayah | done |
+| #35 | Active trip bus info | Roqaya | moved to phase 3 |
+| #36 | Last location update time | Roqaya | moved to phase 3 |
+| #40 | KU email sign-up | Abdulrahman | done |
+| #45 | On/off-campus route switch | Sara  | done |
+| #46 | Stop search | Sara | in progress |
+| #48 | Bus marker trip details | Zeinab | moved to phase 3 |
+| #49 | English/Arabic switch | Zeinab | done |
+| #53 | Route operating hours | Abdulrahman | done |
+| #57 | KU logo on every page | Abdulrahman | done |
+| #58 | KU colours | Abdulrahman | done |
+| #59 | Driver starts a trip | Abdulrahman | moved to phase 3 |
+| #60 | Driver location sharing | Abdulrahman | moved to phase 3 |
+ 
 
 ## Phase 3 — saved 21 October
 
