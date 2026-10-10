@@ -17,9 +17,10 @@ four lines. Revisit it in Phase 4 and say whether it held.*
 | --- | --- | --- |
 | Writing proposals, brainstorming, & summaries | Gemini / ChatGPT | Free, fast, and good for non-coding text tasks. |
 | Coding, project setup, & direct file edits | Antigravity | Edits files directly in the repository. |
-| Complex code analysis & technical documentation. we will also work on the schema | Cloude | Excellent reasoning and handling large context windows. |
+| Complex code analysis & technical documentation. we will also work on the schema | Claude | Excellent reasoning and handling large context windows. |
 
-Our limit: <!The free tier. If we hit it, we stop and tell the team.
+Our limit: Our limit: each member stays within their own free weekly quota on each tool. If a member runs out, they tell the team in the group chat and finish the story by hand or with the fast model.
+**How we count usage.** The free tiers we use do not show token counts, so we count **requests**: one request is one message we send to the assistant, including follow-ups and corrections. Each member counts their own requests while working on a story and writes the total in that story's row when its pull request is opened. If we lose count, we write an honest estimate and say so ("about 5"). Work that is not tied to a story (personas, schema, the proposal) gets its own row with "No issue —" and the file it produced. We aim for about 3 requests per story; a story that takes more than 6 gets a line in "What we would do differently" saying why.
 
 ## Phase 2
 
@@ -29,7 +30,7 @@ Our limit: <!The free tier. If we hit it, we stop and tell the team.
 | [#53](https://github.com/isom472-fall2026/team3/issues/53) — Student can view route operating hours | Antigravity Claude Model | 3 requests/prompts to complete the whole story | The user story and acceptance criteria, relevant React/Vite files, and the `routes` table structure | Paste the issue text directly into Antigravity, avoid broad repository searches, and stop each run once the acceptance criteria are satisfied. |
 | [#34](https://github.com/isom472-fall2026/team3/issues/34) — Admin can view weekly trip history | Antigravity (Google) | About 3 requests | The full issue acceptance criteria, the existing React app in `/app`, the Supabase schema in `docs/schema.md`, and the existing `BusPages.jsx` and `App.css` files. Antigravity created `WeeklyTripHistory.jsx`, extended `BusPages.jsx` with tab navigation, and added the dashboard CSS to `App.css`. | Break the task into smaller steps: one request for the Supabase query and data logic, a separate request for the UI and table layout, so each set of changes can be reviewed before continuing. |
 | [#57](https://github.com/isom472-fall2026/team3/issues/57) — Student sees the KU logo on every page | Claude (claude-opus-5-5) | 14 requests for the build (about 6 more to choose the logo and write the story) | The story and acceptance criteria, the official KU logo image, and the React files in `/app` (App.jsx, App.css, SignIn.jsx, SignUp.jsx, index.html) | Close files in the editor before the assistant writes to them; one change was overwritten by an unsaved editor copy and had to be redone. |
-
+| No issue — token plan ("The plan" section above) | ChatGPT | 2 requests | The list of tools the team uses, the free-tier limits of each, and the ledger template | Asked it for a plan before checking which tools the team actually used; had to rewrite the rows to match what we really do. |
 
 ## Phase 3
 
