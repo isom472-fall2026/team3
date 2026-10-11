@@ -19,7 +19,8 @@ four lines. Revisit it in Phase 4 and say whether it held.*
 | Coding, project setup, & direct file edits | Antigravity | Edits files directly in the repository. |
 | Complex code analysis & technical documentation. we will also work on the schema | Cloude | Excellent reasoning and handling large context windows. |
 
-Our limit: <!The free tier. If we hit it, we stop and tell the team.
+Our limit: Our limit: each member stays within their own free weekly quota on each tool. If a member runs out, they tell the team in the group chat and finish the story by hand or with the fast model.
+**How we count usage.** The free tiers we use do not show token counts, so we count **requests**: one request is one message we send to the assistant, including follow-ups and corrections. Each member counts their own requests while working on a story and writes the total in that story's row when its pull request is opened. If we lose count, we write an honest estimate and say so ("about 5"). Work that is not tied to a story (personas, schema, the proposal) gets its own row with "No issue —" and the file it produced. We aim for about 3 requests per story; a story that takes more than 6 gets a line in "What we would do differently" saying why.
 
 ## Phase 2
 
