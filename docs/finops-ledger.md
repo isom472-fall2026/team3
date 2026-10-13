@@ -34,6 +34,8 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | [#58](https://github.com/isom472-fall2026/team3/issues/58) — Student sees KU colours across the app | Claude | 11 requests | The story's acceptance criteria, `app/src/index.css`, `app/src/App.css`, and the component files with buttons | Check the file actually changed on disk after each step (one step was copied over stale and cost an extra request), and decide button colours like Sign Out before starting instead of changing them halfway. |
 | No issue — token plan ("The plan" section above) | ChatGPT | 2 requests | The list of tools the team uses, the free-tier limits of each, and the ledger template | Asked it for a plan before checking which tools the team actually used; had to rewrite the rows to match what we really do. |
 | No issue — User Story [#48](https://github.com/isom472-fall2026/team3/issues/48) | ChatGPT | About 6 requests (estimate) | The user story idea and acceptance criteria for tapping a bus marker on the campus map to view trip details. ChatGPT helped write and organize the user story, including the acceptance criteria and database tables. | Provide the database schema and existing project requirements from the beginning to ensure the acceptance criteria and column names match the actual implementation. |
+| No issue — index page prototype | Gemini | About 3 requests (estimate) | The request to create an initial index page prototype and the project requirements. Gemini helped draft the prototype description | Provide the exact prototype requirements and existing project structure from the beginning to make the output more specific to the project. |
+
 
 
 
