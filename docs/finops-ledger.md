@@ -19,7 +19,8 @@ four lines. Revisit it in Phase 4 and say whether it held.*
 | Coding, project setup, & direct file edits | Antigravity | Edits files directly in the repository. |
 | Complex code analysis & technical documentation. we will also work on the schema | Cloude | Excellent reasoning and handling large context windows. |
 
-Our limit: <!The free tier. If we hit it, we stop and tell the team.
+Our limit: Our limit: each member stays within their own free weekly quota on each tool. If a member runs out, they tell the team in the group chat and finish the story by hand or with the fast model.
+**How we count usage.** The free tiers we use do not show token counts, so we count **requests**: one request is one message we send to the assistant, including follow-ups and corrections. Each member counts their own requests while working on a story and writes the total in that story's row when its pull request is opened. If we lose count, we write an honest estimate and say so ("about 5"). Work that is not tied to a story (personas, schema, the proposal) gets its own row with "No issue —" and the file it produced. We aim for about 3 requests per story; a story that takes more than 6 gets a line in "What we would do differently" saying why.
 
 ## Phase 2
 
@@ -31,6 +32,9 @@ Our limit: <!The free tier. If we hit it, we stop and tell the team.
 | [#57](https://github.com/isom472-fall2026/team3/issues/57) — Student sees the KU logo on every page | Claude (claude-opus-5-5) | 14 requests for the build (about 6 more to choose the logo and write the story) | The story and acceptance criteria, the official KU logo image, and the React files in `/app` (App.jsx, App.css, SignIn.jsx, SignUp.jsx, index.html) | Close files in the editor before the assistant writes to them; one change was overwritten by an unsaved editor copy and had to be redone. |
 | No issue — Phase 2 backlog.md | ChatGPT (high reasoning) | about 2 requests | The list of open issues with their numbers, titles and assignees, copied from the project board, and the backlog table template | Asked it to put the stories in order and check them against the project board. It got some of the "State at the tag" values wrong, so I checked every story's state on the board and the Issues tab myself and fixed them by hand. Next time, fill in the state column myself, because only we know what is done, moved or still open. |
  
+
+| [#58](https://github.com/isom472-fall2026/team3/issues/58) — Student sees KU colours across the app | Claude | 11 requests | The story's acceptance criteria, `app/src/index.css`, `app/src/App.css`, and the component files with buttons | Check the file actually changed on disk after each step (one step was copied over stale and cost an extra request), and decide button colours like Sign Out before starting instead of changing them halfway. |
+
 
 ## Phase 3
 
