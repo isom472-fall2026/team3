@@ -5,9 +5,12 @@ import WeeklyTripHistory from './WeeklyTripHistory.jsx'
 function BusPages({ user, onSignOut }) {
   const [buses, setBuses] = useState([])
   const [routes, setRoutes] = useState([])
+  const [stops, setStops] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(user)
   const [dbError, setDbError] = useState(null)
+  const [stopsError, setStopsError] = useState(null)
   const [activeTab, setActiveTab] = useState('history') // 'history' | 'fleet'
 
   const isConfirmed = Boolean(currentUser?.email_confirmed_at)
@@ -15,6 +18,7 @@ function BusPages({ user, onSignOut }) {
   const fetchBusData = useCallback(async () => {
     setLoading(true)
     setDbError(null)
+    setStopsError(null)
 
     try {
       const { data: userData } = await supabase.auth.getUser()
@@ -22,6 +26,7 @@ function BusPages({ user, onSignOut }) {
       setCurrentUser(updatedUser)
 
       if (updatedUser?.email_confirmed_at) {
+        // Fetch buses
         const { data: busData, error: busError } = await supabase
           .from('buses')
           .select('*')
@@ -33,6 +38,7 @@ function BusPages({ user, onSignOut }) {
           setBuses(busData || [])
         }
 
+        // Fetch routes
         const { data: routeData, error: routeError } = await supabase
           .from('routes')
           .select('id, name, operating_hours')
@@ -44,13 +50,35 @@ function BusPages({ user, onSignOut }) {
         } else {
           setRoutes(routeData || [])
         }
+
+        // Fetch stops
+        const { data: stopData, error: stopError } = await supabase
+          .from('stops')
+          .select('id, name, area')
+
+        if (stopError) {
+          setStopsError(stopError.message)
+          setStops([])
+        } else {
+          // Sort alphabetically by name (case‑insensitive)
+          const sorted = (stopData || []).slice().sort((a, b) => {
+            const nameA = (a.name || '').toLowerCase()
+            const nameB = (b.name || '').toLowerCase()
+            if (nameA < nameB) return -1
+            if (nameA > nameB) return 1
+            return 0
+          })
+          setStops(sorted)
+        }
       } else {
         setBuses([])
         setRoutes([])
+        setStops([])
       }
     } catch (err) {
       setDbError(err?.message || 'Failed to fetch bus information.')
       setBuses([])
+      setStops([])
     } finally {
       setLoading(false)
     }
