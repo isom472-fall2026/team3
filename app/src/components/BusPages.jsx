@@ -5,16 +5,21 @@ import WeeklyTripHistory from './WeeklyTripHistory.jsx'
 function BusPages({ user, onSignOut }) {
   const [buses, setBuses] = useState([])
   const [routes, setRoutes] = useState([])
+  const [stops, setStops] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(user)
   const [dbError, setDbError] = useState(null)
+  const [stopsError, setStopsError] = useState(null)
   const [activeTab, setActiveTab] = useState('history') // 'history' | 'fleet'
+  const [routeTab, setRouteTab] = useState('on_campus') // 'on_campus' | 'off_campus'
 
   const isConfirmed = Boolean(currentUser?.email_confirmed_at)
 
   const fetchBusData = useCallback(async () => {
     setLoading(true)
     setDbError(null)
+    setStopsError(null)
 
     try {
       const { data: userData } = await supabase.auth.getUser()
@@ -22,6 +27,7 @@ function BusPages({ user, onSignOut }) {
       setCurrentUser(updatedUser)
 
       if (updatedUser?.email_confirmed_at) {
+        // Fetch buses
         const { data: busData, error: busError } = await supabase
           .from('buses')
           .select('*')
@@ -33,9 +39,10 @@ function BusPages({ user, onSignOut }) {
           setBuses(busData || [])
         }
 
+        // Fetch routes
         const { data: routeData, error: routeError } = await supabase
           .from('routes')
-          .select('id, name, operating_hours')
+          .select('id, name, operating_hours, service_type')
           .eq('is_active', true)
 
         if (routeError) {
@@ -44,13 +51,35 @@ function BusPages({ user, onSignOut }) {
         } else {
           setRoutes(routeData || [])
         }
+
+        // Fetch stops
+        const { data: stopData, error: stopError } = await supabase
+          .from('stops')
+          .select('id, name, area')
+
+        if (stopError) {
+          setStopsError(stopError.message)
+          setStops([])
+        } else {
+          // Sort alphabetically by name (case‑insensitive)
+          const sorted = (stopData || []).slice().sort((a, b) => {
+            const nameA = (a.name || '').toLowerCase()
+            const nameB = (b.name || '').toLowerCase()
+            if (nameA < nameB) return -1
+            if (nameA > nameB) return 1
+            return 0
+          })
+          setStops(sorted)
+        }
       } else {
         setBuses([])
         setRoutes([])
+        setStops([])
       }
     } catch (err) {
       setDbError(err?.message || 'Failed to fetch bus information.')
       setBuses([])
+      setStops([])
     } finally {
       setLoading(false)
     }
@@ -81,7 +110,7 @@ function BusPages({ user, onSignOut }) {
 
           const { data: routeData, error: routeError } = await supabase
             .from('routes')
-            .select('id, name, operating_hours')
+            .select('id, name, operating_hours, service_type')
             .eq('is_active', true)
 
           if (!isMounted) return
@@ -220,21 +249,58 @@ function BusPages({ user, onSignOut }) {
             </div>
           )}
 
+          {/* Route type tabs */}
+          <div className="route-type-tabs" role="tablist" aria-label="Route Type Tabs">
+            <button
+              type="button"
+              role="tab"
+              id="tab-on-campus"
+              aria-selected={routeTab === 'on_campus'}
+              className={`bus-tab-btn ${routeTab === 'on_campus' ? 'active' : ''}`}
+              onClick={() => setRouteTab('on_campus')}
+            >
+              On campus
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-off-campus"
+              aria-selected={routeTab === 'off_campus'}
+              className={`bus-tab-btn ${routeTab === 'off_campus' ? 'active' : ''}`}
+              onClick={() => setRouteTab('off_campus')}
+            >
+              Off campus
+            </button>
+          </div>
+
           {routes && routes.length > 0 && (
             <div className="route-hours-section" id="route-operating-hours">
               <h3>Route Operating Hours</h3>
               <div className="route-hours-grid">
-                {routes.map((route) => (
-                  <div key={route.id} className="route-hours-card" data-route-id={route.id}>
-                    <div className="route-hours-name">{route.name}</div>
-                    <div className="route-hours-value">
-                      {route.operating_hours
-                        ? route.operating_hours
-                        : <span className="route-hours-unavailable">Operating hours not available</span>}
+                {routes
+                  .filter((r) => r.service_type === routeTab)
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((route) => (
+                    <div key={route.id} className="route-hours-card" data-route-id={route.id}>
+                      <div className="route-hours-name">{route.name}</div>
+                      <div className="route-hours-value">
+                        {route.operating_hours
+                          ? route.operating_hours
+                          : <span className="route-hours-unavailable">Operating hours not available</span>}
+                      </div>
                     </div>
+                  ))}
+                {routes.filter((r) => r.service_type === routeTab).length === 0 && (
+                  <div className="no-routes-message">
+                    {routeTab === 'on_campus' ? 'No on-campus routes right now.' : 'No off-campus routes right now.'}
                   </div>
-                ))}
+                )}
               </div>
+            </div>
+          )}
+          {dbError && (
+            <div className="alert alert-error" role="alert">
+              <div>Routes could not be loaded. Try again.</div>
             </div>
           )}
 
