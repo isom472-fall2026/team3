@@ -38,6 +38,15 @@ jobs:
         working-directory: app
         run: npm run build
 
+      # Pages serves one site per repository. The app owns the root address, so the
+      # proposal page and the prototype are copied in beside it to keep their links working.
+      - name: Add the proposal page and prototype to the site
+        run: |
+          mkdir -p app/dist/docs app/dist/prototype
+          cp docs/index.html app/dist/docs/index.html
+          cp -r prototype/. app/dist/prototype/
+          touch app/dist/.nojekyll
+
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
 
