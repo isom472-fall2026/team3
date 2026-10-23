@@ -44,7 +44,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#31](https://github.com/isom472-fall2026/team3/issues/31) — Student can view active buses on the campus map | Claude (claude-opus-5-5) | About 12 requests (estimate) | The story and its acceptance criteria, the schema (`trips`, `buses`, `schedules`, `routes`, `bus_locations`, Realtime), and the pages from #87. It added Leaflet with OpenStreetMap, a reusable `BusMap` and `BusMarker`, a shared `useActiveBuses()` hook (today's active trips and each bus's newest position, live through Supabase Realtime with a 5-second fallback), and on/off-campus views, built in 4 steps with a mocked browser check after each. | Over 6 because it was built in 4 committed steps and I asked how the map and test data work. Agree extra behaviour (the on/off-campus tabs) with the Client Lead before building, so the criteria match the code. |
 
 ## Phase 4
 
