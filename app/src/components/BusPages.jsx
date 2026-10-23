@@ -316,6 +316,39 @@ function BusPages({ user, onSignOut }) {
                   </div>
                   <div className="bus-card-body">
                     <p><strong>Plate:</strong> {bus.plate_number || 'N/A'}</p>
+                  {bus.tracker_user_id === currentUser?.id && (
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={async () => {
+                        // Prevent marking out of service if there is an active trip
+                        if ((bus.status || '').toLowerCase() !== 'out of service') {
+                          const { data: activeTrips, error: tripErr } = await supabase
+                            .from('trips')
+                            .select('id')
+                            .eq('bus_id', bus.id)
+                            .eq('status', 'active');
+                          if (activeTrips && activeTrips.length > 0) {
+                            alert('Cannot mark out of service while a trip is active.');
+                            return;
+                          }
+                        }
+                        const newStatus = (bus.status || '').toLowerCase() === 'out of service' ? 'Active' : 'Out of Service';
+                        const { error: updateErr } = await supabase
+                          .from('buses')
+                          .update({ status: newStatus })
+                          .eq('id', bus.id);
+                        if (updateErr) {
+                          console.error('Failed to update status:', updateErr);
+                          alert('Failed to update bus status.');
+                        } else {
+                          fetchBusData();
+                        }
+                      }}
+                    >
+                      {(bus.status || '').toLowerCase() === 'out of service' ? 'Mark In Service' : 'Mark Out of Service'}
+                    </button>
+                  )}
                   </div>
                 </div>
               ))}
