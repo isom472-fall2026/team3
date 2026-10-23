@@ -17,6 +17,8 @@ function runsOn(daysOfWeek, weekday) {
 
 function StartTripPage() {
   const [departures, setDepartures] = useState([])
+  const [buses, setBuses] = useState([])
+  const [chosenBus, setChosenBus] = useState({}) // schedule id -> bus id
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
 
@@ -25,21 +27,27 @@ function StartTripPage() {
 
     const loadDepartures = async () => {
       const { weekday } = kuwaitToday()
-      const { data, error } = await supabase
-        .from('schedules')
-        .select('id, planned_start_time, days_of_week, routes!inner(id, name, is_active)')
-        .eq('routes.is_active', true)
-        .order('planned_start_time')
+      const [schedulesResult, busesResult] = await Promise.all([
+        supabase
+          .from('schedules')
+          .select('id, planned_start_time, days_of_week, routes!inner(id, name, is_active)')
+          .eq('routes.is_active', true)
+          .order('planned_start_time'),
+        supabase.from('buses').select('id, bus_number, status').eq('status', 'active').order('bus_number'),
+      ])
 
       if (!isMounted) return
-      setLoadError(Boolean(error))
+      const failed = Boolean(schedulesResult.error || busesResult.error)
+      setLoadError(failed)
       setDepartures(
-        error
+        failed
           ? []
-          : (data || [])
+          : (schedulesResult.data || [])
               .filter((s) => s.routes?.is_active === true && runsOn(s.days_of_week, weekday))
               .sort((a, b) => a.planned_start_time.localeCompare(b.planned_start_time))
       )
+      // Buses in maintenance, out of service, or with no status cannot be sent out.
+      setBuses(failed ? [] : (busesResult.data || []).filter((b) => b.status === 'active'))
       setLoading(false)
     }
 
@@ -75,6 +83,19 @@ function StartTripPage() {
             <div key={dep.id} className="route-hours-card" data-schedule-id={dep.id}>
               <div className="route-hours-name">{dep.routes.name}</div>
               <div className="route-hours-value">{dep.planned_start_time.slice(0, 5)}</div>
+              <label className="departure-bus">
+                Bus{' '}
+                <select
+                  id={`bus-select-${dep.id}`}
+                  value={chosenBus[dep.id] || ''}
+                  onChange={(e) => setChosenBus((prev) => ({ ...prev, [dep.id]: e.target.value }))}
+                >
+                  <option value="">Choose a bus</option>
+                  {buses.map((bus) => (
+                    <option key={bus.id} value={bus.id}>{bus.bus_number}</option>
+                  ))}
+                </select>
+              </label>
             </div>
           ))}
         </div>
