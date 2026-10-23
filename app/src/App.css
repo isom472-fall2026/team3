@@ -1145,6 +1145,12 @@
   width: 100%;
 }
 
+.map-status {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 @media (max-width: 640px) {
   .bus-map-canvas {
     height: 360px;

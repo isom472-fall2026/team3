@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import BusMap from '../components/BusMap.jsx'
 import { MAP_VIEWS } from '../lib/mapViews.js'
+import { useActiveBuses } from '../lib/useActiveBuses.js'
 
 const TABS = [
   { type: 'on_campus', label: 'On campus' },
@@ -9,6 +10,9 @@ const TABS = [
 
 function MapPage() {
   const [serviceType, setServiceType] = useState('on_campus')
+  const { buses, loading, error } = useActiveBuses()
+
+  const busesInTab = buses.filter((bus) => bus.serviceType === serviceType)
 
   return (
     <div className="bus-confirmed-section" id="map-page">
@@ -32,6 +36,16 @@ function MapPage() {
           </button>
         ))}
       </div>
+
+      {error && (
+        <div className="alert alert-error" role="alert" id="map-error">
+          <div>Bus locations could not be loaded. Try again.</div>
+        </div>
+      )}
+
+      {!loading && !error && busesInTab.length === 0 && (
+        <p className="map-status" id="no-buses-message">No buses running right now.</p>
+      )}
 
       {/* A new key per tab re-creates the map at that tab's starting view. */}
       <BusMap
