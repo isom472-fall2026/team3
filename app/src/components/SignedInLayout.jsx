@@ -9,10 +9,20 @@ function SignedInLayout({ user, onSignOut }) {
   // Changing the key remounts the open page, so Refresh reloads its data
   // without every page having to handle a refresh itself.
   const [refreshKey, setRefreshKey] = useState(0)
+  // null until we know, so a staff page is not redirected away while the check is running.
+  const [isStaff, setIsStaff] = useState(null)
   const navigate = useNavigate()
 
   const isConfirmed = Boolean(currentUser?.email_confirmed_at)
   const firstPage = pages[0].path
+  const visiblePages = pages.filter((page) => !page.staffOnly || isStaff)
+
+  // The database decides who is staff (staff_members); this only hides screens.
+  // An error counts as not staff, so a student never sees a staff screen by accident.
+  const checkStaff = async () => {
+    const { data, error } = await supabase.rpc('is_staff')
+    setIsStaff(!error && data === true)
+  }
 
   // The session's copy of the user can be older than the email confirmation.
   const reloadUser = async () => {
@@ -25,6 +35,9 @@ function SignedInLayout({ user, onSignOut }) {
     supabase.auth.getUser().then(({ data }) => {
       if (isMounted && data?.user) setCurrentUser(data.user)
     })
+    supabase.rpc('is_staff').then(({ data, error }) => {
+      if (isMounted) setIsStaff(!error && data === true)
+    })
     return () => {
       isMounted = false
     }
@@ -34,6 +47,7 @@ function SignedInLayout({ user, onSignOut }) {
     setRefreshing(true)
     try {
       await reloadUser()
+      await checkStaff()
     } finally {
       setRefreshKey((k) => k + 1)
       setRefreshing(false)
@@ -104,7 +118,7 @@ function SignedInLayout({ user, onSignOut }) {
       ) : (
         <>
           <nav className="bus-tabs-nav" aria-label="Pages">
-            {pages.map((page) => (
+            {visiblePages.map((page) => (
               <NavLink
                 key={page.path}
                 to={`/${page.path}`}
@@ -121,12 +135,16 @@ function SignedInLayout({ user, onSignOut }) {
             <span>KU Student Verified — Email confirmed</span>
           </div>
 
-          <Routes>
-            {pages.map(({ path, component: Page }) => (
-              <Route key={path} path={`/${path}`} element={<Page key={refreshKey} user={currentUser} />} />
-            ))}
-            <Route path="*" element={<Navigate to={`/${firstPage}`} replace />} />
-          </Routes>
+          {isStaff === null ? (
+            <p>Loading…</p>
+          ) : (
+            <Routes>
+              {visiblePages.map(({ path, component: Page }) => (
+                <Route key={path} path={`/${path}`} element={<Page key={refreshKey} user={currentUser} />} />
+              ))}
+              <Route path="*" element={<Navigate to={`/${firstPage}`} replace />} />
+            </Routes>
+          )}
         </>
       )}
     </div>
