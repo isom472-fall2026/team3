@@ -44,7 +44,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#53](https://github.com/isom472-fall2026/team3/issues/53) — Student can view route operating hours (bug fix) | Claude (claude-opus-5-5) | About 3 requests | The story's acceptance criteria and `app/src/pages/RoutesPage.jsx`. It added the check for blank, spaces-only and digit-free hours and fixed the error wording to match the criterion. | Re-read every criterion against the page in Phase 2: one box was ticked but the error text didn't match. |
 
 ## Phase 4
 
