@@ -1145,10 +1145,71 @@
   width: 100%;
 }
 
+.map-type-tabs {
+  margin-bottom: 16px;
+}
+
 .map-status {
   margin: 0 0 12px;
   color: var(--text-secondary);
   font-weight: 600;
+}
+
+/* Bus markers: Leaflet puts the marker's top-left corner on the bus's position,
+   so the content is shifted back to centre the badge on that point. */
+.bus-marker-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translate(-50%, -14px);
+}
+
+.bus-marker-badge {
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ku-black);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  border: 2px solid var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-marker-note {
+  white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-marker--stale .bus-marker-badge {
+  background: var(--gray-200);
+  color: var(--text-secondary);
+}
+
+/* Running buses that cannot be placed on the map. */
+.map-unplaced {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.map-unplaced li + li {
+  margin-top: 6px;
+}
+
+.map-unplaced-note {
+  color: var(--text-secondary);
 }
 
 @media (max-width: 640px) {

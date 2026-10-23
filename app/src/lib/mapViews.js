@@ -12,3 +12,15 @@ export const MAP_VIEWS = {
   off_campus: OFF_CAMPUS_VIEW,
 }
 
+
+// A position outside these limits is not a real bus position in Kuwait
+// (GPS error or bad data), so it is never drawn on the map.
+const KUWAIT_LIMITS = { minLat: 28.5, maxLat: 30.1, minLng: 46.5, maxLng: 48.5 }
+
+export function isInKuwait(latitude, longitude) {
+  return (
+    Number.isFinite(latitude) && Number.isFinite(longitude) &&
+    latitude >= KUWAIT_LIMITS.minLat && latitude <= KUWAIT_LIMITS.maxLat &&
+    longitude >= KUWAIT_LIMITS.minLng && longitude <= KUWAIT_LIMITS.maxLng
+  )
+}
