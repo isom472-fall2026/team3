@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase.js'
 import SignUp from './components/SignUp.jsx'
 import SignIn from './components/SignIn.jsx'
-import BusPages from './components/BusPages.jsx'
+import SignedInLayout from './components/SignedInLayout.jsx'
 import './App.css'
 
 function App() {
@@ -81,7 +81,7 @@ function App() {
 
       <main className="main-content">
         {user ? (
-          <BusPages user={user} onSignOut={() => setUser(null)} />
+          <SignedInLayout user={user} onSignOut={() => setUser(null)} />
         ) : authView === 'signup' ? (
           <SignUp onSwitchToSignIn={() => setAuthView('signin')} />
         ) : (
@@ -99,4 +99,4 @@ function App() {
   )
 }
 
-export default App
+export default App
