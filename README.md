@@ -6,16 +6,16 @@
 
 A web-based system that helps Kuwait University students view bus routes, stops, estimated arrival times, reported bus locations, and trip status. Transportation staff can manage buses, routes, schedules, trips, and delays through the system.
 
-> **Current phase: Phase 2 — Design Sprint**
+> **Current phase: Phase 3 — Sprint 1** (Phase Lead: Abdulrahman Alyaseen)
 >
-> We are currently working on the system backlog, database schema, Supabase setup, user stories, prototype/design, and development environment.
+> We are building the first working stories from the backlog and releasing the running system at the address below. What is being built, and by whom, is on the board.
 >
 > See [`docs/how-we-work.md`](docs/how-we-work.md) for the project workflow and phase requirements.
 >
 > Update this section at the start of every phase. It is the first thing the team sees.
 
 - **Proposal page:** https://isom472-fall2026.github.io/team3/docs/
-- **Running system:** Not deployed yet. To be released during the 3rd phase.
+- **Running system:** https://isom472-fall2026.github.io/team3/
 - **Board:** https://github.com/orgs/isom472-fall2026/projects/4
 
 ## Where do I go?
