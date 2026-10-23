@@ -45,7 +45,8 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
-
+| [#80](https://github.com/isom472-fall2026/team3/issues/80) — A late arrival is recorded as a delay automatically | Claude | <your estimate, e.g. "3 requests"> | The story and acceptance criteria, `docs/schema.md`, `db/schema.sql`, and the `trip_stop_updates`, `trips`, `scheduled_stop_times` and `delay_logs` tables. It added the trigger that creates one `delay_logs` row when an arrival is later than the scheduled time. | Paste the acceptance criteria into the first request instead of letting it search the repo for them, and check every criterion (on-time arrival, no scheduled time, empty trip date, one row per trip per stop) before opening the pull request. |
+| [#81](https://github.com/isom472-fall2026/team3/issues/81) — A trip finishes automatically at its last stop | Claude | <your estimate, e.g. "3 requests"> | The story and acceptance criteria, `docs/schema.md`, `db/schema.sql`, and the `trips`, `routes_stops` and `trip_stop_updates` tables. It added the trigger that marks a trip `completed` and sets `actual_completion` at the last stop. | Paste the acceptance criteria into the first request, and check every criterion (a route with no stops, location updates after completion) before opening the pull request. |
 ## Phase 4
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
