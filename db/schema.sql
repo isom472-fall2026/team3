@@ -104,7 +104,7 @@ CREATE TABLE delay_logs (
     created_at TIMESTAMPTZ DEFAULT now(),
     trip_id UUID NOT NULL,
     routes_stop_id UUID,
-    delay_minutes INT4,
+    delay_minutes INT4 CHECK (delay_minutes > 0),
     logged_at TIMESTAMPTZ,
     UNIQUE (trip_id, routes_stop_id),
     FOREIGN KEY (trip_id) REFERENCES trips(id),
