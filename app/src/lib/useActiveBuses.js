@@ -1,9 +1,13 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from './supabase.js'
 import { kuwaitToday } from './kuwaitTime.js'
 
-// Today's running buses, each with its latest reported position.
-// Shared by the live map (#31) and the bus-info pages (#35, #36, #48).
+// If live updates cannot connect, ask again this often instead, so a bus
+// still moves on screen within 5 seconds of sending its position.
+const FALLBACK_POLL_MS = 5 * 1000
+
+// Today's running buses, each with its latest reported position, kept up to
+// date live. Shared by the live map (#31) and the bus-info pages (#35, #36, #48).
 //
 // Returns { buses, loading, error, reload }, where each bus is
 //   { tripId, busNumber, routeName, serviceType,
@@ -11,9 +15,15 @@ import { kuwaitToday } from './kuwaitTime.js'
 export function useActiveBuses() {
   const [state, setState] = useState({ buses: [], loading: true, error: false })
   const [version, setVersion] = useState(0)
+  const [live, setLive] = useState(false)
+  const busesRef = useRef(state.buses)
 
   // Asks for a fresh load; the effect below does the loading.
   const reload = useCallback(() => setVersion((v) => v + 1), [])
+
+  useEffect(() => {
+    busesRef.current = state.buses
+  }, [state.buses])
 
   useEffect(() => {
     let current = true
@@ -26,7 +36,40 @@ export function useActiveBuses() {
     }
   }, [version])
 
+  // Live updates: a new position moves its bus at once; any change to a trip
+  // (started, finished, cancelled) reloads the list.
+  useEffect(() => {
+    const channel = supabase
+      .channel('active-buses')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'bus_locations' }, ({ new: row }) => {
+        if (!busesRef.current.some((bus) => bus.tripId === row.trip_id)) {
+          reload() // a trip this page does not know yet
+          return
+        }
+        setState((prev) => ({ ...prev, buses: prev.buses.map((bus) => withNewerLocation(bus, row)) }))
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'trips' }, reload)
+      .subscribe((status) => setLive(status === 'SUBSCRIBED'))
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [reload])
+
+  useEffect(() => {
+    if (live) return undefined
+    const id = setInterval(reload, FALLBACK_POLL_MS)
+    return () => clearInterval(id)
+  }, [live, reload])
+
   return { ...state, reload }
+}
+
+// Positions can arrive out of order; only a newer one replaces the shown one.
+function withNewerLocation(bus, row) {
+  if (bus.tripId !== row.trip_id) return bus
+  if (bus.location && Date.parse(row.recorded_at) < Date.parse(bus.location.recordedAt)) return bus
+  return { ...bus, location: { latitude: row.latitude, longitude: row.longitude, recordedAt: row.recorded_at } }
 }
 
 async function fetchActiveBuses() {
