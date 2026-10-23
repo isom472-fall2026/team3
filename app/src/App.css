@@ -1130,3 +1130,23 @@
   color: var(--text-primary);
 }
 
+/* =========================================================
+   Live bus map (Story 31)
+   ========================================================= */
+.bus-map {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-map-canvas {
+  height: 480px;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .bus-map-canvas {
+    height: 360px;
+  }
+}
