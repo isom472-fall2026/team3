@@ -45,7 +45,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
-
+| [#105](https://github.com/isom472-fall2026/team3/issues/105) — Transportation coordinator starts a trip for a bus | Claude (claude-opus-5-5) | About 15 requests (estimate) | The story and its 10 acceptance criteria, the schema with the new staff role (`staff_members`, `is_staff()`, the "Staff can start trips" policy, the one-active-trip-per-bus index), and the page setup from #87. It built `StartTripPage.jsx` in 4 steps (staff-only page, today's departures, active-bus drop-down, Start button with its messages) and checked each step in a browser with Supabase mocked. I tested it on Supabase with test data. | Over 6 because I built it in 4 separate steps and asked how to add staff accounts and test it. One step's file didn't reach my folder and had to be sent again, so I'll check the file in GitHub Desktop after every step. Next time, prepare the test data before building. |
 ## Phase 4
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
