@@ -38,7 +38,8 @@ function SchedulePage() {
         .order('name')
 
       if (!isMounted) return
-      setRoutesError(Boolean(error))
+      setRoutes(error ? [] : [...(data || [])].sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })))
       setRoutes(error ? [] : data || [])
       setRoutesLoading(false)
     }
