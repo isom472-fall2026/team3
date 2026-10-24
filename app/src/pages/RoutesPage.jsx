@@ -29,7 +29,29 @@ function RoutesPage() {
       if (!isMounted) return
       setLoadError(Boolean(error))
       setRoutes(error ? [] : data || [])
+      const { data, error } = await supabase
+        .from('routes')
+        .select('id, name, operating_hours, service_type')
+        .eq('is_active', true)
+
+      if (!isMounted) return
+      setLoadError(Boolean(error))
+      setRoutes(error ? [] : data || [])
       setLoading(false)
+
+      // Stops are loaded separately, so the routes still show if only this fails.
+      const { data: rsData, error: rsError } = await supabase
+        .from('routes_stops')
+        .select('route_id, sequence_order, stops(name)')
+
+      if (!isMounted) return
+      setStopsError(Boolean(rsError))
+      const grouped = {}
+      for (const row of rsData || []) {
+        if (!grouped[row.route_id]) grouped[row.route_id] = []
+        grouped[row.route_id].push(row)
+      }
+      setStopsByRoute(grouped)
     }
 
     loadRoutes()
