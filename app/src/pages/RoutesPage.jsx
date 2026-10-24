@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase.js
+import RouteDepartureForm from '../components/RouteDepartureForm.jsx'
 import { supabase } from '../lib/supabase.js'
 
 function RoutesPage() {
