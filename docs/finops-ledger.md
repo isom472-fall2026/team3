@@ -45,7 +45,8 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
-
+| [#46](https://github.com/isom472-fall2026/team3/issues/46) — Student can search for a stop by name or area | Antigravity | 3 requests | The story and acceptance criteria, `app/src/components/BusPages.jsx`, and the `stops` table (`name`, `area`). It added the query that loads the stops and sorts them by name. | Check every acceptance criterion in the browser before opening the pull request. The search box and the filtering never reached the page but only once, it will get fixed at the start of phase 3. |
+| [#118](https://github.com/isom472-fall2026/team3/issues/118) — Staff adds a departure to a route | `<tool>` | `<n requests>` | The story and acceptance criteria, `<files>`, and the `routes` (`name`, `operating_hours`) and `schedules` (`route_id`, `planned_start_time`, `days_of_week`) tables. `<what it produced>` | `<what you would do differently>` |
 ## Phase 4
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
