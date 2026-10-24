@@ -19,12 +19,12 @@ whoever is free at the end.*
 
 | Name | Stories |
 |---|---|
-| Abdulrahman Alyaseen | #105, #31, #53 (bug fixed) |
-| Sara Alshamsi | #46, #118 |
-| Jumana Shams |  |
-| Ayah Reda |  |
-| Roqaya Aldurai |  |
-| Zeinab Mohammed Sharif |  |
+| Abdulrahman Alyaseen (Phase Lead, Build Lead) | #105, #31, #53 (bug fixed) |
+| Sara Alshamsi (Data Lead) | #46, #118 |
+| Jumana Shams (Client Lead) |  |
+| Ayah Reda (Quality Lead) |  |
+| Roqaya Aldurai (Finops Lead) |  |
+| Zeinab Mohammed Sharif (Design Lead) |  |
 
 ## Links to the stories
 
