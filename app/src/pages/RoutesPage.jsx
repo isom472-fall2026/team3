@@ -21,7 +21,7 @@ function RoutesPage() {
     const loadRoutes = async () => {
       const { data, error } = await supabase
         .from('routes')
-        .select('id, name, operating_hours, service_type')
+        .select('id, name, operating_hours, service_type, routes_stops(sequence_order, stops(name))')
         .eq('is_active', true)
 
       if (!isMounted) return
@@ -91,6 +91,7 @@ function RoutesPage() {
                     ? route.operating_hours
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
+                <RouteEndpoints routeStops={route.routes_stops} />
                 {isStaff && (
                   <RouteDepartureForm route={route} />
                 )}
@@ -104,6 +105,54 @@ function RoutesPage() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Returns a display-safe stop name: trims whitespace; 'Unnamed stop' if blank.
+function resolveStopName(raw) {
+  if (!raw || raw.trim() === '') return 'Unnamed stop'
+  return raw.trim()
+}
+
+// Renders the start → end endpoint line inside a route card.
+function RouteEndpoints({ routeStops }) {
+  // null means Supabase failed to return the relation at all.
+  if (routeStops == null) {
+    return (
+      <div className="route-endpoints route-endpoints-error">
+        Stops could not be loaded.
+      </div>
+    )
+  }
+
+  if (routeStops.length === 0) {
+    return (
+      <div className="route-endpoints route-endpoints-unset">
+        Stops not set
+      </div>
+    )
+  }
+
+  // Sort by sequence_order to identify first and last stops reliably.
+  const sorted = [...routeStops].sort((a, b) => a.sequence_order - b.sequence_order)
+  const firstName = resolveStopName(sorted[0].stops?.name)
+
+  if (sorted.length === 1) {
+    return (
+      <div className="route-endpoints">
+        <span className="route-endpoint-stop">{firstName}</span>
+        <span className="route-endpoint-one-stop"> — This route has only one stop.</span>
+      </div>
+    )
+  }
+
+  const lastName = resolveStopName(sorted[sorted.length - 1].stops?.name)
+  return (
+    <div className="route-endpoints">
+      <span className="route-endpoint-stop">{firstName}</span>
+      <span className="route-endpoint-arrow" aria-hidden="true"> → </span>
+      <span className="route-endpoint-stop">{lastName}</span>
     </div>
   )
 }
