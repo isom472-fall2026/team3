@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase.js
 import { supabase } from '../lib/supabase.js'
 
 function RoutesPage() {
+  const [isStaff, setIsStaff] = useState(false);
+  useEffect(() => {
+    // check if the signed‑in user is staff via the DB function
+    supabase.rpc('is_staff').then(({ data, error }) => {
+      if (!error) setIsStaff(Boolean(data));
+    });
+  }, []);
   const [routes, setRoutes] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -83,6 +91,9 @@ function RoutesPage() {
                     ? route.operating_hours
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
+                {isStaff && (
+                  <RouteDepartureForm route={route} />
+                )}
               </div>
             ))}
             {routesInTab.length === 0 && (
