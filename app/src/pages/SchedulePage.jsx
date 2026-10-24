@@ -130,7 +130,12 @@ function SchedulePage() {
             id="route-select"
             className="form-select schedule-route-select"
             value={selectedRouteId}
-            onChange={(e) => setSelectedRouteId(e.target.value)}
+            onChange={(e) => {
+              setSelectedRouteId(e.target.value)
+              setDepartures([])
+              setScheduleError(false)
+              setScheduleLoading(Boolean(e.target.value))
+            }}
           >
             <option value="">— Select a route —</option>
             {routes.map((r) => (
