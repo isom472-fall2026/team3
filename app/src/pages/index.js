@@ -1,4 +1,5 @@
 import RoutesPage from './RoutesPage.jsx'
+import MapPage from './MapPage.jsx'
 import BusesPage from './BusesPage.jsx'
 import HistoryPage from './HistoryPage.jsx'
 import StopsPage from './StopsPage.jsx'
@@ -10,6 +11,7 @@ import StartTripPage from './StartTripPage.jsx'
 // staffOnly pages are hidden from the menu and unreachable for accounts not in staff_members.
 export const pages = [
   { path: 'routes', label: '🗺️ Routes', component: RoutesPage },
+  { path: 'map', label: '📍 Live map', component: MapPage },
   { path: 'schedule', label: '🕐 Schedule', component: SchedulePage },
   { path: 'buses', label: '🚌 Buses', component: BusesPage },
   { path: 'history', label: '📊 Weekly Trip History (Admin)', component: HistoryPage, staffOnly: true },
