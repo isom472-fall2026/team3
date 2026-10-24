@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react'
 import RouteDepartureForm from '../components/RouteDepartureForm.jsx'
 import { supabase } from '../lib/supabase.js'
 
+// Hours with no digit at all ("TBD", "-", only spaces) tell a student nothing, so they
+// are treated as missing. Anything else is shown exactly as stored.
+function hasHours(hours) {
+  return typeof hours === 'string' && hours.trim() !== '' && /\d/.test(hours)
+}
+
 function RoutesPage() {
   const [isStaff, setIsStaff] = useState(false);
   useEffect(() => {
@@ -91,7 +97,7 @@ function RoutesPage() {
 
       {loadError && (
         <div className="alert alert-error" role="alert">
-          <div>Routes could not be loaded. Try again.</div>
+          <div>Route details could not be loaded. Try again.</div>
         </div>
       )}
 
@@ -103,7 +109,7 @@ function RoutesPage() {
               <div key={route.id} className="route-hours-card" data-route-id={route.id}>
                 <div className="route-hours-name">{route.name}</div>
                 <div className="route-hours-value">
-                  {route.operating_hours
+                  {hasHours(route.operating_hours)
                     ? route.operating_hours
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
