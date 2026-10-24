@@ -115,7 +115,7 @@ function RoutesPage() {
                     ? route.operating_hours
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
-                <RouteEndpoints routeStops={route.routes_stops} />
+                <RouteEndpoints routeStops={stopsError ? null : (stopsByRoute[route.id] || [])} />
                 {isStaff && (
                   <RouteDepartureForm route={route} />
                 )}
