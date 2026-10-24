@@ -23,14 +23,6 @@ function RoutesPage() {
     const loadRoutes = async () => {
       const { data, error } = await supabase
         .from('routes')
-        .select('id, name, operating_hours, service_type, routes_stops(sequence_order, stops(name))')
-        .eq('is_active', true)
-
-      if (!isMounted) return
-      setLoadError(Boolean(error))
-      setRoutes(error ? [] : data || [])
-      const { data, error } = await supabase
-        .from('routes')
         .select('id, name, operating_hours, service_type')
         .eq('is_active', true)
 
