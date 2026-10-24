@@ -13,6 +13,8 @@ function RoutesPage() {
   const [routes, setRoutes] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [stopsByRoute, setStopsByRoute] = useState({})
+  const [stopsError, setStopsError] = useState(false)
   const [routeTab, setRouteTab] = useState('on_campus') // 'on_campus' | 'off_campus'
 
   useEffect(() => {
