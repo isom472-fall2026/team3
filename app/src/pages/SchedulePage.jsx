@@ -49,16 +49,9 @@ function SchedulePage() {
 
   // Load schedules whenever the selected route changes.
   useEffect(() => {
-    if (!selectedRouteId) {
-      setDepartures([])
-      setScheduleError(false)
-      return
-    }
+    if (!selectedRouteId) return
 
     let isMounted = true
-    setScheduleLoading(true)
-    setScheduleError(false)
-    setDepartures([])
 
     const loadSchedule = async () => {
       const { data, error } = await supabase
