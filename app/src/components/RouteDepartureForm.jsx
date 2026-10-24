@@ -23,15 +23,21 @@ function RouteDepartureForm({ route }) {
       setErrorMsg('Tick at least one day.');
       return false;
     }
-    // operating_hours validation – simple inclusion check
+    // operating_hours like "07:00-15:00", "7:00 AM – 3:00 PM" or "6:30 – 9:00".
+    // A format we can't read (e.g. "TBD") skips the check rather than blocking staff.
+    const toMinutes = (text) => {
+      const m = text.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+      if (!m) return null;
+      let hours = Number(m[1]);
+      if (m[3]) hours = (hours % 12) + (m[3].toUpperCase() === 'PM' ? 12 : 0);
+      return hours * 60 + Number(m[2]);
+    };
     if (route.operating_hours) {
-      // Assume operating_hours is a string like "08:00-18:00"
-      const [start, end] = route.operating_hours.split('-').map((s) => s.trim());
-      if (start && end) {
-        if (time < start || time > end) {
-          setErrorMsg(`This route runs ${route.operating_hours}.`);
-          return false;
-        }
+      const [start, end] = route.operating_hours.split(/[-–—]/).map(toMinutes);
+      const chosen = toMinutes(time);
+      if (start !== null && end !== null && (chosen < start || chosen > end)) {
+        setErrorMsg(`This route runs ${route.operating_hours}.`);
+        return false;
       }
     }
     setErrorMsg('');
