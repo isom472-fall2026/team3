@@ -26,14 +26,18 @@ function StopsPage() {
   }, []);
 
   const trimmed = search.trim().toLowerCase();
-  const filtered = stops.filter((s) => {
-    const name = s.name?.trim() ?? '';
-    const area = s.area?.trim() ?? '';
-    if (trimmed === '') return true;
-    const lowerName = name.toLowerCase();
-    const lowerArea = area.toLowerCase();
-    return lowerName.includes(trimmed) || lowerArea.includes(trimmed);
-  });
+  const filtered = stops
+    .filter((s) => {
+      const name = s.name?.trim() ?? '';
+      const area = s.area?.trim() ?? '';
+      if (trimmed === '') return true;
+      const lowerName = name.toLowerCase();
+      const lowerArea = area.toLowerCase();
+      return lowerName.includes(trimmed) || lowerArea.includes(trimmed);
+    })
+    .sort((a, b) =>
+      (a.name ?? '').trim().localeCompare((b.name ?? '').trim(), undefined, { sensitivity: 'base' })
+    );
 
   return (
     <div className="bus-confirmed-section" id="stops-page">
