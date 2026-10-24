@@ -19,7 +19,7 @@ whoever is free at the end.*
 
 | Name | Stories |
 |---|---|
-| Abdulrahman Alyaseen | #105, #31, #53 |
+| Abdulrahman Alyaseen | #105, #31, #53 (bug fixed) |
 | Sara Alshamsi | #46, #118 |
 | Jumana Shams |  |
 | Ayah Reda |  |
