@@ -5,26 +5,25 @@ whoever is free at the end.*
 
 ## What was delivered
 
-- **Transportation staff can start today's trips.** A staff account sees a "Start a trip" page listing today's departures for active routes, earliest first. Staff choose an active bus and press Start. The page refuses a missing bus ("Choose a bus.") and a bus already on a trip ("Bus X is already on a trip."), and shows "Started" or "Finished" for departures that already ran. Students don't see the page, and the database refuses their inserts.
-- **Students can see running buses on a live campus map.** The "Live map" page shows the Shadadiya campus (On campus) or the wider area (Off campus). Each bus on an active trip today is a marker with its bus number. It moves within 5 seconds of a new position without reloading, and greys out with "Last updated HH:MM" when its position is over 2 minutes old. Buses with no position are listed as "Location not available".
-- **Route operating hours are clearer.** A route whose hours are empty, only spaces, or contain no time (e.g. "TBD") now shows "Operating hours not available".
-- **Students can search for a stop by name or area.** The "Stops" page filters the list as they type, sorted alphabetically, and shows "No stops match" when nothing matches.
-- **Staff can add a departure to a route.** <Sara: one line once #129 is merged>
-- <Jumana: what a user can now do with #29 and #30>
-- <Ayah: what a user can now do with #33 and #84>
-- <Roqaya: what a user can now do with #35 and #36>
-- <Zeinab: what a user can now do with #48 and #120>
+During Phase 3, our team built the main student and staff features of the KU Bus Tracking System. All 13 sprint stories are merged and on the running site.
+
+Transportation staff can now start today's trips by choosing a bus for each departure (#105), and add new departures to a route (#118). Students don't see these staff pages.
+
+Students can follow the buses on a live campus map, with On campus and Off campus views (#31). Each bus moves within 5 seconds of a new location. Tapping a bus shows its route, next stop and scheduled time (#48). Students can also see when a bus's location was last updated and whether it may be out of date (#36), and the bus number, plate and status for an active trip (#35).
+
+For planning a trip, students can see a route's stops in order (#29) and where each route starts and ends (#84). They can look up a route's departure times and days (#33), see which of today's departures are cancelled (#120), and check a trip's latest delay (#30). We also fixed two Phase 2 bugs: stop search by name or area (#46), and routes with missing operating hours (#53).
+
 
 ## Who did what
 
 | Name | Stories |
 |---|---|
 | Abdulrahman Alyaseen (Phase Lead, Build Lead) | #105, #31, #53 (bug fixed) |
-| Sara Alshamsi (Data Lead) | #46, #118 |
-| Jumana Shams (Client Lead) | #29, #30 — not merged yet (no pull request open). Also saved the Phase 3 backlog in `docs/backlog.md` (#136). |
+| Sara Alshamsi (Data Lead) | #46 (bug fixed), #118 |
+| Jumana Shams (Client Lead) | #29, #30 |
 | Ayah Reda (Quality Lead) | #33, #84 |
-| Roqaya Aldurai (Finops Lead) | #35, #36 — not merged yet (no pull request open) |
-| Zeinab Mohammed Sharif (Design Lead) | #120 — pull request #134 open, not merged yet; #48 — not merged yet (no pull request open) |
+| Roqaya Aldurai (Finops Lead) | #35, #36 |
+| Zeinab Mohammed Sharif (Design Lead) | #48, #120 |
 
 ## Links to the stories
 
@@ -46,11 +45,12 @@ whoever is free at the end.*
 
 ## The tag cut for this phase
 
-phase-3
+phase-3 after pull request #148 by the phase lead Abdulrahman Alyaseen
 
 ## Anything not finished, and where it went
 
 - **#59 Driver starts a trip and #60 Driver location sharing — replaced.** The team replaced the driver role with transportation staff. The same work is now #105 (staff start a trip, delivered this phase) and #106 (a test bus plays back locations, moved to Phase 4).
-- **#80 Late arrival recorded as a delay and #81 Trip finishes at its last stop — moved to Phase 4.** The database trigger already does both, but the pull requests opened for them did not implement or verify the stories, so they were closed and the stories reopened. They will be verified with test data once #106 and the seed data exist.
-- **#79 Arrival at a stop recorded automatically — moved to Phase 4**, for the same reason.
-- **#106 Test bus plays back fake locations — moved to Phase 4.** It needs #105 and #31 merged first.
+- **#106 Test bus plays back fake locations — moved to Phase 4.** Until it exists, the live map, delays and last-update pages are tested by adding rows to the database by hand.
+- **#79 Arrival at a stop recorded automatically, #80 Late arrival recorded as a delay and #81 Trip finishes at its last stop — moved to Phase 4.** The database trigger already does all three, but the pull requests opened for #80 and #81 did not implement or verify the stories, so they were closed and the stories reopened. They will be verified with #106 and the seed data.
+- **Client approval for the scope changes (#105, #106, #57, #58, #131) — pending.** Jumana asked Ms. Abeer by WhatsApp on 25 Oct and the request is logged in `docs/scope-changes.md`. Her answer will be added in Phase 4.
+
