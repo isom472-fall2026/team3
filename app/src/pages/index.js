@@ -5,7 +5,9 @@ import HistoryPage from './HistoryPage.jsx'
 import StopsPage from './StopsPage.jsx'
 import SchedulePage from './SchedulePage.jsx'
 import DelaysPage from './DelaysPage.jsx'
+import RouteStopsPage from './RouteStopsPage.jsx'
 import StartTripPage from './StartTripPage.jsx'
+import ActiveTripBusPage from './ActiveTripBusPage.jsx'
 
 // Every signed-in page, in menu order. The first one is where a student lands after
 // signing in, and where an unknown address goes. To add a page: one file here, one line below.
@@ -15,8 +17,10 @@ export const pages = [
   { path: 'map', label: '📍 Live map', component: MapPage },
   { path: 'schedule', label: '🕐 Schedule', component: SchedulePage },
   { path: 'delays', label: '⏱️ Delays', component: DelaysPage },
+  { path: 'route-stops', label: '📋 Route stops', component: RouteStopsPage },
   { path: 'buses', label: '🚌 Buses', component: BusesPage },
   { path: 'history', label: '📊 Weekly Trip History (Admin)', component: HistoryPage, staffOnly: true },
   { path: 'stops', label: '🚏 Stops', component: StopsPage },
+  { path: 'active-trip-bus', label: '🚌 Active trip bus', component: ActiveTripBusPage },
   { path: 'start-trip', label: '▶️ Start a trip', component: StartTripPage, staffOnly: true },
 ]

@@ -1231,6 +1231,22 @@
 .trip-delay-cancelled {
   font-size: 15px;
   font-weight: 600;
+   Route stops — Story 29
+   ========================================================= */
+.route-stops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 0;
+  list-style-position: inside;
+}
+
+.route-stops-item {
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 14.5px;
   color: var(--ku-black);
 }
 
