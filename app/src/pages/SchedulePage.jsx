@@ -274,7 +274,7 @@ function SchedulePage() {
               {departures.map((dep, i) => (
                 <li
                   key={dep.id || i}
-                  className={`schedule-departure-item${dep.isCancelled ? ' schedule-departure-cancelled cancelled' : ''}`}
+                  className={`schedule-departure-item${dep.isCancelled ? ' schedule-departure-cancelled' : ''}`}
                   data-time={dep.planned_start_time}
                 >
                   <span className="schedule-departure-time">
