@@ -1224,7 +1224,7 @@
 .trip-delay-minutes {
   font-size: 17px;
   font-weight: 700;
-  color: #b91c1c;
+  color: var(--error-text);
 }
 
 .trip-delay-none,
