@@ -186,7 +186,8 @@
   background-color: var(--white);
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 44px; /* Mobile touch friendly */
+  min-height: 44px;
+  /* Mobile touch friendly */
 }
 
 .form-group input:focus {
@@ -1211,6 +1212,50 @@
 }
 
 /* =========================================================
+   Trip delay — Story 30
+   ========================================================= */
+.trip-delay {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.trip-delay-minutes {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--error-text);
+}
+
+.trip-delay-none,
+.trip-delay-cancelled {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ku-black);
+}
+
+/* =========================================================
+   Route stops — Story 29
+   ========================================================= */
+.route-stops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 0;
+  list-style-position: inside;
+}
+
+.route-stops-item {
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 14.5px;
+  color: var(--ku-black);
+}
+
+/* =========================================================
    Route start → end endpoints — Story 84
    ========================================================= */
 
@@ -1320,7 +1365,7 @@
   background: var(--white);
 }
 
-.map-unplaced li + li {
+.map-unplaced li+li {
   margin-top: 6px;
 }
 
@@ -1381,4 +1426,64 @@
   .bus-map-canvas {
     height: 360px;
   }
+}
+
+/* =========================================================
+
+   Last location update — Story 36
+
+   ========================================================= */
+
+.last-updated {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: var(--ku-black);
+
+}
+
+.last-updated-unavailable,
+
+.last-updated-unknown,
+
+.last-updated-finished {
+
+  font-weight: 600;
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-stale {
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-label {
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--error-border);
+
+  background: var(--error-bg);
+
+  color: var(--error-text);
+
+  font-size: 12.5px;
+
+  font-weight: 600;
+
 }
