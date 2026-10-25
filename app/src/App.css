@@ -1328,6 +1328,55 @@
   color: var(--text-secondary);
 }
 
+/* Bus trip card on map (#48) */
+.bus-trip-popup .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+}
+
+.bus-trip-popup .leaflet-popup-content {
+  margin: 10px 14px;
+  line-height: 1.4;
+}
+
+.bus-trip-card {
+  font-family: inherit;
+  color: var(--text-primary);
+  font-size: 13px;
+  min-width: 140px;
+}
+
+.bus-trip-card-header {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.bus-trip-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bus-trip-stop {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.bus-trip-scheduled {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.bus-trip-label {
+  font-weight: 600;
+}
+
+.bus-trip-card-status {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
 @media (max-width: 640px) {
   .bus-map-canvas {
     height: 360px;
