@@ -21,10 +21,10 @@ whoever is free at the end.*
 |---|---|
 | Abdulrahman Alyaseen (Phase Lead, Build Lead) | #105, #31, #53 (bug fixed) |
 | Sara Alshamsi (Data Lead) | #46, #118 |
-| Jumana Shams (Client Lead) |  |
-| Ayah Reda (Quality Lead) |  |
-| Roqaya Aldurai (Finops Lead) |  |
-| Zeinab Mohammed Sharif (Design Lead) |  |
+| Jumana Shams (Client Lead) | #29, #30 — not merged yet (no pull request open). Also saved the Phase 3 backlog in `docs/backlog.md` (#136). |
+| Ayah Reda (Quality Lead) | #33, #84 |
+| Roqaya Aldurai (Finops Lead) | #35, #36 — not merged yet (no pull request open) |
+| Zeinab Mohammed Sharif (Design Lead) | #120 — pull request #134 open, not merged yet; #48 — not merged yet (no pull request open) |
 
 ## Links to the stories
 

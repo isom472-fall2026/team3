@@ -186,7 +186,8 @@
   background-color: var(--white);
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 44px; /* Mobile touch friendly */
+  min-height: 44px;
+  /* Mobile touch friendly */
 }
 
 .form-group input:focus {
@@ -1232,6 +1233,50 @@
 }
 
 /* =========================================================
+   Trip delay — Story 30
+   ========================================================= */
+.trip-delay {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.trip-delay-minutes {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--error-text);
+}
+
+.trip-delay-none,
+.trip-delay-cancelled {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ku-black);
+}
+
+/* =========================================================
+   Route stops — Story 29
+   ========================================================= */
+.route-stops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 0;
+  list-style-position: inside;
+}
+
+.route-stops-item {
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 14.5px;
+  color: var(--ku-black);
+}
+
+/* =========================================================
    Route start → end endpoints — Story 84
    ========================================================= */
 
@@ -1265,4 +1310,152 @@
   color: var(--text-muted);
   font-style: italic;
   margin-top: 4px;
+}
+
+/* =========================================================
+   Live bus map (Story 31)
+   ========================================================= */
+.bus-map {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-map-canvas {
+  height: 480px;
+  width: 100%;
+}
+
+.map-type-tabs {
+  margin-bottom: 16px;
+}
+
+.map-status {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Bus markers: Leaflet puts the marker's top-left corner on the bus's position,
+   so the content is shifted back to centre the badge on that point. */
+.bus-marker-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translate(-50%, -14px);
+}
+
+.bus-marker-badge {
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ku-black);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  border: 2px solid var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-marker-note {
+  white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.bus-marker--stale .bus-marker-badge {
+  background: var(--gray-200);
+  color: var(--text-secondary);
+}
+
+/* Running buses that cannot be placed on the map. */
+.map-unplaced {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.map-unplaced li+li {
+  margin-top: 6px;
+}
+
+.map-unplaced-note {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .bus-map-canvas {
+    height: 360px;
+  }
+}
+
+/* =========================================================
+
+   Last location update — Story 36
+
+   ========================================================= */
+
+.last-updated {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: var(--ku-black);
+
+}
+
+.last-updated-unavailable,
+
+.last-updated-unknown,
+
+.last-updated-finished {
+
+  font-weight: 600;
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-stale {
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-label {
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--error-border);
+
+  background: var(--error-bg);
+
+  color: var(--error-text);
+
+  font-size: 12.5px;
+
+  font-weight: 600;
+
 }
