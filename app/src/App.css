@@ -186,7 +186,8 @@
   background-color: var(--white);
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 44px; /* Mobile touch friendly */
+  min-height: 44px;
+  /* Mobile touch friendly */
 }
 
 .form-group input:focus {
@@ -1364,7 +1365,7 @@
   background: var(--white);
 }
 
-.map-unplaced li + li {
+.map-unplaced li+li {
   margin-top: 6px;
 }
 
@@ -1376,4 +1377,64 @@
   .bus-map-canvas {
     height: 360px;
   }
+}
+
+/* =========================================================
+
+   Last location update — Story 36
+
+   ========================================================= */
+
+.last-updated {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: var(--ku-black);
+
+}
+
+.last-updated-unavailable,
+
+.last-updated-unknown,
+
+.last-updated-finished {
+
+  font-weight: 600;
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-stale {
+
+  color: var(--text-secondary);
+
+}
+
+.last-updated-label {
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--error-border);
+
+  background: var(--error-bg);
+
+  color: var(--error-text);
+
+  font-size: 12.5px;
+
+  font-weight: 600;
+
 }
