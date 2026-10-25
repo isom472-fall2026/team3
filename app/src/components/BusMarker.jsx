@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import { Marker } from 'react-leaflet'
+import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import { kuwaitClock } from '../lib/kuwaitTime.js'
+import BusTripCard from './BusTripCard.jsx'
 
 // A bus on the map: its number in a badge, greyed out when its position is old.
 // Built from HTML (divIcon) rather than Leaflet's default pin image, so it can
@@ -18,6 +19,7 @@ function BusMarker({ bus, stale }) {
       html: `<span class="bus-marker-inner"><span class="bus-marker-badge">🚌 ${escapeHtml(bus.busNumber)}</span>${note}</span>`,
       iconSize: null,
       iconAnchor: [0, 0],
+      popupAnchor: [0, -18],
     })
   }, [bus.busNumber, stale, recordedAt])
 
@@ -29,7 +31,11 @@ function BusMarker({ bus, stale }) {
       zIndexOffset={stale ? 0 : 1000}
       title={`Bus ${bus.busNumber}${bus.routeName ? ` — ${bus.routeName}` : ''}`}
       alt={`Bus ${bus.busNumber}`}
-    />
+    >
+      <Popup className="bus-trip-popup" closeButton={false}>
+        <BusTripCard bus={bus} />
+      </Popup>
+    </Marker>
   )
 }
 
