@@ -15,6 +15,8 @@ function formatTime(timeStr) {
   return timeStr.slice(0, 5)
 }
 
+import { kuwaitToday } from '../lib/kuwaitTime.js'
+
 function SchedulePage() {
   const [routes, setRoutes] = useState([])
   const [routesError, setRoutesError] = useState(false)
@@ -25,6 +27,7 @@ function SchedulePage() {
   const [departures, setDepartures] = useState([])
   const [scheduleError, setScheduleError] = useState(false)
   const [scheduleLoading, setScheduleLoading] = useState(false)
+  const [tripsError, setTripsError] = useState(false)
 
   // Load active routes once on mount, sorted alphabetically by name.
   useEffect(() => {
@@ -48,34 +51,76 @@ function SchedulePage() {
     return () => { isMounted = false }
   }, [])
 
-  // Load schedules whenever the selected route changes.
+  // Load schedules and today's cancelled trips whenever the selected route changes.
   useEffect(() => {
     if (!selectedRouteId) return
 
     let isMounted = true
+    let channel = null
+    let intervalId = null
 
     const loadSchedule = async () => {
-      const { data, error } = await supabase
+      const { data: scheduleData, error: scheduleError } = await supabase
         .from('schedules')
-        .select('planned_start_time, days_of_week')
+        .select('id, planned_start_time, days_of_week')
         .eq('route_id', selectedRouteId)
 
       if (!isMounted) return
 
-      if (error) {
+      if (scheduleError) {
         setScheduleError(true)
         setScheduleLoading(false)
         return
       }
 
+      const scheduleIds = (scheduleData || []).map((s) => s.id)
+
+      const fetchCancelledScheduleIds = async () => {
+        if (scheduleIds.length === 0) {
+          setTripsError(false)
+          return new Set()
+        }
+
+        const { data: tripsData, error: tripsErr } = await supabase
+          .from('trips')
+          .select('schedule_id')
+          .in('schedule_id', scheduleIds)
+          .eq('status', 'cancelled')
+          .eq('trip_date', kuwaitToday())
+
+        if (tripsErr) {
+          setTripsError(true)
+          return null
+        }
+
+        setTripsError(false)
+        return new Set((tripsData || []).map((t) => t.schedule_id))
+      }
+
+      const cancelledScheduleIds = (await fetchCancelledScheduleIds()) || new Set()
+      if (!isMounted) return
+
       // Deduplicate rows that share the same time and days string.
-      const seen = new Set()
-      const unique = (data || []).filter((row) => {
+      const seen = new Map()
+      for (const row of (scheduleData || [])) {
         const key = `${row.planned_start_time}|${row.days_of_week ?? ''}`
-        if (seen.has(key)) return false
-        seen.add(key)
-        return true
-      })
+        const isCancelled = cancelledScheduleIds.has(row.id)
+        if (seen.has(key)) {
+          const existing = seen.get(key)
+          existing.scheduleIds.push(row.id)
+          if (isCancelled) {
+            existing.isCancelled = true
+          }
+        } else {
+          seen.set(key, {
+            ...row,
+            scheduleIds: [row.id],
+            isCancelled,
+          })
+        }
+      }
+
+      const unique = Array.from(seen.values())
 
       // Earliest departure first.
       unique.sort((a, b) => {
@@ -86,10 +131,50 @@ function SchedulePage() {
 
       setDepartures(unique)
       setScheduleLoading(false)
+
+      const refreshCancelledTrips = async () => {
+        if (!isMounted || scheduleIds.length === 0) return
+        const latestCancelledIds = await fetchCancelledScheduleIds()
+        if (!isMounted || !latestCancelledIds) return
+
+        setDepartures((prev) =>
+          prev.map((dep) => {
+            const isCancelled = dep.scheduleIds
+              ? dep.scheduleIds.some((id) => latestCancelledIds.has(id))
+              : latestCancelledIds.has(dep.id)
+            if (dep.isCancelled === isCancelled) return dep
+            return { ...dep, isCancelled }
+          })
+        )
+      }
+
+      // Realtime shows a cancellation straight away; the 5-second poll also runs in case the connection drops.
+      if (scheduleIds.length > 0) {
+        channel = supabase
+          .channel(`trips-changes-${selectedRouteId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'trips',
+              filter: `schedule_id=in.(${scheduleIds.join(',')})`,
+            },
+            refreshCancelledTrips
+          )
+          .subscribe()
+      }
+
+      intervalId = setInterval(refreshCancelledTrips, 5000)
     }
 
     loadSchedule()
-    return () => { isMounted = false }
+
+    return () => {
+      isMounted = false
+      if (intervalId) clearInterval(intervalId)
+      if (channel) supabase.removeChannel(channel)
+    }
   }, [selectedRouteId])
 
   const selectedRoute = routes.find((r) => r.id === selectedRouteId)
@@ -128,6 +213,7 @@ function SchedulePage() {
               setSelectedRouteId(e.target.value)
               setDepartures([])
               setScheduleError(false)
+              setTripsError(false)
               setScheduleLoading(Boolean(e.target.value))
             }}
           >
@@ -155,6 +241,12 @@ function SchedulePage() {
             </div>
           )}
 
+          {tripsError && (
+            <div className="alert alert-error" role="alert" id="schedule-trips-error">
+              <div>Today's changes could not be loaded.</div>
+            </div>
+          )}
+
           {!scheduleLoading && !scheduleError && departures.length === 0 && (
             <div className="schedule-empty-notice" id="schedule-no-departures">
               No departures scheduled for this route.
@@ -165,17 +257,34 @@ function SchedulePage() {
             <ul className="schedule-departure-list" aria-label="Departure times">
               {departures.map((dep, i) => (
                 <li
-                  key={i}
-                  className="schedule-departure-item"
+                  key={dep.id || i}
+                  className={`schedule-departure-item${dep.isCancelled ? ' schedule-departure-cancelled' : ''}`}
                   data-time={dep.planned_start_time}
                 >
                   <span className="schedule-departure-time">
-                    {formatTime(dep.planned_start_time)}
+                    {dep.isCancelled ? (
+                      <del>
+                        {formatTime(dep.planned_start_time)}
+                      </del>
+                    ) : (
+                      formatTime(dep.planned_start_time)
+                    )}
                   </span>
                   <span className="schedule-departure-sep" aria-hidden="true">—</span>
                   <span className="schedule-departure-days">
-                    {formatDays(dep.days_of_week)}
+                    {dep.isCancelled ? (
+                      <del>
+                        {formatDays(dep.days_of_week)}
+                      </del>
+                    ) : (
+                      formatDays(dep.days_of_week)
+                    )}
                   </span>
+                  {dep.isCancelled && (
+                    <span className="schedule-departure-status schedule-departure-cancelled-label">
+                      Cancelled today
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
