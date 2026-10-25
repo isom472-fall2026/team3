@@ -187,9 +187,7 @@ function SchedulePage() {
     return () => {
       isMounted = false
       if (intervalId) clearInterval(intervalId)
-      if (channel && typeof supabase.removeChannel === 'function') {
-        supabase.removeChannel(channel)
-      }
+      if (channel) supabase.removeChannel(channel)
     }
   }, [selectedRouteId])
 
