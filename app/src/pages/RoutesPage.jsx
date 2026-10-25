@@ -1,10 +1,26 @@
 import { useEffect, useState } from 'react'
+import RouteDepartureForm from '../components/RouteDepartureForm.jsx'
 import { supabase } from '../lib/supabase.js'
 
+// Hours with no digit at all ("TBD", "-", only spaces) tell a student nothing, so they
+// are treated as missing. Anything else is shown exactly as stored.
+function hasHours(hours) {
+  return typeof hours === 'string' && hours.trim() !== '' && /\d/.test(hours)
+}
+
 function RoutesPage() {
+  const [isStaff, setIsStaff] = useState(false);
+  useEffect(() => {
+    // check if the signed‑in user is staff via the DB function
+    supabase.rpc('is_staff').then(({ data, error }) => {
+      if (!error) setIsStaff(Boolean(data));
+    });
+  }, []);
   const [routes, setRoutes] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [stopsByRoute, setStopsByRoute] = useState({})
+  const [stopsError, setStopsError] = useState(false)
   const [routeTab, setRouteTab] = useState('on_campus') // 'on_campus' | 'off_campus'
 
   useEffect(() => {
@@ -20,6 +36,20 @@ function RoutesPage() {
       setLoadError(Boolean(error))
       setRoutes(error ? [] : data || [])
       setLoading(false)
+
+      // Stops are loaded separately, so the routes still show if only this fails.
+      const { data: rsData, error: rsError } = await supabase
+        .from('routes_stops')
+        .select('route_id, sequence_order, stops(name)')
+
+      if (!isMounted) return
+      setStopsError(Boolean(rsError))
+      const grouped = {}
+      for (const row of rsData || []) {
+        if (!grouped[row.route_id]) grouped[row.route_id] = []
+        grouped[row.route_id].push(row)
+      }
+      setStopsByRoute(grouped)
     }
 
     loadRoutes()
@@ -67,7 +97,7 @@ function RoutesPage() {
 
       {loadError && (
         <div className="alert alert-error" role="alert">
-          <div>Routes could not be loaded. Try again.</div>
+          <div>Route details could not be loaded. Try again.</div>
         </div>
       )}
 
@@ -79,10 +109,14 @@ function RoutesPage() {
               <div key={route.id} className="route-hours-card" data-route-id={route.id}>
                 <div className="route-hours-name">{route.name}</div>
                 <div className="route-hours-value">
-                  {route.operating_hours
+                  {hasHours(route.operating_hours)
                     ? route.operating_hours
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
+                <RouteEndpoints routeStops={stopsError ? null : (stopsByRoute[route.id] || [])} />
+                {isStaff && (
+                  <RouteDepartureForm route={route} />
+                )}
               </div>
             ))}
             {routesInTab.length === 0 && (
@@ -93,6 +127,54 @@ function RoutesPage() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Returns a display-safe stop name: trims whitespace; 'Unnamed stop' if blank.
+function resolveStopName(raw) {
+  if (!raw || raw.trim() === '') return 'Unnamed stop'
+  return raw.trim()
+}
+
+// Renders the start → end endpoint line inside a route card.
+function RouteEndpoints({ routeStops }) {
+  // null means Supabase failed to return the relation at all.
+  if (routeStops == null) {
+    return (
+      <div className="route-endpoints route-endpoints-error">
+        Stops could not be loaded.
+      </div>
+    )
+  }
+
+  if (routeStops.length === 0) {
+    return (
+      <div className="route-endpoints route-endpoints-unset">
+        Stops not set
+      </div>
+    )
+  }
+
+  // Sort by sequence_order to identify first and last stops reliably.
+  const sorted = [...routeStops].sort((a, b) => a.sequence_order - b.sequence_order)
+  const firstName = resolveStopName(sorted[0].stops?.name)
+
+  if (sorted.length === 1) {
+    return (
+      <div className="route-endpoints">
+        <span className="route-endpoint-stop">{firstName}</span>
+        <span className="route-endpoint-one-stop"> — This route has only one stop.</span>
+      </div>
+    )
+  }
+
+  const lastName = resolveStopName(sorted[sorted.length - 1].stops?.name)
+  return (
+    <div className="route-endpoints">
+      <span className="route-endpoint-stop">{firstName}</span>
+      <span className="route-endpoint-arrow" aria-hidden="true"> → </span>
+      <span className="route-endpoint-stop">{lastName}</span>
     </div>
   )
 }

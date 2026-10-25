@@ -1131,6 +1131,122 @@
 }
 
 /* =========================================================
+   Bus Route Schedule Lookup — Story 33
+   ========================================================= */
+
+.schedule-route-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 420px;
+}
+
+.schedule-route-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.schedule-route-select {
+  width: 100%;
+}
+
+.schedule-departures-section {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.schedule-departures-heading {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ku-black);
+  margin-bottom: 14px;
+}
+
+.schedule-departure-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-departure-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+.schedule-departure-time {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ku-black);
+  min-width: 44px;
+}
+
+.schedule-departure-sep {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.schedule-departure-days {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.schedule-empty-notice {
+  padding: 14px 16px;
+  background-color: var(--gray-50);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   Route start → end endpoints — Story 84
+   ========================================================= */
+
+.route-endpoints {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+.route-endpoint-stop {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.route-endpoint-arrow {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.route-endpoint-one-stop {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.route-endpoints-unset,
+.route-endpoints-error {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* =========================================================
    Live bus map (Story 31)
    ========================================================= */
 .bus-map {
