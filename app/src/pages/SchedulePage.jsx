@@ -159,24 +159,21 @@ function SchedulePage() {
         )
       }
 
-      // Realtime subscription for immediate updates, with a 5-second polling fallback.
-      if (typeof supabase.channel === 'function') {
-        try {
-          channel = supabase
-            .channel(`trips-changes-${selectedRouteId}`)
-            .on(
-              'postgres_changes',
-              { event: '*', schema: 'public', table: 'trips' },
-              () => {
-                refreshCancelledTrips()
-              }
-            )
-          if (channel && typeof channel.subscribe === 'function') {
-            channel.subscribe()
-          }
-        } catch {
-          channel = null
-        }
+      // Realtime shows a cancellation straight away; the 5-second poll also runs in case the connection drops.
+      if (scheduleIds.length > 0) {
+        channel = supabase
+          .channel(`trips-changes-${selectedRouteId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'trips',
+              filter: `schedule_id=in.(${scheduleIds.join(',')})`,
+            },
+            refreshCancelledTrips
+          )
+          .subscribe()
       }
 
       intervalId = setInterval(refreshCancelledTrips, 5000)
