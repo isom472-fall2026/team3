@@ -81,31 +81,20 @@ function SchedulePage() {
           return new Set()
         }
 
-        try {
-          let tripsQuery = supabase
-            .from('trips')
-            .select('schedule_id, status, trip_date')
+        const { data: tripsData, error: tripsErr } = await supabase
+          .from('trips')
+          .select('schedule_id')
+          .in('schedule_id', scheduleIds)
+          .eq('status', 'cancelled')
+          .eq('trip_date', kuwaitToday())
 
-          if (typeof tripsQuery.in === 'function') {
-            tripsQuery = tripsQuery.in('schedule_id', scheduleIds)
-          }
-
-          const { data: tripsData, error: tripsErr } = await tripsQuery
-          if (tripsErr) {
-            setTripsError(true)
-            return null
-          }
-
-          setTripsError(false)
-          return new Set(
-            (tripsData || [])
-              .filter(isTripCancelledToday)
-              .map((t) => t.schedule_id)
-          )
-        } catch {
+        if (tripsErr) {
           setTripsError(true)
           return null
         }
+
+        setTripsError(false)
+        return new Set((tripsData || []).map((t) => t.schedule_id))
       }
 
       const cancelledScheduleIds = (await fetchCancelledScheduleIds()) || new Set()
