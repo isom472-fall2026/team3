@@ -4,6 +4,7 @@ import BusesPage from './BusesPage.jsx'
 import HistoryPage from './HistoryPage.jsx'
 import StopsPage from './StopsPage.jsx'
 import SchedulePage from './SchedulePage.jsx'
+import RouteStopsPage from './RouteStopsPage.jsx'
 import StartTripPage from './StartTripPage.jsx'
 
 // Every signed-in page, in menu order. The first one is where a student lands after
@@ -13,6 +14,7 @@ export const pages = [
   { path: 'routes', label: '🗺️ Routes', component: RoutesPage },
   { path: 'map', label: '📍 Live map', component: MapPage },
   { path: 'schedule', label: '🕐 Schedule', component: SchedulePage },
+  { path: 'route-stops', label: '📋 Route stops', component: RouteStopsPage },
   { path: 'buses', label: '🚌 Buses', component: BusesPage },
   { path: 'history', label: '📊 Weekly Trip History (Admin)', component: HistoryPage, staffOnly: true },
   { path: 'stops', label: '🚏 Stops', component: StopsPage },
