@@ -1210,7 +1210,6 @@
   color: var(--text-muted);
 }
 
-.schedule-departure-item.cancelled,
 .schedule-departure-item.schedule-departure-cancelled {
   background-color: #fef2f2;
   border-color: #fecaca;
