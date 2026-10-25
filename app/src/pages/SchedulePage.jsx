@@ -279,7 +279,7 @@ function SchedulePage() {
                 >
                   <span className="schedule-departure-time">
                     {dep.isCancelled ? (
-                      <del style={{ textDecoration: 'line-through' }}>
+                      <del>
                         {formatTime(dep.planned_start_time)}
                       </del>
                     ) : (
