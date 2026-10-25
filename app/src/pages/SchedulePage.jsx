@@ -15,24 +15,7 @@ function formatTime(timeStr) {
   return timeStr.slice(0, 5)
 }
 
-function getTodayDateStrings() {
-  const d = new Date()
-  const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-  try {
-    const kuwait = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kuwait' }).format(d)
-    return [local, kuwait]
-  } catch {
-    return [local]
-  }
-}
-
-function isTripCancelledToday(trip) {
-  // Only exact lower-case 'cancelled' is treated as cancelled; 'Cancelled' or 'CANCELLED' are ignored.
-  if (!trip || trip.status !== 'cancelled' || !trip.trip_date) return false
-  const tripDateStr = String(trip.trip_date).split('T')[0].trim()
-  if (!tripDateStr) return false
-  return getTodayDateStrings().includes(tripDateStr)
-}
+import { kuwaitToday } from '../lib/kuwaitTime.js'
 
 function SchedulePage() {
   const [routes, setRoutes] = useState([])
