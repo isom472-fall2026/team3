@@ -4,6 +4,7 @@ import BusesPage from './BusesPage.jsx'
 import HistoryPage from './HistoryPage.jsx'
 import StopsPage from './StopsPage.jsx'
 import SchedulePage from './SchedulePage.jsx'
+import DelaysPage from './DelaysPage.jsx'
 import RouteStopsPage from './RouteStopsPage.jsx'
 import StartTripPage from './StartTripPage.jsx'
 import ActiveTripBusPage from './ActiveTripBusPage.jsx'
@@ -15,6 +16,7 @@ export const pages = [
   { path: 'routes', label: '🗺️ Routes', component: RoutesPage },
   { path: 'map', label: '📍 Live map', component: MapPage },
   { path: 'schedule', label: '🕐 Schedule', component: SchedulePage },
+  { path: 'delays', label: '⏱️ Delays', component: DelaysPage },
   { path: 'route-stops', label: '📋 Route stops', component: RouteStopsPage },
   { path: 'buses', label: '🚌 Buses', component: BusesPage },
   { path: 'history', label: '📊 Weekly Trip History (Admin)', component: HistoryPage, staffOnly: true },

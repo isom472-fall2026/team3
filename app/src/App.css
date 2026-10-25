@@ -1211,6 +1211,30 @@
 }
 
 /* =========================================================
+   Trip delay — Story 30
+   ========================================================= */
+.trip-delay {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.trip-delay-minutes {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--error-text);
+}
+
+.trip-delay-none,
+.trip-delay-cancelled {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ku-black);
+}
+
+/* =========================================================
    Route stops — Story 29
    ========================================================= */
 .route-stops-list {
