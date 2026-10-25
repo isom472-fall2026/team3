@@ -61,6 +61,15 @@ function BusTripCard({ bus }) {
           return
         }
 
+        // bus_id or schedule_id points to a row that cannot be read (#48 criterion 12)
+        if (!trip.buses || !trip.schedules) {
+          if (isMounted) {
+            setError(true)
+            setLoading(false)
+          }
+          return
+        }
+
         const routeId = trip.schedules?.routes?.id || trip.schedules?.route_id
         const scheduleId = trip.schedule_id
 
