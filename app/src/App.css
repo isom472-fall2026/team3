@@ -1216,11 +1216,8 @@
   border-color: #fecaca;
 }
 
-.schedule-departure-item.cancelled .schedule-departure-time,
-.schedule-departure-item.cancelled .schedule-departure-days,
 .schedule-departure-item.schedule-departure-cancelled .schedule-departure-time,
 .schedule-departure-item.schedule-departure-cancelled .schedule-departure-days {
-  text-decoration: line-through;
   color: var(--text-muted);
 }
 
