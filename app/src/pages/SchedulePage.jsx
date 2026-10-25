@@ -289,7 +289,7 @@ function SchedulePage() {
                   <span className="schedule-departure-sep" aria-hidden="true">—</span>
                   <span className="schedule-departure-days">
                     {dep.isCancelled ? (
-                      <del style={{ textDecoration: 'line-through' }}>
+                      <del>
                         {formatDays(dep.days_of_week)}
                       </del>
                     ) : (
