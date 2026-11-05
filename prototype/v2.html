@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KU Bus Tracker — Prototype v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens: the same names and values as app/src/index.css, so screens can be built as drawn.
+   Three are new and only give the existing colours a job: route lines and the bus. */
+:root {
+  --ku-blue: #0EACE3;
+  --ku-gold: #F5D735;
+  --ku-black: #000000;
+  --ku-blue-text: #08739A;
+  --ku-blue-50: #E7F7FD;
+  --ku-blue-100: #CFEFFA;
+  --ku-gold-text: #7A6400;
+  --ku-gold-light: #FDF7D7;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --bg-main: var(--gray-100);
+  --bg-card: var(--white);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  --focus-ring: rgba(14, 172, 227, 0.35);
+  --success-bg: #ecfdf5; --success-text: #065f46; --success-strong: #059669;
+  --error-bg: #fef2f2; --error-border: #fecaca; --error-text: #991b1b;
+  --warning-bg: #fffbeb; --warning-border: #fde68a; --warning-text: #92400e; --warning-strong: #d97706;
+
+  --route-south: var(--ku-blue);
+  --route-north: var(--ku-black);
+  --bus: var(--ku-gold);
+
+  --font: 'Overpass', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ku-blue); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+
+/* ---------- Page: notes on the left, phone on the right ---------- */
+.studio {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) auto;
+  gap: 56px;
+  justify-content: center;
+  align-items: start;
+  padding: 48px 32px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.notes { position: sticky; top: 32px; }
+.notes h1 { font-size: 30px; line-height: 1.1; font-weight: 800; letter-spacing: -0.01em; }
+.notes .lede { margin-top: 10px; color: var(--text-secondary); font-size: 15px; max-width: 46ch; }
+.notes h2 { font-size: 15px; font-weight: 800; margin: 28px 0 8px; }
+
+.role { display: inline-flex; margin-top: 18px; border: 2px solid var(--ku-black); border-radius: 999px; padding: 2px; }
+.role button { border: 0; background: none; padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 14px; }
+.role button[aria-pressed="true"] { background: var(--ku-black); color: var(--white); }
+
+.screenlist { list-style: none; border-top: 1px solid var(--border-color); }
+.screenlist li { border-bottom: 1px solid var(--border-color); }
+.screenlist button {
+  width: 100%; text-align: left; background: none; border: 0;
+  padding: 10px 4px; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px;
+}
+.screenlist .t { font-weight: 600; font-size: 15px; grid-column: 1; grid-row: 1; }
+.screenlist .s { color: var(--text-muted); font-size: 13px; grid-column: 1; grid-row: 2; }
+.screenlist .st { font-size: 12px; color: var(--ku-blue-text); grid-column: 2; grid-row: 1 / span 2; align-self: center; text-align: right; }
+.screenlist button[aria-current="true"] .t { text-decoration: underline; text-decoration-color: var(--ku-blue); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+.screenlist li.staff-only[hidden] { display: none; }
+
+.rules { list-style: none; font-size: 14px; color: var(--text-secondary); }
+.rules li { padding: 6px 0 6px 18px; position: relative; }
+.rules li::before { content: ""; position: absolute; left: 0; top: 13px; width: 8px; height: 8px; border-radius: 50%; background: var(--ku-black); }
+.rules strong { color: var(--text-primary); font-weight: 600; }
+
+.swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sw { font-size: 12px; color: var(--text-secondary); }
+.sw i { display: block; height: 36px; border-radius: 8px; margin-bottom: 4px; border: 1px solid var(--border-color); }
+
+/* ---------- Phone ---------- */
+.phone {
+  width: 390px; height: 820px;
+  background: var(--bg-main);
+  border: 10px solid var(--ku-black);
+  border-radius: 46px;
+  overflow: hidden;
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.screen-picker { display: none; }
+
+.appbar {
+  background: var(--white);
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+.appbar img { width: 28px; height: 28px; object-fit: contain; }
+.appbar .name { font-weight: 800; font-size: 17px; line-height: 1; }
+.appbar .who { margin-left: auto; font-size: 12px; color: var(--text-muted); text-align: right; line-height: 1.3; }
+.appbar .back { border: 0; background: none; display: flex; align-items: center; gap: 4px; font-weight: 600; font-size: 15px; padding: 4px 0; }
+
+.view { flex: 1; overflow-y: auto; display: none; position: relative; }
+.view.on { display: block; }
+.pad { padding: 18px; }
+.title { font-size: 22px; font-weight: 800; line-height: 1.2; }
+.sub { color: var(--text-secondary); font-size: 14px; margin-top: 2px; }
+.section-h { font-size: 15px; font-weight: 800; margin: 22px 0 6px; }
+
+.tabbar {
+  flex-shrink: 0; background: var(--white); border-top: 1px solid var(--gray-200);
+  display: flex; padding: 6px 6px 14px;
+}
+.tabbar button {
+  flex: 1; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 6px 0; border-radius: 12px;
+}
+.tabbar svg { width: 24px; height: 24px; }
+.tabbar button[aria-current="true"] { color: var(--ku-black); }
+.tabbar button[aria-current="true"] svg { background: var(--ku-blue); border-radius: 8px; padding: 2px; box-sizing: content-box; margin: -2px; }
+.tabbar button[hidden] { display: none; }
+
+/* Route badge: the route's own colour, used everywhere a route is named */
+.rb { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13px; }
+.rb::before { content: ""; width: 14px; height: 6px; border-radius: 3px; background: var(--c, var(--route-south)); }
+.rb.north { --c: var(--route-north); }
+
+/* Bus disc: gold always means a bus */
+.busdot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--bus); border: 2.5px solid var(--ku-black); vertical-align: -2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; padding: 0 18px; border-radius: 10px;
+  border: 2px solid var(--ku-black); background: var(--ku-black); color: var(--white);
+  font-weight: 600; font-size: 15px;
+}
+.btn.quiet { background: var(--white); color: var(--ku-black); }
+.btn.danger { background: var(--white); color: var(--error-text); border-color: var(--error-text); }
+.btn.small { min-height: 36px; padding: 0 12px; font-size: 14px; border-radius: 8px; }
+.btn.full { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 2px solid var(--ku-black); background: var(--white); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 14px; min-height: 36px; }
+.chip[aria-pressed="true"] { background: var(--ku-blue); }
+
+.seg { display: flex; background: var(--gray-200); border-radius: 12px; padding: 3px; }
+.seg button { flex: 1; border: 0; background: none; padding: 8px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--text-secondary); }
+.seg button[aria-pressed="true"] { background: var(--white); color: var(--text-primary); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+.notice { border-radius: 12px; padding: 12px 14px; font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+.notice b { display: block; font-weight: 800; }
+.notice.warn { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
+.notice.err { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+.notice.ok { background: var(--success-bg); color: var(--success-text); }
+.notice svg { flex-shrink: 0; margin-top: 1px; }
+
+.rows { list-style: none; background: var(--white); border-radius: 14px; overflow: hidden; }
+.rows > li { padding: 14px 16px; border-bottom: 1px solid var(--gray-200); }
+.rows > li:last-child { border-bottom: 0; }
+.rows button.rowbtn { all: unset; display: block; width: 100%; cursor: pointer; }
+.rows button.rowbtn:focus-visible { outline: 3px solid var(--ku-blue); outline-offset: 4px; border-radius: 6px; }
+
+/* ---------- Next buses: the board ---------- */
+.stoppick { display: flex; align-items: center; justify-content: space-between; background: var(--white); border-radius: 14px; padding: 12px 16px; border: 0; width: 100%; text-align: left; }
+.stoppick .l { font-size: 12px; color: var(--text-muted); }
+.stoppick .v { font-weight: 800; font-size: 17px; }
+
+.next {
+  margin-top: 14px; background: var(--ku-black); color: var(--white);
+  border-radius: 20px; padding: 18px 18px 16px; position: relative; overflow: hidden;
+}
+.next .rb { color: var(--white); }
+.next .rb::before { background: var(--ku-blue); }
+.next .to { font-size: 15px; margin-top: 4px; color: rgba(255,255,255,.8); }
+.next .count { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; }
+.next .count .n { font-size: 84px; font-weight: 800; line-height: .9; letter-spacing: -0.03em; }
+.next .count .u { font-size: 22px; font-weight: 600; }
+.next .meta { margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.75); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.next .meta .busdot { border-color: var(--white); }
+/* The approach strip: three stops before yours, the bus moving between them */
+.approach { margin-top: 16px; position: relative; height: 34px; }
+.approach .line { position: absolute; left: 6px; right: 6px; top: 10px; height: 6px; border-radius: 3px; background: var(--ku-blue); }
+.approach .stop { position: absolute; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--ku-black); border: 4px solid var(--white); transform: translateX(-50%); }
+.approach .stop.you { width: 22px; height: 22px; top: 2px; border-color: var(--ku-blue); background: var(--white); }
+.approach .bus { position: absolute; top: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--bus); border: 3px solid var(--white); transform: translateX(-50%); left: 30%; animation: approach 6s ease-in-out infinite alternate; }
+.approach .lbl { position: absolute; top: 24px; font-size: 11px; color: rgba(255,255,255,.7); transform: translateX(-50%); white-space: nowrap; }
+@keyframes approach { from { left: 26%; } to { left: 38%; } }
+
+.dep { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 10px; }
+.dep .m { font-size: 26px; font-weight: 800; line-height: 1; }
+.dep .m small { font-size: 13px; font-weight: 600; }
+.dep .d { font-size: 14px; }
+.dep .d .x { color: var(--text-muted); font-size: 13px; }
+.tag { font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.tag.late { background: var(--warning-bg); color: var(--warning-text); }
+.tag.cancel { background: var(--error-bg); color: var(--error-text); }
+.tag.on { background: var(--success-bg); color: var(--success-text); }
+.tag.muted { background: var(--gray-100); color: var(--text-secondary); }
+.dep.cancelled .m, .dep.cancelled .d > span:first-child { text-decoration: line-through; color: var(--text-muted); }
+
+/* ---------- Map ---------- */
+.mapwrap { position: absolute; inset: 0; }
+.mapwrap svg.map { width: 100%; height: 100%; display: block; background: #e9eef3; }
+.map-top { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; }
+.map-top .chips .chip { box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.mapbus { cursor: pointer; }
+.mapbus:focus-visible circle.ring { stroke: var(--ku-blue); stroke-width: 6; }
+.mapbus.hide { display: none; }
+.route-path.dim { opacity: .15; }
+
+.sheet {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--white); border-radius: 22px 22px 0 0;
+  box-shadow: 0 -6px 24px rgba(0,0,0,.14);
+  padding: 10px 18px 18px;
+  transform: translateY(105%); transition: transform .28s cubic-bezier(.2,.8,.2,1);
+}
+.sheet.open { transform: translateY(0); }
+.sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--gray-200); margin: 0 auto 12px; }
+.sheet .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.sheet .close { border: 0; background: var(--gray-100); border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-top: 14px; font-size: 14px; }
+.facts dt { font-size: 12px; color: var(--text-muted); }
+.facts dd { font-weight: 600; }
+
+/* ---------- Route line diagram ---------- */
+.linewrap { background: var(--white); border-radius: 14px; padding: 6px 16px; margin-top: 14px; }
+.linediagram { list-style: none; position: relative; }
+.linediagram li { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: center; min-height: 56px; position: relative; }
+.linediagram li::before { content: ""; position: absolute; left: 11px; top: 0; bottom: 0; width: 6px; background: var(--c, var(--route-south)); }
+.linediagram li:first-child::before { top: 50%; }
+.linediagram li.passed::before { background: var(--border-color); }
+.linediagram li:last-child::before { bottom: 50%; }
+.linediagram .dot { width: 18px; height: 18px; margin-left: 5px; border-radius: 50%; background: var(--white); border: 4px solid var(--ku-black); position: relative; z-index: 1; }
+.linediagram li.end .dot { width: 24px; height: 24px; margin-left: 2px; background: var(--ku-black); border-color: var(--ku-black); box-shadow: inset 0 0 0 4px var(--white); }
+.linediagram li.passed .dot { border-color: var(--text-muted); }
+.linediagram li.passed .s { color: var(--text-muted); }
+.linediagram .s { font-weight: 600; font-size: 15px; line-height: 1.25; }
+.linediagram .s small { display: block; font-weight: 400; font-size: 12px; color: var(--text-muted); }
+.linediagram .t { font-size: 14px; font-weight: 600; text-align: right; }
+.linediagram .t small { display: block; font-weight: 400; font-size: 12px; color: var(--text-muted); }
+.linediagram .busmark { position: absolute; left: 2px; z-index: 2; width: 24px; height: 24px; border-radius: 50%; background: var(--bus); border: 3px solid var(--ku-black); top: -12px; }
+
+.routerow { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
+.routerow .nm { font-weight: 800; font-size: 16px; }
+.routerow .ends { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 13px; color: var(--text-secondary); margin: 6px 0 2px; }
+.routerow .ends > span:first-child { grid-row: 2; }
+.routerow .ends > span:last-child { grid-row: 2; grid-column: 2; text-align: right; }
+.routerow .ends .seg-line { grid-row: 1; grid-column: 1 / -1; height: 4px; margin: 6px 6px; border-radius: 2px; background: var(--c, var(--route-south)); position: relative; }
+.routerow .ends .seg-line::before, .routerow .ends .seg-line::after { content: ""; position: absolute; top: -4px; width: 12px; height: 12px; border-radius: 50%; background: var(--white); border: 3px solid var(--ku-black); }
+.routerow .ends .seg-line::before { left: -6px; }
+.routerow .ends .seg-line::after { right: -6px; background: var(--ku-black); }
+.routerow .hrs { font-size: 13px; color: var(--text-muted); }
+
+/* ---------- Forms ---------- */
+.field { margin-top: 14px; }
+.field label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.field .hint { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.input { width: 100%; min-height: 44px; border: 2px solid var(--border-color); border-radius: 10px; padding: 8px 12px; background: var(--white); font-size: 16px; }
+.input:focus { outline: none; border-color: var(--ku-blue); box-shadow: 0 0 0 4px var(--focus-ring); }
+.field.bad .input { border-color: var(--error-text); }
+.field .msg { display: none; color: var(--error-text); font-size: 13px; font-weight: 600; margin-top: 4px; }
+.field.bad .msg { display: flex; gap: 6px; align-items: center; }
+.radios { display: flex; gap: 8px; }
+.radios label { flex: 1; border: 2px solid var(--border-color); border-radius: 10px; min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-weight: 600; font-size: 14px; background: var(--white); margin: 0; cursor: pointer; }
+.radios label:has(input:checked) { border-color: var(--ku-black); background: var(--ku-blue-50); }
+.radios input { accent-color: var(--ku-black); width: 18px; height: 18px; }
+.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.searchbox { position: relative; }
+.searchbox svg { position: absolute; left: 12px; top: 12px; color: var(--text-muted); }
+.searchbox .input { padding-left: 40px; }
+.stoprow { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: center; }
+.stoprow .nm { font-weight: 800; }
+.stoprow .ar { font-size: 13px; color: var(--text-secondary); }
+.stoprow .rt { grid-column: 1; display: flex; gap: 10px; margin-top: 4px; }
+.stoprow .nloc { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+/* ---------- Staff ---------- */
+.trip { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: start; }
+.trip .when { font-size: 22px; font-weight: 800; line-height: 1; }
+.trip .info { font-size: 14px; color: var(--text-secondary); }
+.trip .acts { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.trip .acts select { min-height: 36px; border-radius: 8px; border: 2px solid var(--border-color); padding: 0 8px; background: var(--white); font-size: 14px; }
+.trip .ended { grid-column: 1 / -1; font-size: 13px; color: var(--text-muted); }
+.pill { font-size: 12px; font-weight: 800; border-radius: 999px; padding: 3px 10px; }
+.pill.active { background: var(--ku-blue-100); color: var(--ku-blue-text); }
+.pill.scheduled { background: var(--gray-100); color: var(--text-secondary); }
+.pill.cancelled { background: var(--error-bg); color: var(--error-text); }
+.pill.completed { background: var(--success-bg); color: var(--success-text); }
+
+.fleet { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; }
+.fleet .b { font-weight: 800; }
+.fleet .p { font-size: 13px; color: var(--text-muted); }
+.fleet select { min-height: 36px; border-radius: 8px; border: 2px solid var(--border-color); padding: 0 8px; background: var(--white); font-size: 14px; }
+
+/* Dialog: in-page, never the browser's alert() */
+.scrim { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: flex-end; z-index: 20; }
+.scrim.open { display: flex; }
+.dialog { background: var(--white); width: 100%; border-radius: 22px 22px 0 0; padding: 22px 18px 20px; }
+.dialog h3 { font-size: 19px; font-weight: 800; line-height: 1.25; }
+.dialog p { color: var(--text-secondary); font-size: 14px; margin-top: 6px; }
+.dialog .acts { display: flex; gap: 10px; margin-top: 18px; }
+.dialog .acts .btn { flex: 1; }
+
+.toast { position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 30; background: var(--ku-black); color: var(--white); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-weight: 600; display: flex; gap: 10px; align-items: center; transform: translateY(140%); transition: transform .25s ease; }
+.toast.show { transform: translateY(0); }
+.toast svg { color: var(--ku-gold); flex-shrink: 0; }
+
+/* ---------- Sign in ---------- */
+.signin { min-height: 100%; display: flex; flex-direction: column; padding: 28px 22px; background: var(--white); }
+.signin .crest { display: flex; align-items: center; gap: 12px; }
+.signin .crest img { width: 52px; height: 52px; object-fit: contain; }
+.signin h2 { font-size: 34px; font-weight: 800; line-height: 1.05; margin-top: 34px; letter-spacing: -0.02em; }
+.signin .lines { margin: 22px 0 6px; height: 36px; position: relative; }
+.signin .lines span { position: absolute; left: 0; right: 0; height: 6px; border-radius: 3px; }
+.signin .lines span:nth-child(1) { top: 6px; background: var(--route-south); right: 18%; }
+.signin .lines span:nth-child(2) { top: 22px; background: var(--route-north); left: 22%; }
+.signin .lines i { position: absolute; top: 0; left: 58%; width: 20px; height: 20px; border-radius: 50%; background: var(--bus); border: 3px solid var(--ku-black); }
+.signin .or { text-align: center; color: var(--text-muted); font-size: 13px; margin: 14px 0; }
+.signin .fine { margin-top: auto; padding-top: 18px; font-size: 12px; color: var(--text-muted); }
+.linkbtn { border: 0; background: none; color: var(--ku-blue-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; padding: 4px 0; }
+
+/* ---------- States ---------- */
+.skel { background: linear-gradient(90deg, var(--gray-200) 0%, var(--gray-100) 50%, var(--gray-200) 100%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: 6px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.empty { text-align: center; padding: 28px 18px; background: var(--white); border-radius: 14px; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: var(--success-bg); color: var(--success-strong); display: grid; place-items: center; margin: 0 auto 10px; }
+.empty b { display: block; font-size: 17px; font-weight: 800; }
+.empty p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Phone width: the prototype becomes the app ---------- */
+@media (max-width: 860px) {
+  .studio { grid-template-columns: 1fr; padding: 0; gap: 0; }
+  .phone { width: 100%; height: 100vh; height: 100dvh; border: 0; border-radius: 0; order: -1; }
+  .notes { position: static; padding: 28px 16px 40px; }
+  .screen-picker { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: var(--ku-black); color: var(--white); font-size: 13px; flex-shrink: 0; }
+  .screen-picker select { flex: 1; min-height: 34px; border-radius: 8px; border: 0; padding: 0 8px; color: var(--ku-black); }
+}
+</style>
+</head>
+<body>
+<div class="studio">
+
+  <!-- ===================== Design notes ===================== -->
+  <aside class="notes" aria-label="Design notes">
+    <h1>KU Bus Tracker, prototype v2</h1>
+    <p class="lede">Every screen a student or coordinator uses in Phases 4–6, drawn with the colours already in <code>index.css</code>. Tap anything in the phone: the map buses, the routes, the forms and the cancel button all respond.</p>
+
+    <div class="role" role="group" aria-label="View as">
+      <button type="button" data-role="student" aria-pressed="true">Student</button>
+      <button type="button" data-role="staff" aria-pressed="false">Coordinator</button>
+    </div>
+
+    <h2>Screens</h2>
+    <ul class="screenlist" id="screenlist"></ul>
+
+    <h2>Five rules for every page</h2>
+    <ul class="rules">
+      <li><strong>Gold means a bus.</strong> KU gold is used for nothing else, so a student spots a bus at a glance.</li>
+      <li><strong>Each route keeps its colour.</strong> South is KU blue, North is KU black, on the map, the badges and the line diagram.</li>
+      <li><strong>Times are the biggest thing on the screen.</strong> Minutes away beats the clock time, because that is the question students ask.</li>
+      <li><strong>Lists, not stacks of cards.</strong> Rows with dividers inside one white panel. A card is used only when it is the one thing on screen.</li>
+      <li><strong>Every list has three more states.</strong> Loading, empty and error each say what is happening and what to do next. A database error never reaches the screen.</li>
+    </ul>
+
+    <h2>Colour</h2>
+    <div class="swatches">
+      <div class="sw"><i style="background:var(--ku-blue)"></i>--ku-blue, South route and selection</div>
+      <div class="sw"><i style="background:var(--ku-black)"></i>--ku-black, North route and buttons</div>
+      <div class="sw"><i style="background:var(--ku-gold)"></i>--ku-gold, buses only</div>
+    </div>
+    <p class="lede" style="margin-top:14px;font-size:13px">Type is Overpass, a face drawn from road-sign lettering, with tabular numbers so times line up. If the team prefers no web font, the app's system font works with the same sizes.</p>
+  </aside>
+
+  <!-- ===================== Phone ===================== -->
+  <div class="phone" id="phone">
+    <div class="screen-picker"><label for="pick">Screen</label><select id="pick"></select></div>
+
+    <!-- Sign in -->
+    <section class="view" data-screen="signin" aria-label="Sign in">
+      <div class="signin">
+        <div class="crest">
+          <img src="../app/public/ku-shield.png" onerror="this.onerror=null;this.src='../ku-shield.png'" alt="Kuwait University">
+          <div><div style="font-weight:800">Kuwait University</div><div style="font-size:13px;color:var(--text-muted)">Shadadiya campus buses</div></div>
+        </div>
+        <h2>Where is my bus?</h2>
+        <div class="lines" aria-hidden="true"><span></span><span></span><i></i></div>
+        <div class="field"><label for="em">KU email</label><input class="input" id="em" type="email" value="sara.alhajri@ku.edu.kw"></div>
+        <div class="field"><label for="pw">Password</label><input class="input" id="pw" type="password" value="password"></div>
+        <button class="btn full" style="margin-top:18px" data-go="next">Sign in</button>
+        <div class="or">or</div>
+        <button class="btn quiet full" data-go="next">Continue as a guest</button>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px;text-align:center">Guests see routes, stops and live buses. Signing in is only needed for staff tools.</p>
+        <p class="fine">No account yet? <button class="linkbtn" type="button">Sign up with your KU email</button></p>
+      </div>
+    </section>
+
+    <header class="appbar" id="appbar">
+      <img src="../app/public/ku-shield.png" onerror="this.onerror=null;this.src='../ku-shield.png'" alt="">
+      <span class="name">KU Bus Tracker</span>
+      <span class="who" id="who">Sara Al-Hajri<br>Student</span>
+    </header>
+
+    <!-- Next buses -->
+    <section class="view" data-screen="next" aria-label="Next buses">
+      <div class="pad">
+        <button class="stoppick" type="button" data-go="stops">
+          <span><span class="l">Your stop</span><br><span class="v">Central Library</span></span>
+          <span style="font-size:14px;color:var(--ku-blue-text);font-weight:600">Change</span>
+        </button>
+
+        <div class="next">
+          <span class="rb">South route</span>
+          <div class="to">to Law South</div>
+          <div class="count"><span class="n num" id="mins">4</span><span class="u">min</span></div>
+          <div class="approach" aria-label="The bus is two stops away">
+            <div class="line"></div>
+            <span class="stop" style="left:6%"></span><span class="lbl" style="left:0;transform:none">Engineering S.</span>
+            <span class="stop" style="left:48%"></span><span class="lbl" style="left:48%">Science</span>
+            <span class="stop you" style="left:92%"></span><span class="lbl" style="left:auto;right:0;transform:none;color:#fff;font-weight:600">You</span>
+            <span class="bus" aria-hidden="true"></span>
+          </div>
+          <div class="meta" style="margin-top:22px">
+            <span><span class="busdot"></span> Bus 12</span>
+            <span>Due 09:24</span>
+            <span>Location updated 15 s ago</span>
+          </div>
+        </div>
+
+        <h3 class="section-h">Later from Central Library</h3>
+        <ul class="rows">
+          <li class="dep"><span class="m num">18<small> min</small></span><span class="d"><span class="rb north">North route</span><br><span class="x">to Engineering North, due 09:38</span></span><span class="tag late">6 min late</span></li>
+          <li class="dep cancelled"><span class="m num">24<small> min</small></span><span class="d"><span class="rb">South route</span><br><span class="x">to Law South, 09:44</span></span><span class="tag cancel">Cancelled</span></li>
+          <li class="dep"><span class="m num">44<small> min</small></span><span class="d"><span class="rb">South route</span><br><span class="x">to Law South, due 10:04</span></span><span class="tag muted">Scheduled</span></li>
+        </ul>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:10px">Times update on their own. Late and cancelled trips come from the coordinator and the bus's location.</p>
+      </div>
+    </section>
+
+    <!-- Live map -->
+    <section class="view" data-screen="map" aria-label="Live map">
+      <div class="mapwrap">
+        <svg class="map" viewBox="0 0 370 640" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Campus map with two routes and three buses">
+          <!-- campus ground and buildings, drawn plainly so the routes carry the colour -->
+          <rect width="370" height="640" fill="#e9eef3"/>
+          <path d="M0 140 H370 M0 470 H370 M70 0 V640 M300 0 V640" stroke="#fff" stroke-width="14"/>
+          <g fill="#d5dde6">
+            <rect x="92" y="40" width="80" height="70" rx="6"/><rect x="190" y="40" width="90" height="70" rx="6"/>
+            <rect x="92" y="170" width="60" height="120" rx="6"/><rect x="170" y="170" width="110" height="60" rx="6"/>
+            <rect x="170" y="250" width="110" height="80" rx="6"/><rect x="92" y="310" width="60" height="130" rx="6"/>
+            <rect x="170" y="350" width="110" height="90" rx="6"/><rect x="92" y="500" width="90" height="90" rx="6"/>
+            <rect x="200" y="500" width="80" height="90" rx="6"/>
+          </g>
+          <g font-family="Overpass, sans-serif" font-size="10" fill="#64748b" font-weight="600">
+            <text x="132" y="80" text-anchor="middle">Engineering</text>
+            <text x="235" y="80" text-anchor="middle">Science</text>
+            <text x="225" y="294" text-anchor="middle">Central Library</text>
+            <text x="225" y="400" text-anchor="middle">Business</text>
+            <text x="137" y="550" text-anchor="middle">Law</text>
+            <text x="240" y="550" text-anchor="middle">Sports</text>
+          </g>
+          <!-- routes -->
+          <path class="route-path" data-route="south" d="M70 128 H300 V470 H70" fill="none" stroke="var(--route-south)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+          <path class="route-path" data-route="north" d="M80 480 V152 H290" fill="none" stroke="var(--route-north)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="0" />
+          <!-- stops -->
+          <g fill="#fff" stroke="#000" stroke-width="3">
+            <circle cx="70" cy="128" r="6"/><circle cx="300" cy="128" r="6"/><circle cx="300" cy="290" r="6"/>
+            <circle cx="300" cy="400" r="6"/><circle cx="70" cy="470" r="6"/>
+            <circle cx="80" cy="480" r="6"/><circle cx="80" cy="300" r="6"/><circle cx="80" cy="152" r="6"/>
+          </g>
+          <!-- buses -->
+          <g class="mapbus" data-route="south" data-bus="12" tabindex="0" role="button" aria-label="Bus 12, South route">
+            <circle class="ring" cx="300" cy="215" r="15" fill="var(--bus)" stroke="#000" stroke-width="3.5"/>
+            <text x="300" y="219.5" text-anchor="middle" font-family="Overpass, sans-serif" font-size="12" font-weight="800">12</text>
+          </g>
+          <g class="mapbus" data-route="south" data-bus="7" tabindex="0" role="button" aria-label="Bus 7, South route, location may be out of date">
+            <circle class="ring" cx="190" cy="470" r="15" fill="var(--bus)" stroke="#000" stroke-width="3.5" stroke-dasharray="5 3"/>
+            <text x="190" y="474.5" text-anchor="middle" font-family="Overpass, sans-serif" font-size="12" font-weight="800">7</text>
+          </g>
+          <g class="mapbus" data-route="north" data-bus="21" tabindex="0" role="button" aria-label="Bus 21, North route">
+            <circle class="ring" cx="80" cy="380" r="15" fill="var(--bus)" stroke="#000" stroke-width="3.5"/>
+            <text x="80" y="384.5" text-anchor="middle" font-family="Overpass, sans-serif" font-size="12" font-weight="800">21</text>
+          </g>
+        </svg>
+        <div class="map-top">
+          <div class="seg" role="group" aria-label="Map area">
+            <button type="button" aria-pressed="true">On campus</button>
+            <button type="button" aria-pressed="false">Off campus</button>
+          </div>
+          <div class="chips" role="group" aria-label="Show buses on">
+            <button class="chip" type="button" data-filter="all" aria-pressed="true">All routes</button>
+            <button class="chip" type="button" data-filter="south" aria-pressed="false"><span class="rb">South</span></button>
+            <button class="chip" type="button" data-filter="north" aria-pressed="false"><span class="rb north">North</span></button>
+          </div>
+        </div>
+
+        <div class="sheet" id="sheet" aria-live="polite">
+          <div class="grab"></div>
+          <div class="head">
+            <div>
+              <span class="rb" id="sh-route">South route</span>
+              <div class="title" style="margin-top:4px" id="sh-title">Bus 12 to Law South</div>
+            </div>
+            <button class="close" type="button" aria-label="Close" id="sh-close"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+          <div id="sh-warn"></div>
+          <dl class="facts">
+            <div><dt>Next stop</dt><dd id="sh-next">Central Library</dd></div>
+            <div><dt>Scheduled there</dt><dd class="num" id="sh-time">09:24, on time</dd></div>
+            <div><dt>Plate</dt><dd class="num" id="sh-plate">KU 4512</dd></div>
+            <div><dt>Location updated</dt><dd id="sh-upd">15 seconds ago</dd></div>
+          </dl>
+          <button class="btn quiet full" style="margin-top:16px" data-go="route">See the whole route</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Routes -->
+    <section class="view" data-screen="routes" aria-label="Routes">
+      <div class="pad">
+        <h2 class="title">Routes</h2>
+        <div class="seg" style="margin-top:12px" role="group" aria-label="Route type">
+          <button type="button" aria-pressed="true">On campus</button>
+          <button type="button" aria-pressed="false">Off campus</button>
+        </div>
+        <ul class="rows" style="margin-top:14px">
+          <li><button class="rowbtn" type="button" data-go="route">
+            <div class="routerow"><span class="nm">South route</span><span class="tag on">2 buses running</span>
+              <div class="ends"><span>Engineering South</span><span class="seg-line"></span><span>Law South</span></div>
+              <span class="hrs">07:00 – 16:00, Sunday to Thursday</span></div></button></li>
+          <li><button class="rowbtn" type="button" data-go="route">
+            <div class="routerow" style="--c:var(--route-north)"><span class="nm">North route</span><span class="tag late">1 running late</span>
+              <div class="ends"><span>Law North</span><span class="seg-line"></span><span>Engineering North</span></div>
+              <span class="hrs">07:00 – 16:00, Sunday to Thursday</span></div></button></li>
+          <li>
+            <div class="routerow" style="--c:var(--gray-200)"><span class="nm" style="color:var(--text-muted)">Evening shuttle</span><span class="tag muted">No buses now</span>
+              <div class="ends"><span>Engineering South</span><span class="seg-line"></span><span>Sports Complex</span></div>
+              <span class="hrs">Hours not set yet</span></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Route detail -->
+    <section class="view" data-screen="route" aria-label="South route">
+      <div class="pad">
+        <button class="linkbtn" type="button" data-go="routes" style="text-decoration:none">Back to routes</button>
+        <h2 class="title" style="margin-top:6px">South route</h2>
+        <p class="sub">Engineering South to Law South, 07:00 – 16:00</p>
+
+        <div class="notice warn" style="margin-top:14px">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 4.5v5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/></svg>
+          <span><b>Bus 7 is 6 minutes late</b>Recorded at College of Business, 09:12.</span>
+        </div>
+
+        <div class="linewrap">
+          <ol class="linediagram">
+            <li class="end passed"><span class="dot"></span><span class="s">Engineering South<small>Start</small></span><span class="t num">09:10<small>left 09:11</small></span></li>
+            <li class="passed"><span class="dot"></span><span class="s">Science Building<small>Block 3</small></span><span class="t num">09:16<small>arrived 09:16</small></span></li>
+            <li><span class="busmark" aria-label="Bus 12 is here"></span><span class="dot"></span><span class="s">Central Library<small>Main entrance</small></span><span class="t num">09:24<small>in 4 min</small></span></li>
+            <li><span class="dot"></span><span class="s">College of Business<small>CBA parking</small></span><span class="t num">09:30</span></li>
+            <li class="end"><span class="dot"></span><span class="s">Law South<small>End</small></span><span class="t num">09:38</span></li>
+          </ol>
+        </div>
+
+        <h3 class="section-h">Departures today from Engineering South</h3>
+        <ul class="rows">
+          <li class="dep"><span class="m num" style="font-size:20px">09:10</span><span class="d">Bus 12</span><span class="tag on">Running</span></li>
+          <li class="dep"><span class="m num" style="font-size:20px">09:30</span><span class="d">Bus 7</span><span class="tag late">6 min late</span></li>
+          <li class="dep cancelled"><span class="m num" style="font-size:20px">09:50</span><span class="d"><span>No bus</span></span><span class="tag cancel">Cancelled</span></li>
+          <li class="dep"><span class="m num" style="font-size:20px">10:10</span><span class="d" style="color:var(--text-muted)">Not started</span><span class="tag muted">Scheduled</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Stops -->
+    <section class="view" data-screen="stops" aria-label="Stops">
+      <div class="pad">
+        <h2 class="title">Stops</h2>
+        <div class="searchbox" style="margin-top:12px">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <label class="visually-hidden" for="q" style="position:absolute;left:-9999px">Search stops by name or area</label>
+          <input class="input" id="q" type="search" placeholder="Search by stop name or area" autocomplete="off">
+        </div>
+        <ul class="rows" style="margin-top:14px" id="stoplist"></ul>
+        <div class="empty" id="stopempty" hidden style="margin-top:14px">
+          <b>No stop matches "<span id="qtext"></span>"</b>
+          <p>Try part of a building name, such as "Library", or an area, such as "Jabriya".</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Staff: today's trips -->
+    <section class="view" data-screen="trips" aria-label="Today's trips">
+      <div class="pad">
+        <h2 class="title">Today's trips</h2>
+        <p class="sub">Thursday 5 November</p>
+
+        <div class="notice err" style="margin-top:14px">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 1.5l8 14.5H1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 7v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="13.4" r="1.1" fill="currentColor"/></svg>
+          <span><b>Bus 7 stopped sending its location</b>Last seen 6 minutes ago near College of Business, South route 09:30.</span>
+        </div>
+
+        <ul class="rows" style="margin-top:14px" id="triplist"></ul>
+      </div>
+      <div class="scrim" id="scrim">
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-h">
+          <h3 id="dlg-h">Cancel the South route trip on bus 12?</h3>
+          <p>Students will see this trip as cancelled straight away, and the bus leaves the map.</p>
+          <div class="acts">
+            <button class="btn quiet" type="button" id="dlg-no">Keep trip</button>
+            <button class="btn danger" type="button" id="dlg-yes">Yes, cancel trip</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Staff: manage -->
+    <section class="view" data-screen="manage" aria-label="Routes and stops">
+      <div class="pad">
+        <h2 class="title">Routes, stops and buses</h2>
+        <div class="seg" style="margin-top:12px" role="group" aria-label="What to add">
+          <button type="button" data-form="route" aria-pressed="true">Add route</button>
+          <button type="button" data-form="stop" aria-pressed="false">Add stop</button>
+          <button type="button" data-form="fleet" aria-pressed="false">Buses</button>
+        </div>
+
+        <form id="f-route" novalidate style="margin-top:4px">
+          <div class="field" data-f="name"><label for="r-name">Route name</label><input class="input" id="r-name" placeholder="For example, South route"><div class="msg"></div></div>
+          <div class="field" data-f="type"><label>Where it runs</label>
+            <div class="radios"><label><input type="radio" name="rtype" value="on_campus"> On campus</label><label><input type="radio" name="rtype" value="off_campus"> Off campus</label></div>
+            <div class="msg"></div></div>
+          <div class="field" data-f="hours"><label for="r-hours">Operating hours <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label><input class="input num" id="r-hours" placeholder="07:00 - 16:00"><div class="msg"></div></div>
+          <button class="btn full" style="margin-top:18px" type="submit">Add route</button>
+          <p class="field hint" style="margin-top:8px">Try "south route" to see the duplicate check, or hours like "4pm".</p>
+        </form>
+
+        <form id="f-stop" novalidate hidden style="margin-top:4px">
+          <div class="field" data-f="name"><label for="s-name">Stop name</label><input class="input" id="s-name" placeholder="For example, Central Library"><div class="msg"></div></div>
+          <div class="field"><label for="s-area">Area <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label><input class="input" id="s-area" placeholder="For example, Main entrance"></div>
+          <div class="twocol">
+            <div class="field" data-f="lat"><label for="s-lat">Latitude</label><input class="input num" id="s-lat" inputmode="decimal" placeholder="29.2576"><div class="msg"></div></div>
+            <div class="field" data-f="lng"><label for="s-lng">Longitude</label><input class="input num" id="s-lng" inputmode="decimal" placeholder="47.8998"><div class="msg"></div></div>
+          </div>
+          <div class="field" data-f="rad"><label for="s-rad">Arrival radius in metres</label><input class="input num" id="s-rad" inputmode="numeric" value="50"><div class="hint">A bus inside this circle counts as at the stop.</div><div class="msg"></div></div>
+          <button class="btn full" style="margin-top:18px" type="submit">Add stop</button>
+        </form>
+
+        <div id="f-fleet" hidden style="margin-top:14px">
+          <ul class="rows">
+            <li class="fleet"><span><span class="b">Bus 12</span><br><span class="p num">KU 4512</span></span><select aria-label="Status of bus 12"><option selected>Active</option><option>Maintenance</option><option>Out of service</option></select></li>
+            <li class="fleet"><span><span class="b">Bus 7</span><br><span class="p num">KU 4507</span></span><select aria-label="Status of bus 7"><option selected>Active</option><option>Maintenance</option><option>Out of service</option></select></li>
+            <li class="fleet"><span><span class="b">Bus 21</span><br><span class="p num">KU 4521</span></span><select aria-label="Status of bus 21"><option selected>Active</option><option>Maintenance</option><option>Out of service</option></select></li>
+            <li class="fleet"><span><span class="b">Bus 3</span><br><span class="p num">KU 4503</span></span><select aria-label="Status of bus 3"><option>Active</option><option selected>Maintenance</option><option>Out of service</option></select></li>
+          </ul>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:10px">A bus in maintenance or out of service cannot be given a trip.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- States -->
+    <section class="view" data-screen="states" aria-label="Loading, empty and error">
+      <div class="pad">
+        <h2 class="title">Loading, empty, error</h2>
+        <p class="sub">The same three patterns on every page that loads data.</p>
+
+        <h3 class="section-h">Loading</h3>
+        <ul class="rows" aria-label="Loading departures">
+          <li style="display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center"><span class="skel" style="height:26px"></span><span><span class="skel" style="display:block;height:12px;width:60%"></span><span class="skel" style="display:block;height:10px;width:85%;margin-top:8px"></span></span></li>
+          <li style="display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center"><span class="skel" style="height:26px"></span><span><span class="skel" style="display:block;height:12px;width:45%"></span><span class="skel" style="display:block;height:10px;width:70%;margin-top:8px"></span></span></li>
+        </ul>
+
+        <h3 class="section-h">Empty</h3>
+        <div class="empty">
+          <div class="ic"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M6 13.5l5 5 9-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <b>No delays today</b>
+          <p>Buses on every route are on time. Delays show here as soon as one is recorded.</p>
+        </div>
+
+        <h3 class="section-h">Error</h3>
+        <div class="notice err">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6l6 6M12 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span><b>The schedule could not be loaded</b>Check your connection and try again.<br><button class="btn small quiet" type="button" style="margin-top:10px">Try again</button></span>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabbar" id="tabbar" aria-label="Main">
+      <button type="button" data-go="next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Next buses</button>
+      <button type="button" data-go="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0113 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Live map</button>
+      <button type="button" data-go="routes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 6h6a4 4 0 010 8h-4a4 4 0 000 8"/></svg>Routes</button>
+      <button type="button" data-go="stops"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 21V4h9l-2 4 2 4H7"/></svg>Stops</button>
+      <button type="button" data-go="trips" data-staff hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Trips</button>
+      <button type="button" data-go="manage" data-staff hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Manage</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="toast-t"></span></div>
+  </div>
+</div>
+
+<script>
+// Screen list: each screen names the stories it covers, so the prototype doubles as the screen list.
+const SCREENS = [
+  { id: 'signin', t: 'Sign in', s: 'KU email or continue as a guest', st: '#40 #131' },
+  { id: 'next',   t: 'Next buses', s: 'The bus to your stop, in minutes', st: '#30 #32 #36 #120' },
+  { id: 'map',    t: 'Live map', s: 'Filter by route, tap a bus for details', st: '#31 #35 #48 #98' },
+  { id: 'routes', t: 'Routes', s: 'On and off campus, start and end', st: '#45 #53 #84' },
+  { id: 'route',  t: 'One route', s: 'Stops in order, where the bus is', st: '#29 #33 #100' },
+  { id: 'stops',  t: 'Stops', s: 'Search, and show a stop on the map', st: '#46 #107' },
+  { id: 'trips',  t: "Today's trips", s: 'Start, cancel, silent buses', st: '#105 #110 #116', staff: true },
+  { id: 'manage', t: 'Routes, stops and buses', s: 'Add a route or stop, bus status', st: '#89 #96 #117', staff: true },
+  { id: 'states', t: 'Loading, empty, error', s: 'One pattern for every page', st: 'all pages' },
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+let role = 'student';
+let current = 'next';
+
+const list = $('#screenlist');
+const pick = $('#pick');
+SCREENS.forEach((sc) => {
+  const li = document.createElement('li');
+  if (sc.staff) li.className = 'staff-only';
+  li.innerHTML = `<button type="button" data-go="${sc.id}"><span class="t">${sc.t}</span><span class="st">${sc.st}</span><span class="s">${sc.s}</span></button>`;
+  list.appendChild(li);
+  const o = document.createElement('option');
+  o.value = sc.id; o.textContent = sc.t;
+  if (sc.staff) o.dataset.staff = '1';
+  pick.appendChild(o);
+});
+
+function show(id) {
+  const sc = SCREENS.find((x) => x.id === id);
+  if (sc && sc.staff && role !== 'staff') setRole('staff');
+  current = id;
+  $$('.view').forEach((v) => v.classList.toggle('on', v.dataset.screen === id));
+  const isSignin = id === 'signin';
+  $('#appbar').hidden = isSignin;
+  $('#tabbar').hidden = isSignin;
+  $$('#tabbar button').forEach((b) => b.setAttribute('aria-current', String(b.dataset.go === id || (id === 'route' && b.dataset.go === 'routes'))));
+  $$('#screenlist button').forEach((b) => b.setAttribute('aria-current', String(b.dataset.go === id)));
+  pick.value = id;
+  $('#sheet').classList.remove('open');
+}
+
+function setRole(r) {
+  role = r;
+  $$('.role button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.role === r)));
+  $$('[data-staff]').forEach((b) => (b.hidden = r !== 'staff'));
+  $$('.screenlist li.staff-only').forEach((li) => (li.hidden = r !== 'staff'));
+  $$('#pick option[data-staff]').forEach((o) => (o.hidden = r !== 'staff'));
+  $('#who').innerHTML = r === 'staff' ? 'Noura Al-Mutairi<br>Transportation coordinator' : 'Sara Al-Hajri<br>Student';
+  const sc = SCREENS.find((x) => x.id === current);
+  if (r !== 'staff' && sc && sc.staff) show('next');
+}
+
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) { e.preventDefault(); show(go.dataset.go); }
+  const rb = e.target.closest('.role button');
+  if (rb) setRole(rb.dataset.role);
+});
+pick.addEventListener('change', () => show(pick.value));
+
+// Segmented controls on screens that only switch a view
+$$('.seg').forEach((seg) => seg.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  $$('button', seg).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  if (b.dataset.form) ['route', 'stop', 'fleet'].forEach((f) => ($('#f-' + f).hidden = f !== b.dataset.form));
+}));
+
+// Countdown on Next buses
+let secs = 4 * 60;
+setInterval(() => { secs = secs > 60 ? secs - 1 : 4 * 60; $('#mins').textContent = Math.ceil(secs / 60); }, 1000);
+
+// ---------- Map ----------
+const BUSES = {
+  12: { route: 'south', title: 'Bus 12 to Law South', next: 'Central Library', time: '09:24, on time', plate: 'KU 4512', upd: '15 seconds ago' },
+  7:  { route: 'south', title: 'Bus 7 to Law South', next: 'Law South', time: '09:38, 6 min late', plate: 'KU 4507', upd: '6 minutes ago', stale: true },
+  21: { route: 'north', title: 'Bus 21 to Engineering North', next: 'Central Library', time: '09:42, on time', plate: 'KU 4521', upd: '8 seconds ago' },
+};
+function openBus(n) {
+  const b = BUSES[n];
+  $('#sh-route').textContent = b.route === 'south' ? 'South route' : 'North route';
+  $('#sh-route').classList.toggle('north', b.route === 'north');
+  $('#sh-title').textContent = b.title;
+  $('#sh-next').textContent = b.next;
+  $('#sh-time').textContent = b.time;
+  $('#sh-plate').textContent = b.plate;
+  $('#sh-upd').textContent = b.upd;
+  $('#sh-warn').innerHTML = b.stale ? '<div class="notice warn" style="margin-top:12px"><span><b>Location may be out of date</b>This bus has not sent its position for 6 minutes. It may not be where the map shows.</span></div>' : '';
+  $('#sheet').classList.add('open');
+}
+$$('.mapbus').forEach((g) => {
+  g.addEventListener('click', () => openBus(g.dataset.bus));
+  g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBus(g.dataset.bus); } });
+});
+$('#sh-close').addEventListener('click', () => $('#sheet').classList.remove('open'));
+$$('[data-filter]').forEach((c) => c.addEventListener('click', () => {
+  const f = c.dataset.filter;
+  $$('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+  $$('.mapbus').forEach((g) => g.classList.toggle('hide', f !== 'all' && g.dataset.route !== f));
+  $$('.route-path').forEach((p) => p.classList.toggle('dim', f !== 'all' && p.dataset.route !== f));
+  $('#sheet').classList.remove('open');
+}));
+
+// ---------- Stops ----------
+const STOPS = [
+  { name: 'Central Library', area: 'Main entrance', routes: ['south', 'north'], ok: true },
+  { name: 'College of Business', area: 'CBA parking', routes: ['south', 'north'], ok: true },
+  { name: 'Engineering South', area: 'Gate 2', routes: ['south'], ok: true },
+  { name: 'Law South', area: '', routes: ['south'], ok: true },
+  { name: 'Science Building', area: 'Block 3', routes: ['south', 'north'], ok: true },
+  { name: 'Jabriya pickup', area: 'Jabriya', routes: [], ok: false },
+];
+function renderStops(q = '') {
+  const qq = q.trim().toLowerCase();
+  const hits = STOPS.filter((s) => !qq || s.name.toLowerCase().includes(qq) || s.area.toLowerCase().includes(qq));
+  $('#stoplist').hidden = hits.length === 0;
+  $('#stopempty').hidden = hits.length !== 0;
+  $('#qtext').textContent = q.trim();
+  $('#stoplist').innerHTML = hits.map((s) => `
+    <li class="stoprow">
+      <span><span class="nm">${s.name}</span>${s.area ? `<br><span class="ar">${s.area}</span>` : ''}</span>
+      ${s.ok ? '<button class="btn small quiet" type="button" data-go="map">Show on map</button>' : '<span class="nloc">Location not set</span>'}
+      <span class="rt">${s.routes.map((r) => `<span class="rb ${r === 'north' ? 'north' : ''}">${r === 'north' ? 'North' : 'South'}</span>`).join('') || '<span style="font-size:13px;color:var(--text-muted)">No routes stop here yet</span>'}</span>
+    </li>`).join('');
+}
+$('#q').addEventListener('input', (e) => renderStops(e.target.value));
+renderStops();
+
+// ---------- Staff trips ----------
+const TRIPS = [
+  { id: 1, time: '09:10', route: 'South route', bus: '12', status: 'active' },
+  { id: 2, time: '09:30', route: 'South route', bus: '7', status: 'active' },
+  { id: 3, time: '09:20', route: 'North route', bus: '21', status: 'active' },
+  { id: 4, time: '09:50', route: 'South route', bus: '', status: 'scheduled' },
+  { id: 5, time: '08:30', route: 'North route', bus: '3', status: 'completed' },
+];
+const STATUS = { active: 'Running', scheduled: 'Not started', completed: 'Finished', cancelled: 'Cancelled' };
+function renderTrips() {
+  $('#triplist').innerHTML = TRIPS.map((t) => {
+    const ended = t.status === 'completed' || t.status === 'cancelled';
+    let acts = '';
+    if (t.status === 'scheduled') {
+      acts = `<div class="acts"><select aria-label="Bus for the ${t.time} trip"><option value="">Choose a bus</option><option>Bus 21</option><option>Bus 12</option></select><button class="btn small" type="button" data-start="${t.id}">Start trip</button><button class="btn small danger" type="button" data-cancel="${t.id}">Cancel trip</button></div>`;
+    } else if (t.status === 'active') {
+      acts = `<div class="acts"><button class="btn small danger" type="button" data-cancel="${t.id}">Cancel trip</button></div>`;
+    } else if (ended) {
+      acts = `<div class="ended">This trip has already ended</div>`;
+    }
+    return `<li class="trip">
+      <span><span class="when num">${t.time}</span><br><span class="info"><span class="rb ${t.route.startsWith('North') ? 'north' : ''}">${t.route}</span>${t.bus ? ', bus ' + t.bus : ''}</span></span>
+      <span class="pill ${t.status}">${STATUS[t.status]}</span>${acts}</li>`;
+  }).join('');
+}
+renderTrips();
+
+let pending = null;
+$('#triplist').addEventListener('click', (e) => {
+  const c = e.target.closest('[data-cancel]');
+  const s = e.target.closest('[data-start]');
+  if (c) {
+    pending = TRIPS.find((t) => t.id === Number(c.dataset.cancel));
+    $('#dlg-h').textContent = `Cancel the ${pending.route} trip${pending.bus ? ' on bus ' + pending.bus : ''}?`;
+    $('#scrim').classList.add('open');
+    $('#dlg-no').focus();
+  }
+  if (s) {
+    const t = TRIPS.find((x) => x.id === Number(s.dataset.start));
+    const sel = s.parentElement.querySelector('select');
+    if (!sel.value) { sel.style.borderColor = 'var(--error-text)'; sel.focus(); toast('Choose a bus first.'); return; }
+    t.bus = sel.value.replace('Bus ', ''); t.status = 'active'; renderTrips(); toast(`Trip started on bus ${t.bus}.`);
+  }
+});
+$('#dlg-no').addEventListener('click', () => $('#scrim').classList.remove('open'));
+$('#dlg-yes').addEventListener('click', () => {
+  if (pending) { pending.status = 'cancelled'; renderTrips(); toast('Trip cancelled. Students see it now.'); }
+  $('#scrim').classList.remove('open');
+});
+
+function toast(msg) {
+  $('#toast-t').textContent = msg;
+  $('#toast').classList.add('show');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => $('#toast').classList.remove('show'), 2600);
+}
+
+// ---------- Forms: the exact messages from #89 and #96 ----------
+function setErr(form, key, msg) {
+  const f = $(`[data-f="${key}"]`, form);
+  f.classList.toggle('bad', Boolean(msg));
+  $('.msg', f).textContent = msg || '';
+  return !msg;
+}
+const EXISTING = ['south route', 'north route', 'evening shuttle'];
+$('#f-route').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const name = $('#r-name').value.trim();
+  const type = $('input[name="rtype"]:checked', f);
+  const hours = $('#r-hours').value.trim();
+  let ok = true;
+  ok = setErr(f, 'name', !name ? 'Enter a route name.' : EXISTING.includes(name.toLowerCase()) ? 'This route name is already in use.' : '') && ok;
+  ok = setErr(f, 'type', !type ? 'Choose on campus or off campus.' : '') && ok;
+  let hoursMsg = '';
+  if (hours) {
+    const m = hours.match(/^(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})$/);
+    if (!m || Number(m[1]) * 60 + Number(m[2]) >= Number(m[3]) * 60 + Number(m[4])) hoursMsg = 'Write hours like 07:00 - 16:00.';
+  }
+  ok = setErr(f, 'hours', hoursMsg) && ok;
+  if (ok) { EXISTING.push(name.toLowerCase()); f.reset(); toast(`Route added. Students now see ${name}.`); }
+});
+$('#f-stop').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const name = $('#s-name').value.trim();
+  const lat = $('#s-lat').value.trim();
+  const lng = $('#s-lng').value.trim();
+  const rad = $('#s-rad').value.trim();
+  let ok = true;
+  ok = setErr(f, 'name', !name ? "Enter the stop's name." : '') && ok;
+  const latN = Number(lat), lngN = Number(lng);
+  const outside = lat && lng && (!(latN >= 28.5 && latN <= 30.1) || !(lngN >= 46.5 && lngN <= 48.5));
+  ok = setErr(f, 'lat', !lat ? 'Enter a latitude.' : outside ? 'This point is not in Kuwait.' : '') && ok;
+  ok = setErr(f, 'lng', !lng ? 'Enter a longitude.' : '') && ok;
+  ok = setErr(f, 'rad', !/^\d+$/.test(rad) || Number(rad) < 10 || Number(rad) > 500 ? 'Radius must be 10–500 metres.' : '') && ok;
+  if (ok) { f.reset(); $('#s-rad').value = 50; toast(`Stop added. It shows in stop search now.`); }
+});
+
+show('next');
+</script>
+</body>
+</html>
