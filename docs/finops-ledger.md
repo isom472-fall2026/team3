@@ -64,7 +64,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#131](https://github.com/isom472-fall2026/team3/issues/131) — Visitor continues as a guest without a KU account | Claude (claude-opus-5-5) | About 6 requests: 1 for the build, about 5 to check the live Supabase setup (guest policies, `is_guest()`, anonymous sign-ins) | The story and its acceptance criteria, `db/schema.sql` (the guest read policies, `is_guest()` and the KU-email hook), and `SignIn.jsx`, `SignedInLayout.jsx`, `BusTripCard.jsx`, `BusMarker.jsx`, `DelaysPage.jsx`, `MapPage.jsx` and `pages/index.js`. It added "Continue as guest", showed "Guest" in the header without the email notice, hid arrival times and delays from guests, and tested the whole guest flow in a browser against a fake Supabase. | Most requests went on checking that the live database matched the schema file. Next time, run the check queries in the SQL Editor before starting, and give the assistant the results in the first request. |
 
 ## Phase 5
 
