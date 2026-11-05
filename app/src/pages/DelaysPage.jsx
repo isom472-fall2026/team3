@@ -10,7 +10,24 @@ function tripLabel(trip) {
   return `${route} — ${time}${bus ? ` · Bus ${bus}` : ''}`
 }
 
-function DelaysPage() {
+// Guests (#131) cannot read delay_logs, so they see why instead of an empty page.
+function DelaysPage({ user }) {
+  if (user?.is_anonymous) {
+    return (
+      <div className="bus-confirmed-section" id="delays-page">
+        <div className="bus-content-intro">
+          <h2>Delays</h2>
+        </div>
+        <div className="schedule-empty-notice" id="guest-sign-in-notice">
+          Sign in with your KU email to see arrival times and delays.
+        </div>
+      </div>
+    )
+  }
+  return <DelaysForSignedIn />
+}
+
+function DelaysForSignedIn() {
   const [trips, setTrips] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
