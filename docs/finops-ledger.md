@@ -64,7 +64,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#106](https://github.com/isom472-fall2026/team3/issues/106) — A test bus plays back fake locations along its route | Claude (claude-opus-5-5) | About 3 requests for the build (2 more to check the criteria and plan Jumana's acceptance) | The story and its acceptance criteria, `db/schema.sql` (the `bus_locations` insert policy and the geofence trigger), `app/src/pages/StartTripPage.jsx`, `app/src/pages/index.js`, `app/src/lib/kuwaitTime.js` and the classes in `App.css`. It wrote `app/src/lib/testBusPath.js` and `app/src/pages/TestBusPage.jsx`, added the staff-only menu entry, and tested every message against a fake database and a copy of the trigger's logic. | The first version gave some stops 4 points inside their circle instead of exactly 3; it was only caught when I asked it to go through the criteria one by one. Next time, ask for a criterion-by-criterion check in the first request. |
 
 ## Phase 5
 
