@@ -125,7 +125,9 @@ CREATE TABLE delay_logs (
     created_at TIMESTAMPTZ DEFAULT now(),
     trip_id UUID NOT NULL,
     routes_stop_id UUID,
-    delay_minutes INT4 CHECK (delay_minutes > 0),
+    delay_minutes INT4
+        CONSTRAINT delay_logs_delay_minutes_check
+        CHECK (delay_minutes > 0),
     logged_at TIMESTAMPTZ,
     reason TEXT                                 -- written by staff; 1-200 characters, not only spaces
         CONSTRAINT delay_logs_reason_check
