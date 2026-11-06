@@ -121,15 +121,19 @@ function StartTripPage() {
     setCancellingId(trip.id)
     setMessage(dep.id, '')
 
-    const { error } = await supabase
+    // .select() returns the changed row. When the database's rules refuse the change,
+    // Supabase can answer with no error and no rows, so an empty result is a refusal too.
+    const { data: updated, error } = await supabase
       .from('trips')
       .update({ status: 'cancelled' })
       .eq('id', trip.id)
+      .select('id')
 
     setCancellingId(null)
     setPendingCancel(null)
 
-    if (error) {
+    if (error || !updated || updated.length === 0) {
+      console.error('Trip was not cancelled:', error || 'no row changed')
       setMessage(dep.id, 'Trip could not be cancelled. Try again.')
       return
     }
