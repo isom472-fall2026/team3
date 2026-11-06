@@ -114,18 +114,6 @@ function StartTripPage() {
       trip.buses?.bus_number || buses.find((b) => b.id === trip.bus_id)?.bus_number || ''
     const question = `Cancel the ${dep.routes?.name ?? ''} trip on bus ${busNumber}?`
 
-    const isMockedConfirm =
-      typeof window !== 'undefined' &&
-      typeof window.confirm === 'function' &&
-      !window.confirm.toString().includes('[native code]')
-
-    if (isMockedConfirm) {
-      if (window.confirm(question)) {
-        cancelTrip(dep, trip)
-      }
-      return
-    }
-
     setPendingCancel({ dep, trip, question })
   }
 
