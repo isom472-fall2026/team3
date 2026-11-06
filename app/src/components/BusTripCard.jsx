@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { supabase } from '../lib/supabase.js'
 
-function BusTripCard({ bus }) {
+function BusTripCard({ bus, isGuest }) {
   const map = useMap()
   const [details, setDetails] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -65,6 +65,23 @@ function BusTripCard({ bus }) {
         if (!trip.buses || !trip.schedules) {
           if (isMounted) {
             setError(true)
+            setLoading(false)
+          }
+          return
+        }
+
+        // Guests (#131) do not see arrivals or expected times: the next stop comes from
+        // arrivals, so only the bus, route and a cancelled trip are shown.
+        if (isGuest) {
+          if (isMounted) {
+            setDetails({
+              busNumber: trip.buses?.bus_number ?? bus.busNumber,
+              routeName: trip.schedules?.routes?.name ?? bus.routeName,
+              stopText: trip.status === 'cancelled' ? 'Trip cancelled' : null,
+              hasNextStop: false,
+              scheduledTime: null,
+              guest: trip.status !== 'cancelled',
+            })
             setLoading(false)
           }
           return
@@ -180,7 +197,7 @@ function BusTripCard({ bus }) {
     return () => {
       isMounted = false
     }
-  }, [bus.tripId, bus.busNumber, bus.routeName])
+  }, [bus.tripId, bus.busNumber, bus.routeName, isGuest])
 
   const busNumber = details?.busNumber ?? bus.busNumber
   const routeName = details?.routeName ?? bus.routeName
@@ -203,6 +220,11 @@ function BusTripCard({ bus }) {
           {stopText && (
             <div className="bus-trip-stop" id="bus-trip-next-stop">
               <span className="bus-trip-stop-name">{stopText}</span>
+            </div>
+          )}
+          {details?.guest && (
+            <div className="bus-trip-no-time" id="guest-sign-in-notice">
+              Sign in with your KU email to see arrival times and delays.
             </div>
           )}
           {hasNextStop && (

@@ -7,7 +7,7 @@ import BusTripCard from './BusTripCard.jsx'
 // A bus on the map: its number in a badge, greyed out when its position is old.
 // Built from HTML (divIcon) rather than Leaflet's default pin image, so it can
 // show the bus number and needs no image files.
-function BusMarker({ bus, stale }) {
+function BusMarker({ bus, stale, isGuest }) {
   const { latitude, longitude, recordedAt } = bus.location
 
   const icon = useMemo(() => {
@@ -33,7 +33,7 @@ function BusMarker({ bus, stale }) {
       alt={`Bus ${bus.busNumber}`}
     >
       <Popup className="bus-trip-popup" closeButton={false}>
-        <BusTripCard bus={bus} />
+        <BusTripCard bus={bus} isGuest={isGuest} />
       </Popup>
     </Marker>
   )

@@ -13,7 +13,9 @@ function SignedInLayout({ user, onSignOut }) {
   const [isStaff, setIsStaff] = useState(null)
   const navigate = useNavigate()
 
-  const isConfirmed = Boolean(currentUser?.email_confirmed_at)
+  // A guest (#131) signed in anonymously: no email, so nothing to confirm.
+  const isGuest = Boolean(currentUser?.is_anonymous)
+  const isConfirmed = isGuest || Boolean(currentUser?.email_confirmed_at)
   const firstPage = pages[0].path
   const visiblePages = pages.filter((page) => !page.staffOnly || isStaff)
 
@@ -71,7 +73,7 @@ function SignedInLayout({ user, onSignOut }) {
           <div className="badge-ku">KU Campus Transport</div>
           <h1>Bus Pages</h1>
           <p className="user-email-tag">
-            Signed in as: <strong>{currentUser?.email}</strong>
+            Signed in as: <strong>{isGuest ? 'Guest' : currentUser?.email}</strong>
           </p>
         </div>
         <div className="bus-header-actions">
@@ -132,7 +134,7 @@ function SignedInLayout({ user, onSignOut }) {
 
           <div className="verification-status-banner">
             <span className="status-dot-active"></span>
-            <span>KU Student Verified — Email confirmed</span>
+            <span>{isGuest ? 'Browsing as a guest' : 'KU Student Verified — Email confirmed'}</span>
           </div>
 
           {isStaff === null ? (

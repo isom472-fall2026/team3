@@ -5,6 +5,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [guestLoading, setGuestLoading] = useState(false)
   const [error, setError] = useState('')
 
   const handleSignIn = async (e) => {
@@ -39,6 +40,29 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
     }
   }
 
+  // #131: a visitor without a KU account signs in anonymously. If anonymous sign-ins
+  // are turned off in Supabase, or the request fails, nothing changes and we say so.
+  const handleGuest = async () => {
+    setError('')
+    setGuestLoading(true)
+    try {
+      const { data, error: guestError } = await supabase.auth.signInAnonymously()
+      if (guestError || !data?.user) {
+        if (guestError) console.error('Guest sign-in failed:', guestError)
+        setError('Guest access is not available right now.')
+      } else if (onSignInSuccess) {
+        onSignInSuccess(data.user)
+      }
+    } catch (err) {
+      console.error('Guest sign-in failed:', err)
+      setError('Guest access is not available right now.')
+    } finally {
+      setGuestLoading(false)
+    }
+  }
+
+  const busy = loading || guestLoading
+
   return (
     <div className="auth-card">
       <div className="auth-header">
@@ -69,7 +93,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="e.g. s2221160339@ku.edu.kw"
             required
-            disabled={loading}
+            disabled={busy}
           />
         </div>
 
@@ -83,7 +107,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             required
-            disabled={loading}
+            disabled={busy}
           />
         </div>
 
@@ -91,11 +115,22 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
           type="submit"
           id="signin-submit"
           className="btn btn-primary"
-          disabled={loading}
+          disabled={busy}
         >
           {loading ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
+
+      <button
+        type="button"
+        id="continue-as-guest"
+        className="btn btn-secondary"
+        style={{ width: '100%', marginTop: '0.75rem' }}
+        onClick={handleGuest}
+        disabled={busy}
+      >
+        {guestLoading ? 'Continuing as guest...' : 'Continue as guest'}
+      </button>
 
       <div className="auth-footer">
         <span>Don't have an account yet?</span>{' '}
