@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 
-function RouteDepartureForm({ route }) {
+function RouteDepartureForm({ route, onAdded }) {
   const [time, setTime] = useState('');
   const [days, setDays] = useState({ Sun: false, Mon: false, Tue: false, Wed: false, Thu: false, Fri: false, Sat: false });
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [saving, setSaving] = useState(false);
 
   const dayNames = Object.keys(days);
@@ -41,12 +42,14 @@ function RouteDepartureForm({ route }) {
       }
     }
     setErrorMsg('');
+    setSuccessMsg('');
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    setSuccessMsg('');
     setSaving(true);
     const selectedDays = dayNames.filter((d) => days[d]);
     const daysString = selectedDays.join(',');
@@ -69,11 +72,13 @@ function RouteDepartureForm({ route }) {
       days_of_week: daysString,
     });
     if (error) {
-      setErrorMsg(error.message);
+      setErrorMsg('The departure could not be saved. Try again.');
     } else {
-      // clear form
       setTime('');
       setDays({ Sun: false, Mon: false, Tue: false, Wed: false, Thu: false, Fri: false, Sat: false });
+      setErrorMsg('');
+      setSuccessMsg('Departure added.');
+      if (onAdded) onAdded();
     }
     setSaving(false);
   };
@@ -101,6 +106,7 @@ function RouteDepartureForm({ route }) {
         ))}
       </div>
       {errorMsg && <div className="alert alert-error" role="alert" style={{ marginTop: '0.5rem' }}>{errorMsg}</div>}
+      {successMsg && <div className="alert alert-success" role="status" style={{ marginTop: '0.5rem' }}>{successMsg}</div>}
       <button type="submit" className="btn btn-primary" disabled={saving} style={{ marginTop: '0.5rem' }}>
         {saving ? 'Saving...' : 'Add Departure'}
       </button>
