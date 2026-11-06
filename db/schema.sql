@@ -48,6 +48,7 @@ CREATE TABLE stops (
     latitude FLOAT8 NOT NULL,
     longitude FLOAT8 NOT NULL,
     geofence_radius_m INT4 NOT NULL DEFAULT 50  -- metres: inside this circle the bus is "at the stop"
+        CONSTRAINT stops_geofence_radius_check
         CHECK (geofence_radius_m > 0)
 );
 CREATE TABLE routes (
