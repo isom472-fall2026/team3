@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { supabase } from '../lib/supabase.js';
+import { isInKuwait } from '../lib/mapViews.js';
 
 function StopsPage() {
   const [stops, setStops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
     const loadStops = async () => {
       const { data, error } = await supabase
         .from('stops')
-        .select('id, name, area')
+        .select('id, name, area, latitude, longitude, geofence_radius_m')
         .order('name', { ascending: true });
       if (!isMounted) return;
       setLoadError(Boolean(error));
@@ -70,18 +73,46 @@ function StopsPage() {
 
       {!loading && !loadError && filtered.length > 0 && (
         <div className="stops-list" id="stops-list">
-          {filtered.map((stop) => (
-            <div key={stop.id} className="stop-card" data-stop-id={stop.id}>
-              <div className="stop-name">
-                {stop.name && stop.name.trim() !== ''
-                  ? stop.name.trim()
-                  : 'Unnamed stop'}
+          {filtered.map((stop) => {
+            const lat = Number(stop.latitude);
+            const lng = Number(stop.longitude);
+            const hasLocation = isInKuwait(lat, lng);
+            return (
+              <div key={stop.id} className="stop-card" data-stop-id={stop.id}>
+                <div className="stop-info">
+                  <div className="stop-name">
+                    {stop.name && stop.name.trim() !== ''
+                      ? stop.name.trim()
+                      : 'Unnamed stop'}
+                  </div>
+                  {stop.area && stop.area.trim() !== '' && (
+                    <div className="stop-area">{stop.area.trim()}</div>
+                  )}
+                </div>
+                <div className="stop-actions">
+                  {hasLocation ? (
+                    <button
+                      type="button"
+                      className="btn btn-secondary stop-map-btn"
+                      id={`show-on-map-${stop.id}`}
+                      onClick={() =>
+                        navigate(`/map?stop=${stop.id}`, { state: { stop } })
+                      }
+                    >
+                      Show on map
+                    </button>
+                  ) : (
+                    <span
+                      className="stop-no-location"
+                      id={`location-not-set-${stop.id}`}
+                    >
+                      Location not set
+                    </span>
+                  )}
+                </div>
               </div>
-              {stop.area && stop.area.trim() !== '' && (
-                <div className="stop-area">{stop.area.trim()}</div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useSearchParams } from 'react-router'
+import { useMap } from 'react-leaflet'
 import BusMap from '../components/BusMap.jsx'
 import BusMarker from '../components/BusMarker.jsx'
+import StopMarker from '../components/StopMarker.jsx'
 import { MAP_VIEWS, isInKuwait } from '../lib/mapViews.js'
 import { useActiveBuses } from '../lib/useActiveBuses.js'
+import { supabase } from '../lib/supabase.js'
 
 const TABS = [
   { type: 'on_campus', label: 'On campus' },
@@ -16,11 +20,99 @@ const STALE_AFTER_MS = 2 * 60 * 1000
 // even when no new data arrives.
 const CLOCK_TICK_MS = 15 * 1000
 
+// Pans the Leaflet map to a new centre when centre changes.
+function MapRecenter({ center, zoom }) {
+  const map = useMap()
+  const prevCenter = useRef(null)
+  useEffect(() => {
+    if (
+      center &&
+      (prevCenter.current?.[0] !== center[0] || prevCenter.current?.[1] !== center[1])
+    ) {
+      map.setView(center, zoom, { animate: true })
+      prevCenter.current = center
+    }
+  }, [map, center, zoom])
+  return null
+}
+
 function MapPage({ user }) {
   const isGuest = Boolean(user?.is_anonymous)
   const [serviceType, setServiceType] = useState('on_campus')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
+
+  const [searchParams] = useSearchParams()
+  const location = useLocation()
+
+  const stopId = searchParams.get('stop') || searchParams.get('stopId')
+
+  // Seed from navigation state if the state stop matches the query param (or no param).
+  const inlineStop = location.state?.stop ?? null
+  const inlineIsValid =
+    inlineStop && isInKuwait(Number(inlineStop.latitude), Number(inlineStop.longitude))
+
+  const [selectedStop, setSelectedStop] = useState(
+    () => (!stopId && inlineIsValid ? inlineStop : null)
+  )
+  const [stopRoutes, setStopRoutes] = useState([])
+  const [stopError, setStopError] = useState(false)
+  const [stopLoading, setStopLoading] = useState(Boolean(stopId))
+
+  useEffect(() => {
+    if (!stopId) {
+      return
+    }
+
+    let isMounted = true
+
+    const fetchStop = async () => {
+      // Reset loading/error state at the start of the async fetch (inside the callback
+      // avoids a synchronous setState in the effect body).
+      setStopLoading(true)
+      setStopError(false)
+      // Use inline stop from state when it matches the query param — saves a request.
+      let stop = location.state?.stop?.id === stopId ? location.state.stop : null
+
+      if (!stop) {
+        const { data, error: err } = await supabase
+          .from('stops')
+          .select('id, name, area, latitude, longitude, geofence_radius_m')
+          .eq('id', stopId)
+          .maybeSingle()
+        if (!isMounted) return
+        if (err || !data) {
+          setStopError(true)
+          setStopLoading(false)
+          return
+        }
+        stop = data
+      }
+
+      if (!isMounted) return
+
+      // Fetch active routes for this stop.
+      const { data: rsData } = await supabase
+        .from('routes_stops')
+        .select('routes!inner(id, name, is_active)')
+        .eq('stop_id', stopId)
+        .eq('routes.is_active', true)
+
+      if (!isMounted) return
+
+      const names = (rsData ?? [])
+        .map((rs) => rs.routes?.name)
+        .filter(Boolean)
+      setStopRoutes(Array.from(new Set(names)).sort((a, b) => a.localeCompare(b)))
+      setSelectedStop(stop)
+      setStopLoading(false)
+    }
+
+    fetchStop()
+    return () => {
+      isMounted = false
+    }
+  }, [stopId, location.state])
 
   const busesInTab = buses.filter((bus) => bus.serviceType === serviceType)
   const onMap = busesInTab.filter(
@@ -33,6 +125,14 @@ function MapPage({ user }) {
     return !Number.isFinite(recordedAt) || now - recordedAt > STALE_AFTER_MS
   }
 
+  // When a stop is selected, derive the map view from its coordinates.
+  const stopCenter = selectedStop
+    ? [Number(selectedStop.latitude), Number(selectedStop.longitude)]
+    : null
+  const mapView = stopCenter
+    ? { center: stopCenter, zoom: 17 }
+    : MAP_VIEWS[serviceType]
+
   return (
     <div className="bus-confirmed-section" id="map-page">
       <div className="bus-content-intro">
@@ -40,21 +140,39 @@ function MapPage({ user }) {
         <p>Where the buses are right now.</p>
       </div>
 
-      <div className="bus-tabs-nav map-type-tabs" role="tablist" aria-label="Route type">
-        {TABS.map((tab) => (
-          <button
-            key={tab.type}
-            type="button"
-            role="tab"
-            id={`map-tab-${tab.type}`}
-            aria-selected={serviceType === tab.type}
-            className={`bus-tab-btn ${serviceType === tab.type ? 'active' : ''}`}
-            onClick={() => setServiceType(tab.type)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {/* Only show the tab bar when not in stop-view mode. */}
+      {!selectedStop && (
+        <div className="bus-tabs-nav map-type-tabs" role="tablist" aria-label="Route type">
+          {TABS.map((tab) => (
+            <button
+              key={tab.type}
+              type="button"
+              role="tab"
+              id={`map-tab-${tab.type}`}
+              aria-selected={serviceType === tab.type}
+              className={`bus-tab-btn ${serviceType === tab.type ? 'active' : ''}`}
+              onClick={() => setServiceType(tab.type)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {selectedStop && (
+        <div className="selected-stop-banner" id="selected-stop-banner">
+          Showing stop: <strong>{selectedStop.name && selectedStop.name.trim() !== '' ? selectedStop.name.trim() : 'Unnamed stop'}</strong>
+          {selectedStop.area && selectedStop.area.trim() !== '' && (
+            <span> · {selectedStop.area.trim()}</span>
+          )}
+        </div>
+      )}
+
+      {(stopError || (stopId && !stopLoading && !selectedStop)) && (
+        <div className="alert alert-error" role="alert" id="map-load-error">
+          <div>Map could not be loaded. Try again.</div>
+        </div>
+      )}
 
       {error && (
         <div className="alert alert-error" role="alert" id="map-error">
@@ -62,22 +180,24 @@ function MapPage({ user }) {
         </div>
       )}
 
-      {!loading && !error && busesInTab.length === 0 && (
+      {!loading && !error && !selectedStop && busesInTab.length === 0 && (
         <p className="map-status" id="no-buses-message">No buses running right now.</p>
       )}
 
-      {/* A new key per tab re-creates the map at that tab's starting view. */}
+      {/* A new key re-creates the map when the stop changes or the tab switches. */}
       <BusMap
-        key={serviceType}
-        view={MAP_VIEWS[serviceType]}
-        label={serviceType === 'on_campus' ? 'On-campus bus map' : 'Off-campus bus map'}
+        key={selectedStop ? `stop-${selectedStop.id}` : serviceType}
+        view={mapView}
+        label={selectedStop ? `Map centred on stop ${selectedStop.name ?? ''}` : (serviceType === 'on_campus' ? 'On-campus bus map' : 'Off-campus bus map')}
       >
-        {onMap.map((bus) => (
+        {stopCenter && <MapRecenter center={stopCenter} zoom={17} />}
+        {selectedStop && <StopMarker stop={selectedStop} routes={stopRoutes} />}
+        {!selectedStop && onMap.map((bus) => (
           <BusMarker key={bus.tripId} bus={bus} stale={isStale(bus)} isGuest={isGuest} />
         ))}
       </BusMap>
 
-      {notOnMap.length > 0 && (
+      {!selectedStop && notOnMap.length > 0 && (
         <ul className="map-unplaced" id="location-not-available">
           {notOnMap.map((bus) => (
             <li key={bus.tripId}>
