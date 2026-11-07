@@ -86,7 +86,8 @@ function AddRoutePage() {
         setErrors({ name: 'This route name is already in use.' })
         return
       }
-      setError(insertError.message)
+      console.error('Route was not saved:', insertError)
+      setError('The route could not be saved. Try again.')
       return
     }
 
