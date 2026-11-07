@@ -239,7 +239,6 @@ function StartTripPage() {
             })}
           </div>
         )}
-      </div>
 
       {pendingCancel && (
         <div
