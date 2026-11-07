@@ -72,7 +72,8 @@ function AddStopPage() {
     setSaving(false)
 
     if (insertError) {
-      setError(insertError.message)
+      console.error('Stop was not saved:', insertError)
+      setError('The stop could not be saved. Try again.')
       return
     }
 
