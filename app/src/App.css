@@ -1508,3 +1508,54 @@
   font-weight: 600;
 
 }
+
+/* Dialog: in-page, never the browser's alert() (#116) */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.scrim.open {
+  display: flex;
+}
+
+.dialog {
+  background: var(--white);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 22px 22px 0 0;
+  padding: 22px 18px 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dialog h3 {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.dialog p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.dialog .acts {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.dialog .acts .btn {
+  flex: 1;
+}
+
+.btn-cancel-trip {
+  margin-top: 8px;
+}
