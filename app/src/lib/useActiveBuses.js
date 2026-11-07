@@ -10,7 +10,7 @@ const FALLBACK_POLL_MS = 5 * 1000
 // date live. Shared by the live map (#31) and the bus-info pages (#35, #36, #48).
 //
 // Returns { buses, loading, error, reload }, where each bus is
-//   { tripId, busNumber, routeName, serviceType,
+//   { tripId, busNumber, routeId, routeName, serviceType,
 //     location: { latitude, longitude, recordedAt } | null }
 export function useActiveBuses() {
   const [state, setState] = useState({ buses: [], loading: true, error: false })
@@ -75,7 +75,7 @@ function withNewerLocation(bus, row) {
 async function fetchActiveBuses() {
   const { data: trips, error } = await supabase
     .from('trips')
-    .select('id, buses(bus_number), schedules(routes(name, service_type))')
+    .select('id, buses(bus_number), schedules(route_id, routes(name, service_type))')
     .eq('status', 'active')
     .eq('trip_date', kuwaitToday())
   if (error) throw error
@@ -101,6 +101,7 @@ async function fetchActiveBuses() {
     return {
       tripId: trip.id,
       busNumber: trip.buses?.bus_number ?? '?',
+      routeId: trip.schedules?.route_id ?? null,
       routeName: route?.name ?? '',
       serviceType: route?.service_type ?? null,
       location: row

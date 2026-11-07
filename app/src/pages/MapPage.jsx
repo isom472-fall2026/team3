@@ -135,7 +135,13 @@ function MapPage({ user }) {
     }
   }, [])
 
-  const busesInTab = buses.filter((bus) => bus.serviceType === serviceType)
+  // #98: choosing a route keeps only its buses; 'all' keeps every bus in the tab.
+  // The filter runs on the live list, so markers keep moving while a route is chosen.
+  const busesInTab = buses.filter(
+    (bus) =>
+      bus.serviceType === serviceType &&
+      (selectedRouteId === 'all' || bus.routeId === selectedRouteId)
+  )
   const onMap = busesInTab.filter(
     (bus) => bus.location && isInKuwait(bus.location.latitude, bus.location.longitude)
   )
@@ -172,7 +178,10 @@ function MapPage({ user }) {
               id={`map-tab-${tab.type}`}
               aria-selected={serviceType === tab.type}
               className={`bus-tab-btn ${serviceType === tab.type ? 'active' : ''}`}
-              onClick={() => setServiceType(tab.type)}
+              onClick={() => {
+                setServiceType(tab.type)
+                setSelectedRouteId('all')
+              }}
             >
               {tab.label}
             </button>
@@ -189,7 +198,13 @@ function MapPage({ user }) {
             id="route-filter"
             className="form-select schedule-route-select"
             value={selectedRouteId}
-            onChange={(e) => setSelectedRouteId(e.target.value)}
+            onChange={(e) => {
+              const id = e.target.value
+              setSelectedRouteId(id)
+              // Show the chosen route's tab, so its buses are on the map.
+              const route = routes.find((r) => r.id === id)
+              if (route?.service_type) setServiceType(route.service_type)
+            }}
           >
             <option value="all">All routes</option>
             {routes.map((route) => (
