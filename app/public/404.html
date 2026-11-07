@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KU Bus Tracker</title>
+<script>
+  // The app uses HashRouter, so its pages live after "#" (/team3/#/routes).
+  // GitHub Pages serves this file for any address it has no file for, such as
+  // /team3/routes, so we send the visitor to the same page in the form the app understands.
+  var base = '/team3/';
+  var path = location.pathname.indexOf(base) === 0 ? location.pathname.slice(base.length) : '';
+  location.replace(base + (path ? '#/' + path.replace(/\/$/, '') + location.search : ''));
+</script>
+</head>
+<body></body>
+</html>

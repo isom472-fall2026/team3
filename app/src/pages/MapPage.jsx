@@ -16,7 +16,8 @@ const STALE_AFTER_MS = 2 * 60 * 1000
 // even when no new data arrives.
 const CLOCK_TICK_MS = 15 * 1000
 
-function MapPage() {
+function MapPage({ user }) {
+  const isGuest = Boolean(user?.is_anonymous)
   const [serviceType, setServiceType] = useState('on_campus')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
@@ -72,7 +73,7 @@ function MapPage() {
         label={serviceType === 'on_campus' ? 'On-campus bus map' : 'Off-campus bus map'}
       >
         {onMap.map((bus) => (
-          <BusMarker key={bus.tripId} bus={bus} stale={isStale(bus)} />
+          <BusMarker key={bus.tripId} bus={bus} stale={isStale(bus)} isGuest={isGuest} />
         ))}
       </BusMap>
 
