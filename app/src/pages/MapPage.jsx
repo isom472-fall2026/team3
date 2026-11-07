@@ -39,6 +39,9 @@ function MapRecenter({ center, zoom }) {
 function MapPage({ user }) {
   const isGuest = Boolean(user?.is_anonymous)
   const [serviceType, setServiceType] = useState('on_campus')
+  // #98: the route filter above the map. 'all' shows every route's buses.
+  const [routes, setRoutes] = useState([])
+  const [selectedRouteId, setSelectedRouteId] = useState('all')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
 
@@ -114,6 +117,24 @@ function MapPage({ user }) {
     }
   }, [stopId, location.state])
 
+  // #98: active routes for the filter, A to Z.
+  useEffect(() => {
+    let isMounted = true
+    const loadRoutes = async () => {
+      const { data } = await supabase
+        .from('routes')
+        .select('id, name, service_type')
+        .eq('is_active', true)
+        .order('name')
+      if (!isMounted) return
+      setRoutes((data ?? []).slice().sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')))
+    }
+    loadRoutes()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const busesInTab = buses.filter((bus) => bus.serviceType === serviceType)
   const onMap = busesInTab.filter(
     (bus) => bus.location && isInKuwait(bus.location.latitude, bus.location.longitude)
@@ -156,6 +177,27 @@ function MapPage({ user }) {
               {tab.label}
             </button>
           ))}
+        </div>
+      )}
+
+      {!selectedStop && (
+        <div className="schedule-route-selector" id="route-filter-bar">
+          <label className="schedule-route-label" htmlFor="route-filter">
+            Route
+          </label>
+          <select
+            id="route-filter"
+            className="form-select schedule-route-select"
+            value={selectedRouteId}
+            onChange={(e) => setSelectedRouteId(e.target.value)}
+          >
+            <option value="all">All routes</option>
+            {routes.map((route) => (
+              <option key={route.id} value={route.id}>
+                {route.name}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
