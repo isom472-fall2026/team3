@@ -42,6 +42,7 @@ function MapPage({ user }) {
   // #98: the route filter above the map. 'all' shows every route's buses.
   const [routes, setRoutes] = useState([])
   const [routesLoaded, setRoutesLoaded] = useState(false)
+  const [routesError, setRoutesError] = useState(false)
   const [selectedRouteId, setSelectedRouteId] = useState('all')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
@@ -122,12 +123,19 @@ function MapPage({ user }) {
   useEffect(() => {
     let isMounted = true
     const loadRoutes = async () => {
-      const { data } = await supabase
+      const { data, error: routesLoadError } = await supabase
         .from('routes')
         .select('id, name, service_type')
         .eq('is_active', true)
         .order('name')
       if (!isMounted) return
+      if (routesLoadError) {
+        // The map still shows every bus; only the filter is unavailable.
+        console.error('Routes could not be loaded:', routesLoadError)
+        setRoutesError(true)
+        setSelectedRouteId('all')
+        return
+      }
       setRoutes((data ?? []).slice().sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')))
       setRoutesLoaded(true)
     }
@@ -200,7 +208,7 @@ function MapPage({ user }) {
             id="route-filter"
             className="form-select schedule-route-select"
             value={selectedRouteId}
-            disabled={routesLoaded && routes.length === 0}
+            disabled={routesError || (routesLoaded && routes.length === 0)}
             onChange={(e) => {
               const id = e.target.value
               setSelectedRouteId(id)
@@ -209,7 +217,9 @@ function MapPage({ user }) {
               if (route?.service_type) setServiceType(route.service_type)
             }}
           >
-            {routesLoaded && routes.length === 0 ? (
+            {routesError ? (
+              <option value="all">Routes could not be loaded.</option>
+            ) : routesLoaded && routes.length === 0 ? (
               // Only routes with is_active TRUE are listed; if none are, say so.
               <option value="all">No routes running right now.</option>
             ) : (
