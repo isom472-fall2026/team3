@@ -9,6 +9,7 @@ import RouteStopsPage from './RouteStopsPage.jsx'
 import StartTripPage from './StartTripPage.jsx'
 import LastLocationUpdatePage from './LastLocationUpdatePage.jsx'
 import ActiveTripBusPage from './ActiveTripBusPage.jsx'
+import AddStopPage from './AddStopPage.jsx'
 
 // Every signed-in page, in menu order. The first one is where a student lands after
 // signing in, and where an unknown address goes. To add a page: one file here, one line below.
@@ -25,4 +26,5 @@ export const pages = [
   { path: 'last-location-update', label: '⏱️ Last location update', component: LastLocationUpdatePage },
   { path: 'active-trip-bus', label: '🚌 Active trip bus', component: ActiveTripBusPage },
   { path: 'start-trip', label: '▶️ Start a trip', component: StartTripPage, staffOnly: true },
+  { path: 'add-stop', label: '➕ Add stop', component: AddStopPage, staffOnly: true },
 ]
