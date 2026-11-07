@@ -25,6 +25,8 @@ import TestBusPage from './TestBusPage.jsx'
 import StoppedLocationPage from './StoppedLocationPage.jsx'
 
 import AddStopPage from './AddStopPage.jsx'
+
+import AddRoutePage from './AddRoutePage.jsx'
  
 // Every signed-in page, in menu order. The first one is where a student lands after
 
@@ -61,6 +63,8 @@ export const pages = [
   { path: 'stopped-location', label: '🛑 Stopped location', component: StoppedLocationPage, staffOnly: true },
 
   { path: 'add-stop', label: '➕ Add stop', component: AddStopPage, staffOnly: true },
+
+  { path: 'add-route', label: '➕ Add route', component: AddRoutePage, staffOnly: true },
 
 ]
  
