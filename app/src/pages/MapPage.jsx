@@ -246,7 +246,11 @@ function MapPage({ user }) {
       )}
 
       {!loading && !error && !selectedStop && busesInTab.length === 0 && (
-        <p className="map-status" id="no-buses-message">No buses running right now.</p>
+        selectedRouteId === 'all' ? (
+          <p className="map-status" id="no-buses-message">No buses running right now.</p>
+        ) : (
+          <p className="map-status" id="no-route-buses-message">No active buses on this route.</p>
+        )
       )}
 
       {/* A new key re-creates the map when the stop changes or the tab switches. */}

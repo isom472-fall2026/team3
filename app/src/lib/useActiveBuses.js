@@ -75,15 +75,17 @@ function withNewerLocation(bus, row) {
 async function fetchActiveBuses() {
   const { data: trips, error } = await supabase
     .from('trips')
-    .select('id, buses(bus_number), schedules(route_id, routes(name, service_type))')
+    .select('id, status, buses(bus_number), schedules(route_id, routes(name, service_type))')
     .eq('status', 'active')
     .eq('trip_date', kuwaitToday())
   if (error) throw error
+  // Only a status of exactly 'active' counts (#98): never 'Active', 'ACTIVE' or anything else.
+  const running = (trips || []).filter((trip) => trip.status === 'active')
 
   // One small query per running bus for just its newest row, rather than
   // downloading every position the bus has sent today.
   const latest = await Promise.all(
-    (trips || []).map((trip) =>
+    running.map((trip) =>
       supabase
         .from('bus_locations')
         .select('latitude, longitude, recorded_at')
@@ -95,7 +97,7 @@ async function fetchActiveBuses() {
   const failed = latest.find((result) => result.error)
   if (failed) throw failed.error
 
-  return (trips || []).map((trip, i) => {
+  return running.map((trip, i) => {
     const row = latest[i].data?.[0]
     const route = trip.schedules?.routes
     return {
