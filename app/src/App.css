@@ -1,1561 +1,408 @@
-/* Layout */
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
 
-.app-navbar {
-  background-color: var(--ku-black);
-  color: var(--white);
-  padding: 12px 16px;
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
 
-.navbar-container {
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+/* =========================================================
+   Stop search cards — Story 107
+   ========================================================= */
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logo {
+.stop-search-box {
   display: block;
-  height: 40px;
-  width: auto;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--white);
-}
-
-.brand-subtitle {
-  font-size: 12px;
-  color: var(--ku-blue);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-.auth-tab-group {
-  display: flex;
-  background-color: var(--on-dark-12);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 4px;
-}
-
-.tab-btn {
-  background: none;
-  border: none;
-  color: var(--gray-200);
-  padding: 6px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tab-btn:hover {
-  color: var(--white);
-  background-color: var(--on-dark-10);
-}
-
-.tab-btn.active {
-  background-color: var(--white);
-  color: var(--ku-black);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Main Content Area */
-.main-content {
-  flex: 1;
-  padding: 24px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-/* Auth Card (Mobile-first) */
-.auth-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: var(--shadow-md);
-}
-
-@media (min-width: 640px) {
-  .auth-card {
-    padding: 32px;
-  }
-}
-
-.auth-header {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.auth-logo {
-  display: block;
-  height: 150px;
-  width: auto;
-  max-width: 100%;
-  margin: 0 auto 16px;
-}
-
-.badge-ku {
-  display: inline-block;
-  background-color: var(--ku-gold-light);
-  color: var(--ku-gold-text);
-  border: 1px solid var(--ku-gold-border);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-
-.auth-header h2 {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-}
-
-.auth-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-/* Form Elements */
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.form-group input {
-  width: 100%;
-  padding: 10px 14px;
-  font-size: 15px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 8px;
-  outline: none;
-  background-color: var(--white);
-  color: var(--text-primary);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 44px;
-  /* Mobile touch friendly */
-}
-
-.form-group input:focus {
-  border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-.field-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* Password Security Note */
-.password-security-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--border-color);
-  border-left: 3px solid var(--ku-gold);
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-top: 4px;
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: var(--text-secondary);
-}
-
-.security-icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: var(--ku-gold-text);
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 18px;
-  font-size: 15px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-  min-height: 44px;
-  text-decoration: none;
-}
-
-.btn-primary {
-  background-color: var(--ku-blue);
-  color: var(--ku-black);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--ku-blue-hover);
-}
-
-.btn-primary:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: var(--gray-100);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: var(--gray-200);
-}
-
-.btn-outline {
-  background-color: transparent;
-  color: var(--ku-blue-text);
-  border: 1px solid var(--ku-blue);
-}
-
-.btn-outline:hover {
-  background-color: var(--ku-blue-50);
-}
-
-/* Sign Out stays red so it reads as leaving, not as a main action. */
-.btn-danger {
-  background-color: transparent;
-  color: var(--error-text);
-  border: 1px solid var(--error-border);
-}
-
-.btn-danger:hover {
-  background-color: var(--error-bg);
-}
-
-.btn-link {
-  background: none;
-  border: none;
-  color: var(--ku-blue-text);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  text-decoration: underline;
-}
-
-.btn-link:hover {
-  color: var(--ku-blue-text);
-}
-
-.auth-footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-/* Alerts */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.45;
-  margin-bottom: 18px;
-}
-
-.alert-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.alert-error {
-  background-color: var(--error-bg);
-  border: 1px solid var(--error-border);
-  color: var(--error-text);
-}
-
-.alert-success {
-  background-color: var(--success-bg);
-  border: 1px solid var(--success-border);
-  color: var(--success-text);
-}
-
-/* Bus Pages Screen */
-.bus-pages-container {
-  width: 100%;
-  max-width: 880px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.bus-header {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: var(--shadow-sm);
-}
-
-@media (min-width: 640px) {
-  .bus-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.bus-header h1 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin: 6px 0 4px;
-}
-
-.user-email-tag {
-  font-size: 13.5px;
-  color: var(--text-secondary);
-}
-
-.bus-header-actions {
-  display: flex;
-  gap: 10px;
-}
-
-/* Unconfirmed Notice */
-.bus-unconfirmed-notice {
-  background-color: var(--warning-bg);
-  border: 1.5px solid var(--warning-border);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.bus-unconfirmed-notice .notice-icon {
-  font-size: 32px;
-}
-
-.bus-unconfirmed-notice h3 {
-  font-size: 18px;
-  color: var(--warning-text);
-  margin-bottom: 6px;
-}
-
-.bus-unconfirmed-notice p {
-  font-size: 14.5px;
-  color: var(--warning-text);
-  margin-bottom: 8px;
-}
-
-.notice-instruction {
-  font-size: 13.5px;
-}
-
-.no-bus-info-panel {
-  background-color: var(--white);
-  border: 1px dashed var(--warning-strong);
-  border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-}
-
-.no-bus-text {
-  font-weight: 600;
-  color: var(--warning-text);
-  font-size: 14px;
-}
-
-/* Confirmed Section */
-.bus-confirmed-section {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.verification-status-banner {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  align-self: flex-start;
-}
-
-.status-dot-active {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--success-strong);
-}
-
-.bus-content-intro h2 {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.bus-content-intro p {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.buses-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-@media (min-width: 640px) {
-  .buses-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.bus-card {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
-}
-
-.bus-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.bus-number {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ku-black);
-}
-
-.bus-status {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  text-transform: uppercase;
-}
-
-.status-active {
-  background-color: var(--success-bg);
-  color: var(--success-text);
-}
-
-.status-inactive {
-  background-color: var(--gray-100);
-  color: var(--text-secondary);
-}
-
-.bus-card-body p {
-  font-size: 13.5px;
-  color: var(--text-secondary);
-}
-
-/* Route Operating Hours */
-.route-hours-section {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
-}
-
-.route-hours-section h3 {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 14px;
-}
-
-.route-hours-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-@media (min-width: 640px) {
-  .route-hours-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.route-hours-card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-}
-
-.route-hours-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.route-hours-value {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.route-hours-unavailable {
-  font-style: italic;
-  color: var(--text-muted);
-}
-
-/* Bus Placeholder Panel */
-.bus-placeholder-panel {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
-}
-
-.placeholder-badge {
-  display: inline-block;
-  background-color: var(--ku-blue-50);
-  color: var(--ku-blue-text);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-}
-
-.bus-placeholder-panel h3 {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 6px;
-}
-
-.bus-placeholder-panel p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-}
-
-.sample-routes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sample-route-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-  gap: 12px;
-}
-
-.route-icon {
-  font-size: 22px;
-}
-
-.route-details {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.route-details strong {
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.route-details span {
-  font-size: 12.5px;
-  color: var(--text-muted);
-}
-
-.route-timing {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ku-blue-text);
-  background-color: var(--ku-blue-50);
-  padding: 4px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-/* Loading & Footer */
-.loading-logo {
-  height: 72px;
-  width: auto;
-}
-
-.loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 16px;
-  color: var(--text-secondary);
-}
-
-.spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--gray-200);
-  border-top-color: var(--ku-blue);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.app-footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 12.5px;
-  color: var(--white);
-  border-top: 4px solid var(--ku-gold);
-  background-color: var(--ku-black);
-}
-
-/* =========================================================
-   Portal Tab Navigation (Admin Dashboard vs Bus Fleet)
-   ========================================================= */
-.bus-tabs-nav {
-  display: flex;
-  gap: 8px;
-  background-color: var(--gray-200);
-  padding: 4px;
-  border-radius: 10px;
-  margin-bottom: 24px;
-  border: 1px solid var(--border-color);
-}
-
-.bus-tab-btn {
-  flex: 1;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.bus-tab-btn:hover {
-  color: var(--ku-black);
-  background-color: var(--on-dark-60);
-}
-
-.bus-tab-btn.active {
-  background-color: var(--white);
-  color: var(--ku-black);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--shadow-faint);
-}
-
-/* =========================================================
-   Admin Dashboard & Weekly Trip History (Story 34)
-   ========================================================= */
-.admin-dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-
-.dashboard-intro-banner {
-  background: var(--ku-black);
-  border-bottom: 4px solid var(--ku-gold);
-  color: var(--white);
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: var(--shadow-md);
-}
-
-.dashboard-badge-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.badge-admin {
-  background-color: var(--ku-gold);
-  color: var(--ku-black);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.badge-window {
-  background-color: var(--on-dark-20);
-  color: var(--white);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(4px);
-}
-
-.badge-demo {
-  background-color: var(--ku-gold-light);
-  color: var(--ku-black);
-  border: 1px solid var(--ku-gold);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.dashboard-title {
-  font-size: 26px;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: var(--white);
-  letter-spacing: -0.02em;
-}
-
-.dashboard-subtitle {
-  font-size: 14px;
-  color: var(--ku-blue-200);
-  max-width: 680px;
-  line-height: 1.5;
-}
-
-/* KPI Summary Cards */
-.dashboard-kpis-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.kpi-card {
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.kpi-icon {
-  font-size: 28px;
-  background: var(--gray-100);
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-}
-
-.kpi-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.kpi-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.kpi-value {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--ku-black);
-  line-height: 1.2;
-  margin: 2px 0;
-}
-
-.kpi-detail {
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
-/* Filter and Sort Toolbar */
-.filter-sort-toolbar {
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.toolbar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  border-bottom: 1px solid var(--gray-100);
-  padding-bottom: 10px;
-}
-
-.toolbar-header h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ku-black);
-}
-
-.filter-counter {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ku-blue-text);
-  background: var(--ku-blue-50);
-  padding: 4px 10px;
-  border-radius: 16px;
-  border: 1px solid var(--ku-blue-100);
-}
-
-.toolbar-controls-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  align-items: flex-end;
-}
-
-.control-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.control-label {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.form-select {
-  padding: 8px 12px;
-  font-size: 13.5px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: var(--white);
-  color: var(--text-primary);
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.form-select:focus {
-  border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-.control-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.btn-sm {
-  padding: 8px 12px;
-  font-size: 12.5px;
-}
-
-/* Trip Records Table Section */
-.trip-records-section {
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.trips-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 13.5px;
-}
-
-.trips-table thead {
-  background-color: var(--gray-50);
-  border-bottom: 2px solid var(--border-color);
-}
-
-.trips-table th {
-  padding: 14px 16px;
-  font-weight: 700;
-  color: var(--ku-black);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.trips-table tbody tr {
-  border-bottom: 1px solid var(--gray-100);
-  transition: background-color 0.15s ease;
-}
-
-.trips-table tbody tr:hover {
-  background-color: var(--gray-50);
-}
-
-.trips-table td {
-  padding: 14px 16px;
-  vertical-align: middle;
-}
-
-.cell-date .date-main {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.cell-date .date-sub {
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
-.bus-number-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: var(--gray-100);
-  color: var(--ku-black);
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  white-space: nowrap;
-}
-
-.route-name-text {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.time-tag {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.planned-tag {
-  background: var(--gray-100);
-  color: var(--text-secondary);
-  border: 1px solid var(--gray-200);
-}
-
-.actual-start-tag {
-  background: var(--ku-blue-50);
-  color: var(--ku-blue-text);
-  border: 1px solid var(--ku-blue-200);
-}
-
-.actual-completion-tag {
-  background: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-}
-
-.status-badge-completed {
-  display: inline-flex;
-  align-items: center;
-  background-color: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.empty-trips-card {
-  padding: 48px 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.empty-icon {
-  font-size: 40px;
-}
-
-.empty-trips-card h3 {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.empty-trips-card p {
-  color: var(--text-secondary);
-  font-size: 14px;
-  max-width: 440px;
-  margin-bottom: 12px;
-}
-
-.dashboard-loading {
-  padding: 48px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-secondary);
-}
-
-.dashboard-compliance-note {
-  background: var(--gray-50);
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.dashboard-compliance-note code {
-  background: var(--gray-200);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 11.5px;
-  color: var(--text-primary);
-}
-
-/* =========================================================
-   Bus Route Schedule Lookup — Story 33
-   ========================================================= */
-
-.schedule-route-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-width: 420px;
-}
-
-.schedule-route-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.schedule-route-select {
-  width: 100%;
-}
-
-.schedule-departures-section {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
-}
-
-.schedule-departures-heading {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 14px;
-}
-
-.schedule-departure-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.schedule-departure-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-}
-
-.schedule-departure-time {
-  font-size: 15px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--ku-black);
-  min-width: 44px;
-}
-
-.schedule-departure-sep {
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.schedule-departure-days {
-  font-size: 13.5px;
-  color: var(--text-secondary);
-}
-
-.schedule-empty-notice {
-  padding: 14px 16px;
-  background-color: var(--gray-50);
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
-.schedule-departure-item.schedule-departure-cancelled {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-}
-
-.schedule-departure-item.schedule-departure-cancelled .schedule-departure-time,
-.schedule-departure-item.schedule-departure-cancelled .schedule-departure-days {
-  color: var(--text-muted);
-}
-
-.schedule-departure-cancelled-label {
-  margin-left: auto;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #b91c1c;
-  background-color: #fee2e2;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  text-decoration: none;
-}
-
-/* =========================================================
-   Trip delay — Story 30
-   ========================================================= */
-.trip-delay {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.trip-delay-minutes {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--error-text);
-}
-
-.trip-delay-none,
-.trip-delay-cancelled {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ku-black);
-}
-
-/* =========================================================
-   Route stops — Story 29
-   ========================================================= */
-.route-stops-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-left: 0;
-  list-style-position: inside;
-}
-
-.route-stops-item {
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-  font-size: 14.5px;
-  color: var(--ku-black);
-}
-
-/* =========================================================
-   Route start → end endpoints — Story 84
-   ========================================================= */
-
-.route-endpoints {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 2px;
-  font-size: 12.5px;
-  margin-top: 4px;
-}
-
-.route-endpoint-stop {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.route-endpoint-arrow {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-.route-endpoint-one-stop {
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.route-endpoints-unset,
-.route-endpoints-error {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  font-style: italic;
-  margin-top: 4px;
-}
-
-/* =========================================================
-   Live bus map (Story 31)
-   ========================================================= */
-.bus-map {
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.bus-map-canvas {
-  height: 480px;
-  width: 100%;
-}
-
-.map-type-tabs {
-  margin-bottom: 16px;
-}
-
-.map-status {
-  margin: 0 0 12px;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-/* Bus markers: Leaflet puts the marker's top-left corner on the bus's position,
-   so the content is shifted back to centre the badge on that point. */
-.bus-marker-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  transform: translate(-50%, -14px);
-}
-
-.bus-marker-badge {
-  white-space: nowrap;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--ku-black);
-  color: var(--white);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 16px;
-  border: 2px solid var(--white);
-  box-shadow: var(--shadow-sm);
-}
-
-.bus-marker-note {
-  white-space: nowrap;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: var(--white);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-}
-
-.bus-marker--stale .bus-marker-badge {
-  background: var(--gray-200);
-  color: var(--text-secondary);
-}
-
-/* Running buses that cannot be placed on the map. */
-.map-unplaced {
-  list-style: none;
-  margin: 12px 0 0;
-  padding: 12px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--white);
-}
-
-.map-unplaced li+li {
-  margin-top: 6px;
-}
-
-.map-unplaced-note {
-  color: var(--text-secondary);
-}
-
-/* Bus trip card on map (#48) */
-.bus-trip-popup .leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
-}
-
-.bus-trip-popup .leaflet-popup-content {
-  margin: 10px 14px;
-  line-height: 1.4;
-}
-
-.bus-trip-card {
-  font-family: inherit;
-  color: var(--text-primary);
-  font-size: 13px;
-  min-width: 140px;
-}
-
-.bus-trip-card-header {
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.bus-trip-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.bus-trip-stop {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.bus-trip-scheduled {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.bus-trip-label {
-  font-weight: 600;
-}
-
-.bus-trip-card-status {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-@media (max-width: 640px) {
-  .bus-map-canvas {
-    height: 360px;
-  }
-}
-
-/* =========================================================
-
-   Last location update — Story 36
-
-   ========================================================= */
-
-.last-updated {
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  align-items: center;
-
-  gap: 8px;
-
-  font-size: 16px;
-
-  font-weight: 700;
-
-  color: var(--ku-black);
-
-}
-
-.last-updated-unavailable,
-
-.last-updated-unknown,
-
-.last-updated-finished {
-
-  font-weight: 600;
-
-  color: var(--text-secondary);
-
-}
-
-.last-updated-stale {
-
-  color: var(--text-secondary);
-
-}
-
-.last-updated-label {
-
-  padding: 2px 8px;
-
-  border-radius: 999px;
-
-  border: 1px solid var(--error-border);
-
-  background: var(--error-bg);
-
-  color: var(--error-text);
-
-  font-size: 12.5px;
-
-  font-weight: 600;
-
-}
-
-/* Dialog: in-page, never the browser's alert() (#116) */
-.scrim {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: none;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.scrim.open {
-  display: flex;
-}
-
-.dialog {
-  background: var(--white);
   width: 100%;
   max-width: 480px;
-  border-radius: 22px 22px 0 0;
-  padding: 22px 18px 20px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  padding: 10px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 14.5px;
+  margin-bottom: 16px;
+  background: var(--gray-50);
+  color: var(--ku-black);
+  box-sizing: border-box;
 }
 
-.dialog h3 {
-  font-size: 19px;
-  font-weight: 800;
-  line-height: 1.25;
+.stops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stop-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+.stop-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stop-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ku-black);
+}
+
+.stop-area {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.stop-actions {
+  flex-shrink: 0;
+}
+
+.stop-map-btn {
+  font-size: 13px;
+  padding: 6px 14px;
+}
+
+.stop-no-location {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* =========================================================
+   Stop pin marker on the map — Story 107
+   ========================================================= */
+
+.stop-pin-marker {
+  background: none;
+  border: none;
+}
+
+.stop-pin-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.stop-pin-icon {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.stop-pin-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 2px 7px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  white-space: nowrap;
+}
+
+.stop-pin-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ku-black);
+  line-height: 1.3;
+}
+
+.stop-pin-area {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
+/* =========================================================
+   Stop popup — Story 107
+   ========================================================= */
+
+.stop-popup .leaflet-popup-content {
+  margin: 10px 14px;
+  min-width: 170px;
+}
+
+.stop-popup-content {
+  font-family: inherit;
+}
+
+.stop-popup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   margin-bottom: 8px;
 }
 
-.dialog p {
-  color: var(--text-secondary);
+.stop-popup-name {
   font-size: 14px;
-  margin-top: 6px;
+  font-weight: 700;
+  color: var(--ku-black);
 }
 
-.dialog .acts {
+.stop-popup-area {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.stop-popup-routes-section {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 8px;
+}
+
+.stop-popup-routes-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.stop-popup-routes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stop-popup-route-item {
+  font-size: 13px;
+  color: var(--ku-black);
+  font-weight: 500;
+}
+
+.stop-popup-no-routes {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* =========================================================
+   Selected stop banner on the map page — Story 107
+   ========================================================= */
+
+.selected-stop-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.selected-stop-banner strong {
+  color: var(--ku-black);
+}
+
+
+/* =========================================================
+   Stop search cards — Story 107
+   ========================================================= */
+
+.stop-search-box {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  padding: 10px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 14.5px;
+  margin-bottom: 16px;
+  background: var(--gray-50);
+  color: var(--ku-black);
+  box-sizing: border-box;
+}
+
+.stops-list {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: 18px;
 }
 
-.dialog .acts .btn {
+.stop-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+.stop-info {
   flex: 1;
+  min-width: 0;
 }
 
-.btn-cancel-trip {
-  margin-top: 8px;
+.stop-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ku-black);
+}
+
+.stop-area {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.stop-actions {
+  flex-shrink: 0;
+}
+
+.stop-map-btn {
+  font-size: 13px;
+  padding: 6px 14px;
+}
+
+.stop-no-location {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* =========================================================
+   Stop pin marker on the map — Story 107
+   ========================================================= */
+
+.stop-pin-marker {
+  background: none;
+  border: none;
+}
+
+.stop-pin-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.stop-pin-icon {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.stop-pin-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 2px 7px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  white-space: nowrap;
+}
+
+.stop-pin-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ku-black);
+  line-height: 1.3;
+}
+
+.stop-pin-area {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
+/* =========================================================
+   Stop popup — Story 107
+   ========================================================= */
+
+.stop-popup .leaflet-popup-content {
+  margin: 10px 14px;
+  min-width: 170px;
+}
+
+.stop-popup-content {
+  font-family: inherit;
+}
+
+.stop-popup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.stop-popup-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ku-black);
+}
+
+.stop-popup-area {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.stop-popup-routes-section {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 8px;
+}
+
+.stop-popup-routes-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.stop-popup-routes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stop-popup-route-item {
+  font-size: 13px;
+  color: var(--ku-black);
+  font-weight: 500;
+}
+
+.stop-popup-no-routes {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* =========================================================
+   Selected stop banner on the map page — Story 107
+   ========================================================= */
+
+.selected-stop-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.selected-stop-banner strong {
+  color: var(--ku-black);
 }
