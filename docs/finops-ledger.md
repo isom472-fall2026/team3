@@ -65,6 +65,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
+| [#96](https://github.com/isom472-fall2026/team3/issues/96) — Transportation coordinator adds a stop | Antigravity (Google) | 7 requests | The story and its 7 acceptance criteria, `app/src/pages/index.js`, `app/src/index.css`, and the `stops` table (`name`, `area`, `latitude`, `longitude`, `geofence_radius_m`). Built criterion by criterion: `app/src/pages/AddStopPage.jsx` with input fields and default 50m radius, missing field checks under each input, empty-space name rejection, Kuwait boundary checks (28.5–30.1 N, 46.5–48.5 E), whole-number radius check (10–500m), `staffOnly: true` route guard with Supabase RLS protection, and styling via CSS variables. | Building one criterion per prompt took 7 requests, which is one over our target limit of 6. Next time, combine closely related validation checks into a single prompt to keep request counts lower. |
 
 ## Phase 5
 
