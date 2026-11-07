@@ -41,6 +41,7 @@ function MapPage({ user }) {
   const [serviceType, setServiceType] = useState('on_campus')
   // #98: the route filter above the map. 'all' shows every route's buses.
   const [routes, setRoutes] = useState([])
+  const [routesLoaded, setRoutesLoaded] = useState(false)
   const [selectedRouteId, setSelectedRouteId] = useState('all')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
@@ -128,6 +129,7 @@ function MapPage({ user }) {
         .order('name')
       if (!isMounted) return
       setRoutes((data ?? []).slice().sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')))
+      setRoutesLoaded(true)
     }
     loadRoutes()
     return () => {
@@ -198,6 +200,7 @@ function MapPage({ user }) {
             id="route-filter"
             className="form-select schedule-route-select"
             value={selectedRouteId}
+            disabled={routesLoaded && routes.length === 0}
             onChange={(e) => {
               const id = e.target.value
               setSelectedRouteId(id)
@@ -206,7 +209,12 @@ function MapPage({ user }) {
               if (route?.service_type) setServiceType(route.service_type)
             }}
           >
-            <option value="all">All routes</option>
+            {routesLoaded && routes.length === 0 ? (
+              // Only routes with is_active TRUE are listed; if none are, say so.
+              <option value="all">No routes running right now.</option>
+            ) : (
+              <option value="all">All routes</option>
+            )}
             {routes.map((route) => (
               <option key={route.id} value={route.id}>
                 {route.name}
