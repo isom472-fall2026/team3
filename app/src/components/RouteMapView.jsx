@@ -22,6 +22,11 @@ function pinIcon(position, name, endLabel) {
   })
 }
 
+// A name that is empty or only spaces is shown as "Unnamed stop".
+function stopName(name) {
+  return typeof name === 'string' && name.trim() !== '' ? name.trim() : 'Unnamed stop'
+}
+
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
 }
@@ -104,8 +109,8 @@ function RouteMapView({ routeId }) {
             <Marker
               key={stop.id}
               position={points[i]}
-              icon={pinIcon(i + 1, stop.name, endLabel)}
-              title={`${i + 1}. ${stop.name}`}
+              icon={pinIcon(i + 1, stopName(stop.name), endLabel)}
+              title={`${i + 1}. ${stopName(stop.name)}`}
             />
           )
         })}
