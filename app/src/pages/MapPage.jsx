@@ -4,6 +4,7 @@ import { useMap } from 'react-leaflet'
 import BusMap from '../components/BusMap.jsx'
 import BusMarker from '../components/BusMarker.jsx'
 import StopMarker from '../components/StopMarker.jsx'
+import RouteMapView from '../components/RouteMapView.jsx'
 import { MAP_VIEWS, isInKuwait } from '../lib/mapViews.js'
 import { useActiveBuses } from '../lib/useActiveBuses.js'
 import { supabase } from '../lib/supabase.js'
@@ -169,6 +170,10 @@ function MapPage({ user }) {
   const mapView = stopCenter
     ? { center: stopCenter, zoom: 17 }
     : MAP_VIEWS[serviceType]
+
+  // #121: "Show on map" on a route opens the map with ?route=<id>: draw that route's stops.
+  const routeParam = searchParams.get('route')
+  if (routeParam) return <RouteMapView routeId={routeParam} />
 
   return (
     <div className="bus-confirmed-section" id="map-page">
