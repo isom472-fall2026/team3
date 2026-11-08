@@ -45,6 +45,7 @@ function RouteMapView({ routeId }) {
   const [route, setRoute] = useState(null)
   const [stops, setStops] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -58,6 +59,13 @@ function RouteMapView({ routeId }) {
           .order('sequence_order'),
       ])
       if (!isMounted) return
+      // The route or its stops could not be read (or the route does not exist).
+      if (routeRes.error || stopsRes.error || !routeRes.data) {
+        console.error('Route map could not be loaded:', routeRes.error || stopsRes.error || 'route not found')
+        setLoadError(true)
+        setLoading(false)
+        return
+      }
       setRoute(routeRes.data ?? null)
       setStops(
         (stopsRes.data ?? [])
@@ -102,7 +110,13 @@ function RouteMapView({ routeId }) {
 
       {loading && <p className="map-status">Loading route…</p>}
 
-      {!loading && stops.length === 0 && (
+      {loadError && (
+        <div className="alert alert-error" role="alert" id="route-map-error">
+          <div>Map could not be loaded. Try again.</div>
+        </div>
+      )}
+
+      {!loading && !loadError && stops.length === 0 && (
         <p className="map-status" id="route-no-stops-message">No stops listed for this route.</p>
       )}
 
@@ -119,27 +133,29 @@ function RouteMapView({ routeId }) {
         </p>
       )}
 
-      <BusMap
-        key={routeId}
-        view={MAP_VIEWS[route?.service_type] ?? MAP_VIEWS.on_campus}
-        label={`Map of the stops on ${route?.name ?? 'this route'}`}
-      >
-        <FitToStops points={points} />
-        {points.length > 1 && (
-          <Polyline positions={points} pathOptions={{ color: '#0EACE3', weight: 5 }} />
-        )}
-        {placed.map(({ stop, position }, i) => {
-          const endLabel = position === 1 ? 'Start' : position === stops.length ? 'End' : null
-          return (
-            <Marker
-              key={stop.id}
-              position={points[i]}
-              icon={pinIcon(position, stopName(stop.name), endLabel)}
-              title={`${position}. ${stopName(stop.name)}`}
-            />
-          )
-        })}
-      </BusMap>
+      {!loadError && (
+        <BusMap
+          key={routeId}
+          view={MAP_VIEWS[route?.service_type] ?? MAP_VIEWS.on_campus}
+          label={`Map of the stops on ${route?.name ?? 'this route'}`}
+        >
+          <FitToStops points={points} />
+          {points.length > 1 && (
+            <Polyline positions={points} pathOptions={{ color: '#0EACE3', weight: 5 }} />
+          )}
+          {placed.map(({ stop, position }, i) => {
+            const endLabel = position === 1 ? 'Start' : position === stops.length ? 'End' : null
+            return (
+              <Marker
+                key={stop.id}
+                position={points[i]}
+                icon={pinIcon(position, stopName(stop.name), endLabel)}
+                title={`${position}. ${stopName(stop.name)}`}
+              />
+            )
+          })}
+        </BusMap>
+      )}
     </div>
   )
 }
