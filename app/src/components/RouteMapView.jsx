@@ -9,12 +9,22 @@ import { MAP_VIEWS } from '../lib/mapViews.js'
 // #121: one route's stops on the campus map, joined by a line in routes_stops.sequence_order.
 // MapPage shows this instead of the live buses when the address has ?route=<id>.
 
-const pinIcon = L.divIcon({
-  className: 'stop-pin-marker',
-  html: '<div class="stop-pin-inner"><span class="stop-pin-icon" aria-hidden="true">🚏</span></div>',
-  iconSize: null,
-  iconAnchor: [0, 0],
-})
+// Each pin shows its position on the route and the stop's name; the first stop
+// is labelled "Start" and the last "End".
+function pinIcon(position, name, endLabel) {
+  const endHtml = endLabel ? `<span class="stop-pin-area">${endLabel}</span>` : ''
+  return L.divIcon({
+    className: 'stop-pin-marker',
+    // The number sits centred on the stop itself, as a badge on the line; the label hangs below it.
+    html: `<div class="stop-pin-inner" style="transform: translate(-50%, -13px)"><span class="stop-pin-icon route-stop-number" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#0EACE3;color:#000;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)">${position}</span><div class="stop-pin-label"><span class="stop-pin-name">${escapeHtml(name)}</span>${endHtml}</div></div>`,
+    iconSize: null,
+    iconAnchor: [0, 0],
+  })
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+}
 
 // Zooms the map so every pin of the route is in view.
 function FitToStops({ points }) {
@@ -84,9 +94,17 @@ function RouteMapView({ routeId }) {
         {points.length > 1 && (
           <Polyline positions={points} pathOptions={{ color: '#0EACE3', weight: 5 }} />
         )}
-        {stops.map((stop, i) => (
-          <Marker key={stop.id} position={points[i]} icon={pinIcon} />
-        ))}
+        {stops.map((stop, i) => {
+          const endLabel = i === 0 ? 'Start' : i === stops.length - 1 ? 'End' : null
+          return (
+            <Marker
+              key={stop.id}
+              position={points[i]}
+              icon={pinIcon(i + 1, stop.name, endLabel)}
+              title={`${i + 1}. ${stop.name}`}
+            />
+          )
+        })}
       </BusMap>
     </div>
   )
