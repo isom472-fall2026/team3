@@ -85,6 +85,10 @@ function RouteMapView({ routeId }) {
 
       {loading && <p className="map-status">Loading route…</p>}
 
+      {!loading && stops.length === 0 && (
+        <p className="map-status" id="route-no-stops-message">No stops listed for this route.</p>
+      )}
+
       <BusMap
         key={routeId}
         view={MAP_VIEWS[route?.service_type] ?? MAP_VIEWS.on_campus}
