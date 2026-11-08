@@ -703,6 +703,7 @@
    ========================================================= */
 .bus-tabs-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   background-color: var(--gray-200);
   padding: 4px;
@@ -712,7 +713,8 @@
 }
 
 .bus-tab-btn {
-  flex: 1;
+  flex: 1 1 auto;
+  white-space: nowrap;
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
