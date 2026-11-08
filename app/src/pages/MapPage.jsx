@@ -39,6 +39,11 @@ function MapRecenter({ center, zoom }) {
 function MapPage({ user }) {
   const isGuest = Boolean(user?.is_anonymous)
   const [serviceType, setServiceType] = useState('on_campus')
+  // #98: the route filter above the map. 'all' shows every route's buses.
+  const [routes, setRoutes] = useState([])
+  const [routesLoaded, setRoutesLoaded] = useState(false)
+  const [routesError, setRoutesError] = useState(false)
+  const [selectedRouteId, setSelectedRouteId] = useState('all')
   const { buses, loading, error } = useActiveBuses()
   const now = useNow(CLOCK_TICK_MS)
 
@@ -114,7 +119,39 @@ function MapPage({ user }) {
     }
   }, [stopId, location.state])
 
-  const busesInTab = buses.filter((bus) => bus.serviceType === serviceType)
+  // #98: active routes for the filter, A to Z.
+  useEffect(() => {
+    let isMounted = true
+    const loadRoutes = async () => {
+      const { data, error: routesLoadError } = await supabase
+        .from('routes')
+        .select('id, name, service_type')
+        .eq('is_active', true)
+        .order('name')
+      if (!isMounted) return
+      if (routesLoadError) {
+        // The map still shows every bus; only the filter is unavailable.
+        console.error('Routes could not be loaded:', routesLoadError)
+        setRoutesError(true)
+        setSelectedRouteId('all')
+        return
+      }
+      setRoutes((data ?? []).slice().sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')))
+      setRoutesLoaded(true)
+    }
+    loadRoutes()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // #98: choosing a route keeps only its buses; 'all' keeps every bus in the tab.
+  // The filter runs on the live list, so markers keep moving while a route is chosen.
+  const busesInTab = buses.filter(
+    (bus) =>
+      bus.serviceType === serviceType &&
+      (selectedRouteId === 'all' || bus.routeId === selectedRouteId)
+  )
   const onMap = busesInTab.filter(
     (bus) => bus.location && isInKuwait(bus.location.latitude, bus.location.longitude)
   )
@@ -151,11 +188,49 @@ function MapPage({ user }) {
               id={`map-tab-${tab.type}`}
               aria-selected={serviceType === tab.type}
               className={`bus-tab-btn ${serviceType === tab.type ? 'active' : ''}`}
-              onClick={() => setServiceType(tab.type)}
+              onClick={() => {
+                setServiceType(tab.type)
+                setSelectedRouteId('all')
+              }}
             >
               {tab.label}
             </button>
           ))}
+        </div>
+      )}
+
+      {!selectedStop && (
+        <div className="schedule-route-selector" id="route-filter-bar">
+          <label className="schedule-route-label" htmlFor="route-filter">
+            Route
+          </label>
+          <select
+            id="route-filter"
+            className="form-select schedule-route-select"
+            value={selectedRouteId}
+            disabled={routesError || (routesLoaded && routes.length === 0)}
+            onChange={(e) => {
+              const id = e.target.value
+              setSelectedRouteId(id)
+              // Show the chosen route's tab, so its buses are on the map.
+              const route = routes.find((r) => r.id === id)
+              if (route?.service_type) setServiceType(route.service_type)
+            }}
+          >
+            {routesError ? (
+              <option value="all">Routes could not be loaded.</option>
+            ) : routesLoaded && routes.length === 0 ? (
+              // Only routes with is_active TRUE are listed; if none are, say so.
+              <option value="all">No routes running right now.</option>
+            ) : (
+              <option value="all">All routes</option>
+            )}
+            {routes.map((route) => (
+              <option key={route.id} value={route.id}>
+                {route.name}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
@@ -181,7 +256,11 @@ function MapPage({ user }) {
       )}
 
       {!loading && !error && !selectedStop && busesInTab.length === 0 && (
-        <p className="map-status" id="no-buses-message">No buses running right now.</p>
+        selectedRouteId === 'all' ? (
+          <p className="map-status" id="no-buses-message">No buses running right now.</p>
+        ) : (
+          <p className="map-status" id="no-route-buses-message">No active buses on this route.</p>
+        )
       )}
 
       {/* A new key re-creates the map when the stop changes or the tab switches. */}
