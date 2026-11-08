@@ -18,6 +18,17 @@ A web-based system that helps Kuwait University students view bus routes, stops,
 - **Running system:** https://isom472-fall2026.github.io/team3/
 - **Board:** https://github.com/orgs/isom472-fall2026/projects/4
 
+
+## Test accounts
+ 
+| Persona | Email | Password | Can see |
+|---|---|---|---|
+| Student | kubus.student.test@ku.edu.kw | student123 | every student page: routes, stops, schedule, live map, delays |
+| Transportation coordinator (staff) | kubus.staff.test@ku.edu.kw | staff123 | everything above, plus Start a trip, Run test bus, Buses (change status), Add route, Add stop, Stopped location |
+ 
+Both are confirmed, so no KU mailbox is needed.
+
+ 
 ## Where do I go?
 
 | I need to… | Go to |
@@ -84,9 +95,11 @@ cuts the tag.
 | `docs/delivery-notes/` | One note per phase, `phase-1.md` … `phase-6.md`. |
 | `prototype/` | The Design Lead's HTML prototype and the screen list. |
 
+ 
 The repository root is deliberately left free of an `index.html` — that address belongs to
 your running system later in the course.
 
+ 
 ## Working rules
 
 The short version. The full version is [docs/how-we-work.md](docs/how-we-work.md).
