@@ -90,20 +90,20 @@ the story ID, the title, who built it, and what happened to it.
 
 | Story | Title | Who | State at the tag |
 |---|---|---|---|
-| [#106](https://github.com/isom472-fall2026/team3/issues/106) | A test bus plays back fake locations along its route | Abdulrahman | done (PR #155) |
-| [#131](https://github.com/isom472-fall2026/team3/issues/131) | Visitor continues as a guest without a KU account | Abdulrahman | done (PR #156) — scope change, client answer pending, see docs/scope-changes.md |
-| [#79](https://github.com/isom472-fall2026/team3/issues/79) | A bus's arrival at a stop is recorded automatically | Sara | in review (PR #158) |
-| [#80](https://github.com/isom472-fall2026/team3/issues/80) | A late arrival is recorded as a delay automatically | Sara | in review (PR #160) |
-| [#89](https://github.com/isom472-fall2026/team3/issues/89) | Transportation coordinator adds a route | Zeinab | not started |
-| [#96](https://github.com/isom472-fall2026/team3/issues/96) | Transportation coordinator adds a stop | Zeinab | not started |
-| [#98](https://github.com/isom472-fall2026/team3/issues/98) | Student filters active buses by route | Jumana | not started |
-| [#121](https://github.com/isom472-fall2026/team3/issues/121) | Student sees a route drawn on the map | Jumana | not started |
-| [#107](https://github.com/isom472-fall2026/team3/issues/107) | Student sees a stop on the map | Ayah | not started |
-| [#116](https://github.com/isom472-fall2026/team3/issues/116) | Transportation coordinator cancels a trip | Ayah | not started |
-| [#110](https://github.com/isom472-fall2026/team3/issues/110) | Transportation coordinator sees buses that stopped sending their location | Roqaya | not started |
-| [#117](https://github.com/isom472-fall2026/team3/issues/117) | Staff changes a bus's status | Roqaya | in review (PR #159) |
+| [#106](https://github.com/isom472-fall2026/team3/issues/106) | A test bus plays back fake locations along its route | Abdulrahman | done |
+| [#131](https://github.com/isom472-fall2026/team3/issues/131) | Visitor continues as a guest without a KU account | Abdulrahman | done — scope change, see docs/scope-changes.md |
+| [#79](https://github.com/isom472-fall2026/team3/issues/79) | A bus's arrival at a stop is recorded automatically | Sara | done |
+| [#80](https://github.com/isom472-fall2026/team3/issues/80) | A late arrival is recorded as a delay automatically | Sara | done |
+| [#89](https://github.com/isom472-fall2026/team3/issues/89) | Transportation coordinator adds a route | Zeinab | done |
+| [#96](https://github.com/isom472-fall2026/team3/issues/96) | Transportation coordinator adds a stop | Zeinab | done |
+| [#98](https://github.com/isom472-fall2026/team3/issues/98) | Student filters active buses by route | Jumana | done |
+| [#121](https://github.com/isom472-fall2026/team3/issues/121) | Student sees a route drawn on the map | Jumana | done |
+| [#107](https://github.com/isom472-fall2026/team3/issues/107) | Student sees a stop on the map | Ayah | done |
+| [#116](https://github.com/isom472-fall2026/team3/issues/116) | Transportation coordinator cancels a trip | Ayah | done — criteria changed: the button is on Start a trip (#105), and the "Trip cancelled" part moved to #32 |
+| [#110](https://github.com/isom472-fall2026/team3/issues/110) | Transportation coordinator sees buses that stopped sending their location | Roqaya | done |
+| [#117](https://github.com/isom472-fall2026/team3/issues/117) | Staff changes a bus's status | Roqaya | done |
 | [#81](https://github.com/isom472-fall2026/team3/issues/81) | A trip finishes automatically at its last stop | Sara | planned for phase 5 |
-| [#32](https://github.com/isom472-fall2026/team3/issues/32) | Student can view estimated arrival time at a stop | Abdulrahman | planned for phase 5 |
+| [#32](https://github.com/isom472-fall2026/team3/issues/32) | Student can view estimated arrival time at a stop | Abdulrahman | planned for phase 5 — now also shows "Trip cancelled" (moved from #116) |
 | [#78](https://github.com/isom472-fall2026/team3/issues/78) | Student sees the nearest stop to them | Sara | planned for phase 5 |
 | [#83](https://github.com/isom472-fall2026/team3/issues/83) | Staff sees how far each running trip has got | Ayah | planned for phase 5 |
 | [#90](https://github.com/isom472-fall2026/team3/issues/90) | Transportation coordinator puts stops on a route in order | Zeinab | planned for phase 5 |
@@ -127,7 +127,6 @@ the story ID, the title, who built it, and what happened to it.
 | [#93](https://github.com/isom472-fall2026/team3/issues/93) | Receive an alert when the bus is approaching the stop | Roqaya | dropped — §6 rules out push notifications |
 | [#94](https://github.com/isom472-fall2026/team3/issues/94) | View turn-by-turn route directions and stop sequence | Roqaya | dropped |
 | [#95](https://github.com/isom472-fall2026/team3/issues/95) | View real-time bus passenger capacity status | Roqaya | dropped — §6 rules out automated passenger counting |
-
 ## Phase 5 — saved 18 November
 
 | Story | Title | Who | State at the tag |
