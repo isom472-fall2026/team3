@@ -4,7 +4,7 @@ import { Marker, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { supabase } from '../lib/supabase.js'
 import BusMap from './BusMap.jsx'
-import { MAP_VIEWS } from '../lib/mapViews.js'
+import { MAP_VIEWS, isInKuwait } from '../lib/mapViews.js'
 
 // #121: one route's stops on the campus map, joined by a line in routes_stops.sequence_order.
 // MapPage shows this instead of the live buses when the address has ?route=<id>.
@@ -72,10 +72,22 @@ function RouteMapView({ routeId }) {
     }
   }, [routeId])
 
+  // A stop outside Kuwait (28.5–30.1, 46.5–48.5) has a wrong location, so it gets no pin
+  // and the line goes straight from the stop before it to the stop after it.
+  // Each placed stop keeps its position number on the route.
+  const placed = useMemo(
+    () =>
+      stops
+        .map((stop, i) => ({ stop, position: i + 1 }))
+        .filter(({ stop }) => isInKuwait(Number(stop.latitude), Number(stop.longitude))),
+    [stops]
+  )
+  const notPlaced = stops.length - placed.length
+
   // Pins and the line follow the stops in sequence order.
   const points = useMemo(
-    () => stops.map((stop) => [Number(stop.latitude), Number(stop.longitude)]),
-    [stops]
+    () => placed.map(({ stop }) => [Number(stop.latitude), Number(stop.longitude)]),
+    [placed]
   )
 
   return (
@@ -94,6 +106,14 @@ function RouteMapView({ routeId }) {
         <p className="map-status" id="route-no-stops-message">No stops listed for this route.</p>
       )}
 
+      {!loading && notPlaced > 0 && (
+        <p className="map-status" id="route-unplaced-message">
+          {notPlaced === 1
+            ? '1 stop could not be placed on the map.'
+            : `${notPlaced} stops could not be placed on the map.`}
+        </p>
+      )}
+
       <BusMap
         key={routeId}
         view={MAP_VIEWS[route?.service_type] ?? MAP_VIEWS.on_campus}
@@ -103,14 +123,14 @@ function RouteMapView({ routeId }) {
         {points.length > 1 && (
           <Polyline positions={points} pathOptions={{ color: '#0EACE3', weight: 5 }} />
         )}
-        {stops.map((stop, i) => {
-          const endLabel = i === 0 ? 'Start' : i === stops.length - 1 ? 'End' : null
+        {placed.map(({ stop, position }, i) => {
+          const endLabel = position === 1 ? 'Start' : position === stops.length ? 'End' : null
           return (
             <Marker
               key={stop.id}
               position={points[i]}
-              icon={pinIcon(i + 1, stopName(stop.name), endLabel)}
-              title={`${i + 1}. ${stopName(stop.name)}`}
+              icon={pinIcon(position, stopName(stop.name), endLabel)}
+              title={`${position}. ${stopName(stop.name)}`}
             />
           )
         })}
