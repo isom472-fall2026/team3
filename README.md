@@ -100,8 +100,6 @@ The repository root is deliberately left free of an `index.html` — that addres
 your running system later in the course.
 
  
-Both are confirmed, so no KU mailbox is needed.
- 
 ## Working rules
 
 The short version. The full version is [docs/how-we-work.md](docs/how-we-work.md).
