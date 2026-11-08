@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import RouteDepartureForm from '../components/RouteDepartureForm.jsx'
 import { supabase } from '../lib/supabase.js'
 
@@ -114,6 +115,14 @@ function RoutesPage() {
                     : <span className="route-hours-unavailable">Operating hours not available</span>}
                 </div>
                 <RouteEndpoints routeStops={stopsError ? null : (stopsByRoute[route.id] || [])} />
+                {/* #121: open the map with this route's stops drawn in order. */}
+                <Link
+                  to={`/map?route=${route.id}`}
+                  className="btn btn-secondary stop-map-btn"
+                  id={`show-route-on-map-${route.id}`}
+                >
+                  Show on map
+                </Link>
                 {isStaff && (
                   <RouteDepartureForm route={route} />
                 )}
