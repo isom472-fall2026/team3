@@ -86,7 +86,7 @@ the story ID, the title, who built it, and what happened to it.
 | [#94](https://github.com/isom472-fall2026/team3/issues/94) | View turn-by-turn route directions and stop sequence | Roqaya | dropped |
 | [#95](https://github.com/isom472-fall2026/team3/issues/95) | View real-time bus passenger capacity status | Roqaya | dropped — §6 rules out automated passenger counting |
 
-## Phase 4 — saved 4 November
+## Phase 4 — saved 8 November
 
 | Story | Title | Who | State at the tag |
 |---|---|---|---|
