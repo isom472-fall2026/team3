@@ -106,6 +106,11 @@ function RouteMapView({ routeId }) {
         <p className="map-status" id="route-no-stops-message">No stops listed for this route.</p>
       )}
 
+      {!loading && placed.length === 1 && (
+        // One placed stop: its pin is shown, but there is nothing to join a line to.
+        <p className="map-status" id="route-one-stop-message">This route has only one stop.</p>
+      )}
+
       {!loading && notPlaced > 0 && (
         <p className="map-status" id="route-unplaced-message">
           {notPlaced === 1
