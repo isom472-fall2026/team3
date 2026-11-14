@@ -7,7 +7,7 @@ import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
-  const [authView, setAuthView] = useState('signup') // 'signup' | 'signin'
+  const [authView, setAuthView] = useState('signin') // 'signup' | 'signin'
   const [initializing, setInitializing] = useState(true)
 
   useEffect(() => {
@@ -42,42 +42,7 @@ function App() {
   }
 
   return (
-    <div className="app-layout">
-      <header className="app-navbar">
-        <div className="navbar-container">
-          <div className="brand">
-            <img className="brand-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="Kuwait University logo" />
-            <div className="brand-text">
-              <span className="brand-title">KU Bus Tracker</span>
-              <span className="brand-subtitle">Kuwait University</span>
-            </div>
-          </div>
-          {!user && (
-            <div className="auth-tab-group" role="tablist" aria-label="Authentication Options">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={authView === 'signup'}
-                className={`tab-btn ${authView === 'signup' ? 'active' : ''}`}
-                onClick={() => setAuthView('signup')}
-                id="tab-signup"
-              >
-                Sign Up
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={authView === 'signin'}
-                className={`tab-btn ${authView === 'signin' ? 'active' : ''}`}
-                onClick={() => setAuthView('signin')}
-                id="tab-signin"
-              >
-                Sign In
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
+    <div className={`app-layout${user ? '' : ' app-layout--auth'}`}>
 
       <main className="main-content">
         {user ? (
@@ -92,9 +57,11 @@ function App() {
         )}
       </main>
 
-      <footer className="app-footer">
-        <p>© 2026 Kuwait University — Student Bus Tracking System</p>
-      </footer>
+      {!user && (
+        <footer className="app-footer">
+          <p>© 2026 Kuwait University — Student Bus Tracking System</p>
+        </footer>
+      )}
     </div>
   )
 }
