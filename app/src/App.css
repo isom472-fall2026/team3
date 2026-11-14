@@ -159,6 +159,115 @@
   color: var(--text-secondary);
 }
 
+/* Prototype v2 sign-in: the crest, a big question, and the two route lines with a bus. */
+.app-layout--auth .main-content {
+  align-items: flex-start;
+}
+
+@media (max-width: 480px) {
+  .app-layout--auth {
+    background: var(--white);
+  }
+
+  .app-layout--auth .main-content {
+    padding: 0;
+  }
+
+  .app-layout--auth .auth-card {
+    border-radius: 0;
+    max-width: none;
+    padding: 28px 22px;
+  }
+}
+
+.auth-crest-block {
+  margin-bottom: 8px;
+}
+
+.auth-crest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-crest img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.auth-crest-name {
+  font-weight: 800;
+}
+
+.auth-crest-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.auth-heading {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-top: 30px;
+}
+
+.auth-lines {
+  position: relative;
+  height: 36px;
+  margin: 20px 0 6px;
+}
+
+.auth-lines span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.auth-lines span:nth-child(1) {
+  top: 6px;
+  right: 18%;
+  background: var(--route-south);
+}
+
+.auth-lines span:nth-child(2) {
+  top: 22px;
+  left: 22%;
+  background: var(--route-north);
+}
+
+.auth-lines i {
+  position: absolute;
+  top: 0;
+  left: 58%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bus);
+  border: 3px solid var(--ku-black);
+}
+
+.auth-wide {
+  width: 100%;
+}
+
+.auth-or {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.auth-guest-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
 /* =========================================================
    Forms
    ========================================================= */
