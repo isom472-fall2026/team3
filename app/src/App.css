@@ -1,4 +1,10 @@
-/* Layout */
+/* Visual language from prototype/v2.html (#179):
+   gold means a bus and nothing else, each route keeps its colour,
+   lists are rows inside one white panel, and buttons are black or outlined. */
+
+/* =========================================================
+   Layout
+   ========================================================= */
 .app-layout {
   display: flex;
   flex-direction: column;
@@ -6,10 +12,10 @@
 }
 
 .app-navbar {
-  background-color: var(--ku-black);
-  color: var(--white);
+  background-color: var(--white);
+  color: var(--text-primary);
   padding: 12px 16px;
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--gray-200);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -33,7 +39,7 @@
 
 .brand-logo {
   display: block;
-  height: 40px;
+  height: 32px;
   width: auto;
 }
 
@@ -43,56 +49,53 @@
 }
 
 .brand-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--white);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
 }
 
 .brand-subtitle {
   font-size: 12px;
-  color: var(--ku-blue);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
-.auth-tab-group {
+/* Segmented control: the grey track with the chosen option in white. */
+.auth-tab-group,
+.route-type-tabs {
   display: flex;
-  background-color: var(--on-dark-12);
-  border-radius: 8px;
+  background-color: var(--gray-200);
+  border-radius: 12px;
   padding: 3px;
-  gap: 4px;
+  gap: 2px;
 }
 
 .tab-btn {
   background: none;
   border: none;
-  color: var(--gray-200);
-  padding: 6px 14px;
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  min-height: 36px;
   font-size: 14px;
-  font-weight: 500;
-  border-radius: 6px;
+  font-weight: 600;
+  border-radius: 9px;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .tab-btn:hover {
-  color: var(--white);
-  background-color: var(--on-dark-10);
+  color: var(--text-primary);
 }
 
 .tab-btn.active {
   background-color: var(--white);
-  color: var(--ku-black);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
-/* Main Content Area */
 .main-content {
   flex: 1;
-  padding: 24px 16px;
+  padding: 20px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,15 +104,15 @@
   margin: 0 auto;
 }
 
-/* Auth Card (Mobile-first) */
+/* =========================================================
+   Sign in / sign up
+   ========================================================= */
 .auth-card {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: 24px 22px;
   width: 100%;
   max-width: 440px;
-  box-shadow: var(--shadow-md);
 }
 
 @media (min-width: 640px) {
@@ -125,7 +128,7 @@
 
 .auth-logo {
   display: block;
-  height: 150px;
+  height: 96px;
   width: auto;
   max-width: 100%;
   margin: 0 auto 16px;
@@ -133,21 +136,20 @@
 
 .badge-ku {
   display: inline-block;
-  background-color: var(--ku-gold-light);
-  color: var(--ku-gold-text);
-  border: 1px solid var(--ku-gold-border);
+  background-color: var(--ku-blue-50);
+  color: var(--ku-blue-text);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 4px 10px;
-  border-radius: 9999px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
 }
 
 .auth-header h2 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: 6px;
 }
@@ -157,17 +159,19 @@
   color: var(--text-secondary);
 }
 
-/* Form Elements */
+/* =========================================================
+   Forms
+   ========================================================= */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .form-group label {
@@ -176,23 +180,33 @@
   color: var(--text-primary);
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 15px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
   outline: none;
   background-color: var(--white);
   color: var(--text-primary);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 44px;
-  /* Mobile touch friendly */
 }
 
-.form-group input:focus {
+.form-group input[type='radio'],
+.form-group input[type='checkbox'] {
+  width: 18px;
+  min-height: 0;
+  height: 18px;
+  accent-color: var(--ku-black);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring);
+  box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
 .field-hint {
@@ -200,15 +214,20 @@
   color: var(--text-muted);
 }
 
-/* Password Security Note */
+.field-error,
+.msg {
+  color: var(--error-text);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
 .password-security-note {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--border-color);
-  border-left: 3px solid var(--ku-gold);
-  border-radius: 6px;
+  background-color: var(--ku-blue-50);
+  border-radius: 10px;
   padding: 8px 10px;
   margin-top: 4px;
   font-size: 12.5px;
@@ -221,67 +240,81 @@
   height: 16px;
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--ku-gold-text);
+  color: var(--ku-blue-text);
 }
 
-/* Buttons */
+.departure-form label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.departure-form input[type='time'],
+.departure-form input[type='text'] {
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.departure-form input[type='checkbox'] {
+  accent-color: var(--ku-black);
+}
+
+/* =========================================================
+   Buttons: black for the main action, outlined for the rest
+   ========================================================= */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 18px;
   font-size: 15px;
   font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-  min-height: 44px;
-  text-decoration: none;
-}
-
-.btn-primary {
-  background-color: var(--ku-blue);
+  border-radius: 10px;
+  border: 2px solid var(--ku-black);
+  background-color: var(--white);
   color: var(--ku-black);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--ku-blue-hover);
-}
-
-.btn-primary:disabled {
-  opacity: 0.65;
+.btn:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-.btn-secondary {
-  background-color: var(--gray-100);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+.btn-primary {
+  background-color: var(--ku-black);
+  color: var(--white);
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background-color: var(--gray-200);
+.btn-primary:hover:not(:disabled) {
+  background-color: #1f2937;
 }
 
+.btn-secondary,
 .btn-outline {
-  background-color: transparent;
-  color: var(--ku-blue-text);
-  border: 1px solid var(--ku-blue);
+  background-color: var(--white);
+  color: var(--ku-black);
 }
 
-.btn-outline:hover {
-  background-color: var(--ku-blue-50);
+.btn-secondary:hover:not(:disabled),
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--gray-100);
 }
 
-/* Sign Out stays red so it reads as leaving, not as a main action. */
+/* Sign out and cancel stay red so they read as leaving, not as a main action. */
 .btn-danger {
-  background-color: transparent;
+  background-color: var(--white);
   color: var(--error-text);
-  border: 1px solid var(--error-border);
+  border-color: var(--error-text);
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(:disabled) {
   background-color: var(--error-bg);
 }
 
@@ -292,12 +325,16 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  padding: 0;
+  padding: 4px 0;
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.btn-link:hover {
-  color: var(--ku-blue-text);
+.btn-sm {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  border-radius: 8px;
 }
 
 .auth-footer {
@@ -307,23 +344,55 @@
   color: var(--text-secondary);
 }
 
-/* Alerts */
+/* =========================================================
+   Notices: warning yellow, error red, each with an icon
+   ========================================================= */
 .alert {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 14px;
   line-height: 1.45;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+}
+
+.alert strong,
+.alert b {
+  display: block;
+  font-weight: 800;
 }
 
 .alert-icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
+}
+
+/* Alerts written without an icon still get one, so every notice reads the same way. */
+.alert:not(:has(.alert-icon))::before {
+  content: '!';
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.alert-success:not(:has(.alert-icon))::before {
+  content: '✓';
+}
+
+.alert-info:not(:has(.alert-icon))::before {
+  content: 'i';
 }
 
 .alert-error {
@@ -338,24 +407,31 @@
   color: var(--success-text);
 }
 
-/* Bus Pages Screen */
+.alert-info {
+  background-color: var(--ku-blue-50);
+  border: 1px solid var(--ku-blue-100);
+  color: var(--ku-blue-text);
+}
+
+/* =========================================================
+   Signed-in screen
+   ========================================================= */
 .bus-pages-container {
   width: 100%;
   max-width: 880px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+  align-self: flex-start;
 }
 
 .bus-header {
   background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 14px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: var(--shadow-sm);
+  gap: 14px;
 }
 
 @media (min-width: 640px) {
@@ -366,48 +442,55 @@
   }
 }
 
+.bus-header-left {
+  min-width: 0;
+}
+
 .bus-header h1 {
   font-size: 22px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin: 6px 0 4px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 4px 0 2px;
 }
 
 .user-email-tag {
   font-size: 13.5px;
   color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .bus-header-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
-/* Unconfirmed Notice */
+/* Unconfirmed account */
 .bus-unconfirmed-notice {
   background-color: var(--warning-bg);
-  border: 1.5px solid var(--warning-border);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
   border-radius: 12px;
-  padding: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .bus-unconfirmed-notice .notice-icon {
-  font-size: 32px;
+  font-size: 24px;
 }
 
 .bus-unconfirmed-notice h3 {
-  font-size: 18px;
-  color: var(--warning-text);
-  margin-bottom: 6px;
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 4px;
 }
 
 .bus-unconfirmed-notice p {
-  font-size: 14.5px;
-  color: var(--warning-text);
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .notice-instruction {
@@ -416,9 +499,8 @@
 
 .no-bus-info-panel {
   background-color: var(--white);
-  border: 1px dashed var(--warning-strong);
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 14px;
   text-align: center;
 }
 
@@ -428,11 +510,10 @@
   font-size: 14px;
 }
 
-/* Confirmed Section */
 .bus-confirmed-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .verification-status-banner {
@@ -441,9 +522,8 @@
   gap: 8px;
   background-color: var(--success-bg);
   color: var(--success-text);
-  border: 1px solid var(--success-border);
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   align-self: flex-start;
@@ -457,10 +537,11 @@
 }
 
 .bus-content-intro h2 {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .bus-content-intro p {
@@ -468,45 +549,110 @@
   color: var(--text-secondary);
 }
 
-.buses-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+.bus-content-intro a {
+  color: var(--ku-blue-text);
+  font-weight: 600;
 }
 
-@media (min-width: 640px) {
-  .buses-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Empty list: says what is happening, in one white panel. */
+.no-routes-message {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 24px 18px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.bus-card {
+.departure-state {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* =========================================================
+   Lists: rows with dividers inside one white panel
+   ========================================================= */
+.buses-grid,
+.route-hours-grid,
+.schedule-departure-list,
+.route-stops-list,
+.stops-list,
+.sample-routes-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
   background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
+.bus-card,
+.route-hours-card,
+.schedule-departure-item,
+.route-stops-item,
+.stop-card,
+.sample-route-item {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.bus-card:last-child,
+.route-hours-card:last-child,
+.schedule-departure-item:last-child,
+.route-stops-item:last-child,
+.stop-card:last-child,
+.sample-route-item:last-child {
+  border-bottom: 0;
+}
+
+/* A no-results message inside a list sits in the panel without its own box. */
+.route-hours-grid > .no-routes-message {
+  border-radius: 0;
+}
+
+/* Buses */
 .bus-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 4px;
 }
 
 .bus-number {
   font-size: 16px;
-  font-weight: 700;
-  color: var(--ku-black);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Gold disc in front of every bus number: gold always means a bus. */
+.bus-card .bus-number::before,
+.bus-number-badge::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bus);
+  border: 2.5px solid var(--ku-black);
+  margin-right: 6px;
+  vertical-align: -1px;
 }
 
 .bus-status {
   font-size: 12px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  text-transform: uppercase;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .status-active {
@@ -524,67 +670,87 @@
   color: var(--text-secondary);
 }
 
-/* Route Operating Hours */
-.route-hours-section {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
+.bus-status-edit {
+  margin-top: 8px;
+  font-size: 14px;
 }
 
-.route-hours-section h3 {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 14px;
+.bus-status-edit select {
+  min-height: 36px;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  padding: 0 8px;
+  background: var(--white);
+  font-size: 14px;
 }
 
-.route-hours-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
+/* Routes: the panel holds the rows, so the section around it is plain. */
+.route-hours-section,
+.schedule-departures-section {
+  background: none;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
-@media (min-width: 640px) {
-  .route-hours-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.route-hours-section h3,
+.schedule-departures-heading,
+.bus-placeholder-panel h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 8px;
 }
 
 .route-hours-card {
+  --c: var(--route-south);
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
 }
 
+.route-hours-card[data-line='north'] {
+  --c: var(--route-north);
+}
+
+/* Route badge: the route's own colour beside its name. */
 .route-hours-name {
-  font-size: 14px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 800;
   color: var(--text-primary);
+}
+
+.route-hours-name::before {
+  content: '';
+  width: 14px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--c);
+  flex-shrink: 0;
 }
 
 .route-hours-value {
   font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.route-hours-unavailable {
-  font-style: italic;
   color: var(--text-muted);
 }
 
-/* Bus Placeholder Panel */
+.route-hours-unavailable {
+  color: var(--text-muted);
+}
+
+.route-hours-card .stop-map-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+/* Placeholder panel */
 .bus-placeholder-panel {
   background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  padding: 18px;
 }
 
 .placeholder-badge {
@@ -592,39 +758,22 @@
   background-color: var(--ku-blue-50);
   color: var(--ku-blue-text);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 800;
   padding: 3px 8px;
   border-radius: 6px;
   margin-bottom: 8px;
 }
 
-.bus-placeholder-panel h3 {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 6px;
-}
-
 .bus-placeholder-panel p {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 16px;
-}
-
-.sample-routes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .sample-route-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
   gap: 12px;
 }
 
@@ -639,28 +788,31 @@
 }
 
 .route-details strong {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--text-primary);
 }
 
 .route-details span {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .route-timing {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 800;
   color: var(--ku-blue-text);
   background-color: var(--ku-blue-50);
-  padding: 4px 8px;
+  padding: 3px 8px;
   border-radius: 6px;
   white-space: nowrap;
 }
 
-/* Loading & Footer */
+/* =========================================================
+   Loading & footer
+   ========================================================= */
 .loading-logo {
-  height: 72px;
+  height: 64px;
   width: auto;
 }
 
@@ -678,7 +830,7 @@
   width: 36px;
   height: 36px;
   border: 3px solid var(--gray-200);
-  border-top-color: var(--ku-blue);
+  border-top-color: var(--ku-black);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -693,37 +845,35 @@
   text-align: center;
   padding: 16px;
   font-size: 12.5px;
-  color: var(--white);
-  border-top: 4px solid var(--ku-gold);
-  background-color: var(--ku-black);
+  color: var(--text-muted);
+  border-top: 1px solid var(--gray-200);
+  background-color: var(--white);
 }
 
 /* =========================================================
-   Portal Tab Navigation (Admin Dashboard vs Bus Fleet)
+   Page tabs (segmented control until #181 brings the tab bar)
    ========================================================= */
 .bus-tabs-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 2px;
   background-color: var(--gray-200);
-  padding: 4px;
-  border-radius: 10px;
-  margin-bottom: 24px;
-  border: 1px solid var(--border-color);
+  padding: 3px;
+  border-radius: 12px;
 }
 
 .bus-tab-btn {
   flex: 1 1 auto;
   white-space: nowrap;
-  padding: 10px 16px;
+  min-height: 36px;
+  padding: 8px 14px;
   font-size: 14px;
   font-weight: 600;
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  border-radius: 8px;
+  border-radius: 9px;
   cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -732,34 +882,30 @@
 }
 
 .bus-tab-btn:hover {
-  color: var(--ku-black);
-  background-color: var(--on-dark-60);
+  color: var(--text-primary);
 }
 
 .bus-tab-btn.active {
   background-color: var(--white);
-  color: var(--ku-black);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--shadow-faint);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 /* =========================================================
-   Admin Dashboard & Weekly Trip History (Story 34)
+   Admin dashboard & weekly trip history (Story 34)
    ========================================================= */
 .admin-dashboard {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   width: 100%;
 }
 
 .dashboard-intro-banner {
   background: var(--ku-black);
-  border-bottom: 4px solid var(--ku-gold);
   color: var(--white);
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: var(--shadow-md);
+  padding: 20px;
+  border-radius: 20px;
 }
 
 .dashboard-badge-group {
@@ -770,84 +916,62 @@
 }
 
 .badge-admin {
-  background-color: var(--ku-gold);
+  background-color: var(--white);
   color: var(--ku-black);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
-.badge-window {
+.badge-window,
+.badge-demo {
   background-color: var(--on-dark-20);
   color: var(--white);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(4px);
-}
-
-.badge-demo {
-  background-color: var(--ku-gold-light);
-  color: var(--ku-black);
-  border: 1px solid var(--ku-gold);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
 .dashboard-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: var(--white);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .dashboard-subtitle {
   font-size: 14px;
-  color: var(--ku-blue-200);
+  color: rgba(255, 255, 255, 0.75);
   max-width: 680px;
-  line-height: 1.5;
 }
 
-/* KPI Summary Cards */
 .dashboard-kpis-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
 }
 
 .kpi-card {
   background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 16px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 .kpi-icon {
-  font-size: 28px;
+  font-size: 24px;
   background: var(--gray-100);
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .kpi-content {
@@ -857,35 +981,30 @@
 
 .kpi-label {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
 }
 
 .kpi-value {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--ku-black);
-  line-height: 1.2;
+  color: var(--text-primary);
+  line-height: 1.1;
   margin: 2px 0;
 }
 
 .kpi-detail {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
-/* Filter and Sort Toolbar */
 .filter-sort-toolbar {
   background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .toolbar-header {
@@ -894,29 +1013,28 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
   padding-bottom: 10px;
 }
 
 .toolbar-header h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ku-black);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 .filter-counter {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--ku-blue-text);
-  background: var(--ku-blue-50);
-  padding: 4px 10px;
-  border-radius: 16px;
-  border: 1px solid var(--ku-blue-100);
+  background: var(--ku-blue-100);
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
 .toolbar-controls-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
   align-items: flex-end;
 }
@@ -924,31 +1042,30 @@
 .control-item {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .control-label {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .form-select {
-  padding: 8px 12px;
-  font-size: 13.5px;
-  border: 1px solid var(--border-color);
+  min-height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   background-color: var(--white);
   color: var(--text-primary);
-  font-family: inherit;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 
 .form-select:focus {
   border-color: var(--ku-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring);
+  box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
 .control-actions {
@@ -957,17 +1074,9 @@
   align-items: center;
 }
 
-.btn-sm {
-  padding: 8px 12px;
-  font-size: 12.5px;
-}
-
-/* Trip Records Table Section */
 .trip-records-section {
   background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -980,58 +1089,51 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 
 .trips-table thead {
-  background-color: var(--gray-50);
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .trips-table th {
-  padding: 14px 16px;
-  font-weight: 700;
-  color: var(--ku-black);
+  padding: 12px 16px;
+  font-weight: 800;
+  color: var(--text-muted);
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 .trips-table tbody tr {
-  border-bottom: 1px solid var(--gray-100);
-  transition: background-color 0.15s ease;
+  border-bottom: 1px solid var(--gray-200);
 }
 
-.trips-table tbody tr:hover {
-  background-color: var(--gray-50);
+.trips-table tbody tr:last-child {
+  border-bottom: 0;
 }
 
 .trips-table td {
-  padding: 14px 16px;
+  padding: 12px 16px;
   vertical-align: middle;
 }
 
-.cell-date .date-main {
-  font-weight: 700;
+.cell-date .date-main,
+.date-main {
+  font-weight: 800;
   color: var(--text-primary);
 }
 
-.cell-date .date-sub {
-  font-size: 11.5px;
+.cell-date .date-sub,
+.date-sub {
+  font-size: 12px;
   color: var(--text-muted);
 }
 
 .bus-number-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: var(--gray-100);
-  color: var(--ku-black);
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
+  font-weight: 800;
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -1044,28 +1146,24 @@
   display: inline-block;
   padding: 3px 8px;
   border-radius: 6px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .planned-tag {
   background: var(--gray-100);
   color: var(--text-secondary);
-  border: 1px solid var(--gray-200);
 }
 
 .actual-start-tag {
   background: var(--ku-blue-50);
   color: var(--ku-blue-text);
-  border: 1px solid var(--ku-blue-200);
 }
 
 .actual-completion-tag {
   background: var(--success-bg);
   color: var(--success-text);
-  border: 1px solid var(--success-border);
 }
 
 .status-badge-completed {
@@ -1073,30 +1171,29 @@
   align-items: center;
   background-color: var(--success-bg);
   color: var(--success-text);
-  border: 1px solid var(--success-border);
   font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
   white-space: nowrap;
 }
 
 .empty-trips-card {
-  padding: 48px 24px;
+  padding: 32px 18px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .empty-icon {
-  font-size: 40px;
+  font-size: 36px;
 }
 
 .empty-trips-card h3 {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: var(--text-primary);
 }
 
@@ -1104,11 +1201,11 @@
   color: var(--text-secondary);
   font-size: 14px;
   max-width: 440px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .dashboard-loading {
-  padding: 48px 24px;
+  padding: 40px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1117,16 +1214,15 @@
 }
 
 .dashboard-compliance-note {
-  background: var(--gray-50);
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
+  background: var(--white);
+  border-radius: 12px;
   padding: 12px 16px;
   font-size: 12px;
   color: var(--text-muted);
 }
 
 .dashboard-compliance-note code {
-  background: var(--gray-200);
+  background: var(--gray-100);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 11.5px;
@@ -1134,13 +1230,12 @@
 }
 
 /* =========================================================
-   Bus Route Schedule Lookup — Story 33
+   Schedule lookup (Story 33)
    ========================================================= */
-
 .schedule-route-selector {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   max-width: 420px;
 }
 
@@ -1152,46 +1247,22 @@
 
 .schedule-route-select {
   width: 100%;
-}
-
-.schedule-departures-section {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
-}
-
-.schedule-departures-heading {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ku-black);
-  margin-bottom: 14px;
-}
-
-.schedule-departure-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  min-height: 44px;
 }
 
 .schedule-departure-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
+  gap: 12px;
 }
 
+/* Times are the biggest thing on the row. */
 .schedule-departure-time {
-  font-size: 15px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--ku-black);
-  min-width: 44px;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+  min-width: 64px;
 }
 
 .schedule-departure-sep {
@@ -1200,128 +1271,147 @@
 }
 
 .schedule-departure-days {
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
 .schedule-empty-notice {
-  padding: 14px 16px;
-  background-color: var(--gray-50);
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
+  padding: 24px 18px;
+  background-color: var(--white);
+  border-radius: 14px;
   font-size: 14px;
-  color: var(--text-muted);
-}
-
-.schedule-departure-item.schedule-departure-cancelled {
-  background-color: #fef2f2;
-  border-color: #fecaca;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .schedule-departure-item.schedule-departure-cancelled .schedule-departure-time,
 .schedule-departure-item.schedule-departure-cancelled .schedule-departure-days {
   color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.schedule-departure-status,
+.schedule-departure-cancelled-label {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .schedule-departure-cancelled-label {
-  margin-left: auto;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #b91c1c;
-  background-color: #fee2e2;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  text-decoration: none;
+  background-color: var(--error-bg);
+  color: var(--error-text);
 }
 
 /* =========================================================
-   Trip delay — Story 30
+   Trip delay (Story 30)
    ========================================================= */
 .trip-delay {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   font-size: 14px;
   color: var(--text-secondary);
+  background: var(--white);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.trip-delay-late {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
 }
 
 .trip-delay-minutes {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--error-text);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--warning-text);
+}
+
+.trip-delay-stop {
+  font-weight: 600;
+}
+
+.trip-delay-time {
+  font-size: 13px;
 }
 
 .trip-delay-none,
 .trip-delay-cancelled {
   font-size: 15px;
-  font-weight: 600;
-  color: var(--ku-black);
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 /* =========================================================
-   Route stops — Story 29
+   Route stops (Story 29)
    ========================================================= */
 .route-stops-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-left: 0;
   list-style-position: inside;
 }
 
 .route-stops-item {
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-  font-size: 14.5px;
-  color: var(--ku-black);
-}
-
-/* =========================================================
-   Route start → end endpoints — Story 84
-   ========================================================= */
-
-.route-endpoints {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 2px;
-  font-size: 12.5px;
-  margin-top: 4px;
-}
-
-.route-endpoint-stop {
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.route-endpoint-arrow {
+.route-stops-item::marker {
   color: var(--text-muted);
-  font-weight: 400;
+  font-weight: 800;
+}
+
+/* =========================================================
+   Route start → end (Story 84): a short line in the route's colour
+   ========================================================= */
+.route-endpoints {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.route-endpoint-stop {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.route-endpoint-arrow {
+  display: inline-block;
+  width: 28px;
+  height: 4px;
+  margin: 0 8px;
+  border-radius: 2px;
+  background: var(--c, var(--route-south));
+  font-size: 0;
+  color: transparent;
 }
 
 .route-endpoint-one-stop {
   color: var(--text-muted);
-  font-style: italic;
 }
 
 .route-endpoints-unset,
 .route-endpoints-error {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text-muted);
-  font-style: italic;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* =========================================================
    Live bus map (Story 31)
    ========================================================= */
 .bus-map {
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  background: #e9eef3;
 }
 
 .bus-map-canvas {
@@ -1330,36 +1420,39 @@
 }
 
 .map-type-tabs {
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
 .map-status {
-  margin: 0 0 12px;
+  margin: 0 0 4px;
   color: var(--text-secondary);
   font-weight: 600;
 }
 
 /* Bus markers: Leaflet puts the marker's top-left corner on the bus's position,
-   so the content is shifted back to centre the badge on that point. */
+   so the content is shifted back to centre the disc on that point. */
 .bus-marker-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  transform: translate(-50%, -14px);
+  transform: translate(-50%, -16px);
 }
 
 .bus-marker-badge {
   white-space: nowrap;
-  padding: 4px 10px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
   border-radius: 999px;
-  background: var(--ku-black);
-  color: var(--white);
+  background: var(--bus);
+  color: var(--ku-black);
   font-size: 13px;
-  font-weight: 700;
-  line-height: 16px;
-  border: 2px solid var(--white);
-  box-shadow: var(--shadow-sm);
+  font-weight: 800;
+  border: 3px solid var(--ku-black);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .bus-marker-note {
@@ -1370,25 +1463,24 @@
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 600;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
+/* An old position keeps the gold but gets a dashed ring, as in the prototype. */
 .bus-marker--stale .bus-marker-badge {
-  background: var(--gray-200);
-  color: var(--text-secondary);
+  border-style: dashed;
+  opacity: 0.75;
 }
 
-/* Running buses that cannot be placed on the map. */
 .map-unplaced {
   list-style: none;
   margin: 12px 0 0;
   padding: 12px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 14px;
   background: var(--white);
 }
 
-.map-unplaced li+li {
+.map-unplaced li + li {
   margin-top: 6px;
 }
 
@@ -1396,28 +1488,29 @@
   color: var(--text-secondary);
 }
 
-/* Bus trip card on map (#48) */
+/* Bus trip card on the map (#48) */
 .bus-trip-popup .leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
 }
 
 .bus-trip-popup .leaflet-popup-content {
-  margin: 10px 14px;
+  margin: 12px 16px;
   line-height: 1.4;
 }
 
 .bus-trip-card {
   font-family: inherit;
   color: var(--text-primary);
-  font-size: 13px;
-  min-width: 140px;
+  font-size: 14px;
+  min-width: 160px;
 }
 
 .bus-trip-card-header {
-  font-weight: 600;
+  font-weight: 800;
+  font-size: 15px;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .bus-trip-card-body {
@@ -1426,23 +1519,23 @@
   gap: 2px;
 }
 
-.bus-trip-stop {
+.bus-trip-stop,
+.bus-trip-stop-name {
   color: var(--text-primary);
-  font-weight: 500;
-}
-
-.bus-trip-scheduled {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.bus-trip-label {
   font-weight: 600;
 }
 
+.bus-trip-scheduled,
+.bus-trip-no-time,
 .bus-trip-card-status {
   color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.bus-trip-label {
   font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 @media (max-width: 640px) {
@@ -1452,66 +1545,42 @@
 }
 
 /* =========================================================
-
-   Last location update — Story 36
-
+   Last location update (Story 36)
    ========================================================= */
-
 .last-updated {
-
   display: flex;
-
   flex-wrap: wrap;
-
   align-items: center;
-
   gap: 8px;
-
   font-size: 16px;
-
-  font-weight: 700;
-
-  color: var(--ku-black);
-
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 .last-updated-unavailable,
-
 .last-updated-unknown,
-
-.last-updated-finished {
-
-  font-weight: 600;
-
-  color: var(--text-secondary);
-
-}
-
+.last-updated-finished,
 .last-updated-stale {
-
+  font-weight: 600;
   color: var(--text-secondary);
-
 }
 
 .last-updated-label {
-
-  padding: 2px 8px;
-
-  border-radius: 999px;
-
-  border: 1px solid var(--error-border);
-
+  padding: 3px 8px;
+  border-radius: 6px;
   background: var(--error-bg);
-
   color: var(--error-text);
-
-  font-size: 12.5px;
-
-  font-weight: 600;
-
+  font-size: 12px;
+  font-weight: 800;
 }
 
-/* Dialog: in-page, never the browser's alert() (#116) */
+.last-location {
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   Dialog: in-page, never the browser's alert() (#116)
+   ========================================================= */
 .scrim {
   position: fixed;
   inset: 0;
@@ -1532,14 +1601,12 @@
   max-width: 480px;
   border-radius: 22px 22px 0 0;
   padding: 22px 18px 20px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .dialog h3 {
   font-size: 19px;
   font-weight: 800;
   line-height: 1.25;
-  margin-bottom: 8px;
 }
 
 .dialog p {
@@ -1562,31 +1629,27 @@
   margin-top: 8px;
 }
 
-
-
-
 /* =========================================================
-   Stop search cards — Story 107
+   Stop search (Story 107)
    ========================================================= */
-
 .stop-search-box {
   display: block;
   width: 100%;
   max-width: 480px;
-  padding: 10px 14px;
-  border: 1px solid var(--gray-300);
-  border-radius: 8px;
-  font-size: 14.5px;
-  margin-bottom: 16px;
-  background: var(--gray-50);
-  color: var(--ku-black);
-  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 16px;
+  margin-bottom: 4px;
+  background: var(--white);
+  color: var(--text-primary);
 }
 
-.stops-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.stop-search-box:focus {
+  outline: none;
+  border-color: var(--ku-blue);
+  box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
 .stop-card {
@@ -1594,10 +1657,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
 }
 
 .stop-info {
@@ -1606,13 +1665,13 @@
 }
 
 .stop-name {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: var(--ku-black);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 .stop-area {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin-top: 2px;
 }
@@ -1622,20 +1681,21 @@
 }
 
 .stop-map-btn {
-  font-size: 13px;
-  padding: 6px 14px;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  border-radius: 8px;
 }
 
 .stop-no-location {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text-muted);
-  font-style: italic;
+  font-weight: 600;
 }
 
 /* =========================================================
-   Stop pin marker on the map — Story 107
+   Stop pin on the map (Story 107): white stop, black ring
    ========================================================= */
-
 .stop-pin-marker {
   background: none;
   border: none;
@@ -1650,27 +1710,26 @@
 }
 
 .stop-pin-icon {
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 .stop-pin-label {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--gray-300);
+  background: var(--white);
   border-radius: 6px;
   padding: 2px 7px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   white-space: nowrap;
 }
 
 .stop-pin-name {
   font-size: 12px;
-  font-weight: 700;
-  color: var(--ku-black);
+  font-weight: 800;
+  color: var(--text-primary);
   line-height: 1.3;
 }
 
@@ -1681,11 +1740,14 @@
 }
 
 /* =========================================================
-   Stop popup — Story 107
+   Stop popup (Story 107)
    ========================================================= */
+.stop-popup .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+}
 
 .stop-popup .leaflet-popup-content {
-  margin: 10px 14px;
+  margin: 12px 16px;
   min-width: 170px;
 }
 
@@ -1701,9 +1763,9 @@
 }
 
 .stop-popup-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ku-black);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 .stop-popup-area {
@@ -1719,9 +1781,9 @@
 .stop-popup-routes-heading {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .stop-popup-routes-list {
@@ -1735,239 +1797,53 @@
 
 .stop-popup-route-item {
   font-size: 13px;
-  color: var(--ku-black);
-  font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .stop-popup-no-routes {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text-muted);
-  font-style: italic;
   margin: 0;
 }
 
 /* =========================================================
-   Selected stop banner on the map page — Story 107
+   Selected stop banner on the map page (Story 107)
    ========================================================= */
-
 .selected-stop-banner {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
-  background: var(--gray-100);
-  border: 1px solid var(--gray-300);
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.selected-stop-banner strong {
-  color: var(--ku-black);
-}
-
-
-/* =========================================================
-   Stop search cards — Story 107
-   ========================================================= */
-
-.stop-search-box {
-  display: block;
-  width: 100%;
-  max-width: 480px;
   padding: 10px 14px;
-  border: 1px solid var(--gray-300);
-  border-radius: 8px;
-  font-size: 14.5px;
-  margin-bottom: 16px;
-  background: var(--gray-50);
-  color: var(--ku-black);
-  box-sizing: border-box;
-}
-
-.stops-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.stop-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-}
-
-.stop-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.stop-name {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: var(--ku-black);
-}
-
-.stop-area {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-.stop-actions {
-  flex-shrink: 0;
-}
-
-.stop-map-btn {
-  font-size: 13px;
-  padding: 6px 14px;
-}
-
-.stop-no-location {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-/* =========================================================
-   Stop pin marker on the map — Story 107
-   ========================================================= */
-
-.stop-pin-marker {
-  background: none;
-  border: none;
-}
-
-.stop-pin-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-}
-
-.stop-pin-icon {
-  font-size: 24px;
-  line-height: 1;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-}
-
-.stop-pin-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--gray-300);
-  border-radius: 6px;
-  padding: 2px 7px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  white-space: nowrap;
-}
-
-.stop-pin-name {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--ku-black);
-  line-height: 1.3;
-}
-
-.stop-pin-area {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.2;
-}
-
-/* =========================================================
-   Stop popup — Story 107
-   ========================================================= */
-
-.stop-popup .leaflet-popup-content {
-  margin: 10px 14px;
-  min-width: 170px;
-}
-
-.stop-popup-content {
-  font-family: inherit;
-}
-
-.stop-popup-header {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 8px;
-}
-
-.stop-popup-name {
+  background: var(--white);
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 700;
-  color: var(--ku-black);
-}
-
-.stop-popup-area {
-  font-size: 12px;
   color: var(--text-secondary);
-}
-
-.stop-popup-routes-section {
-  border-top: 1px solid var(--gray-200);
-  padding-top: 8px;
-}
-
-.stop-popup-routes-heading {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  display: block;
-  margin-bottom: 5px;
-}
-
-.stop-popup-routes-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.stop-popup-route-item {
-  font-size: 13px;
-  color: var(--ku-black);
-  font-weight: 500;
-}
-
-.stop-popup-no-routes {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  font-style: italic;
-  margin: 0;
-}
-
-/* =========================================================
-   Selected stop banner on the map page — Story 107
-   ========================================================= */
-
-.selected-stop-banner {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: var(--gray-100);
-  border: 1px solid var(--gray-300);
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
 .selected-stop-banner strong {
-  color: var(--ku-black);
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   Phone width: nothing scrolls sideways at 390px
+   ========================================================= */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 14px 12px;
+  }
+
+  .bus-header-actions .btn {
+    flex: 1;
+  }
+
+  .stop-card,
+  .schedule-departure-item {
+    flex-wrap: wrap;
+  }
+
+  .bus-tab-btn {
+    white-space: normal;
+  }
 }
