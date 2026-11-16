@@ -6,9 +6,9 @@
 
 A web-based system that helps Kuwait University students view bus routes, stops, estimated arrival times, reported bus locations, and trip status. Transportation staff can manage buses, routes, schedules, trips, and delays through the system.
 
-> **Current phase: Phase 4 — Sprint 2** (Phase Lead: Zeinab Mohammed Sharif)
+> **Current phase: Phase 5 — Sprint 3** (Phase Lead: Roqaya Aldurai)
 >
-> We are building the second set of stories from the backlog and finishing the work carried over from Phase 3, released on the running system at the address below. What is being built, and by whom, is on the board.
+> We are building the third set of stories from the backlog, finishing the work moved from Phase 4 and redesigning the app to match prototype v2, released on the running system at the address below. What is being built, and by whom, is on the board.
 >
 > See [`docs/how-we-work.md`](docs/how-we-work.md) for the project workflow and phase requirements.
 >
