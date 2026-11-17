@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Navigate, Route, Routes, useNavigate } from 'react-router'
+import { NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router'
 import { supabase } from '../lib/supabase.js'
-import { pages } from '../pages/index.js'
+import { pages, sections } from '../pages/index.js'
+import TabIcon from './TabIcon.jsx'
 
 function SignedInLayout({ user, onSignOut }) {
   const [currentUser, setCurrentUser] = useState(user)
@@ -12,12 +13,21 @@ function SignedInLayout({ user, onSignOut }) {
   // null until we know, so a staff page is not redirected away while the check is running.
   const [isStaff, setIsStaff] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
   // A guest (#131) signed in anonymously: no email, so nothing to confirm.
   const isGuest = Boolean(currentUser?.is_anonymous)
   const isConfirmed = isGuest || Boolean(currentUser?.email_confirmed_at)
   const firstPage = pages[0].path
   const visiblePages = pages.filter((page) => !page.staffOnly || isStaff)
+  const visibleSections = sections
+    .filter((section) => !section.staffOnly || isStaff)
+    .map((section) => ({ ...section, pages: visiblePages.filter((page) => page.section === section.id) }))
+    .filter((section) => section.pages.length > 0)
+  const currentPath = location.pathname.replace(/^\//, '')
+  const currentSection = visibleSections.find((section) =>
+    section.pages.some((page) => page.path === currentPath)
+  )
 
   // The database decides who is staff (staff_members); this only hides screens.
   // An error counts as not staff, so a student never sees a staff screen by accident.
@@ -68,19 +78,19 @@ function SignedInLayout({ user, onSignOut }) {
 
   return (
     <div className="bus-pages-container" id="bus-pages-screen">
-      <header className="bus-header">
-        <div className="bus-header-left">
-          <div className="badge-ku">KU Campus Transport</div>
-          <h1>Bus Pages</h1>
-          <p className="user-email-tag">
-            Signed in as: <strong>{isGuest ? 'Guest' : currentUser?.email}</strong>
-          </p>
+      <header className="app-topbar">
+        <img className="app-topbar-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="" />
+        <div className="app-topbar-id">
+          <span className="app-topbar-name">KU Bus Tracker</span>
+          <span className="app-topbar-who user-email-tag" title={isGuest ? 'Guest' : currentUser?.email}>
+            {isGuest ? 'Guest' : currentUser?.email}
+          </span>
         </div>
-        <div className="bus-header-actions">
+        <div className="app-topbar-actions">
           <button
             type="button"
             onClick={handleRefresh}
-            className="btn btn-secondary"
+            className="btn btn-secondary btn-sm"
             disabled={refreshing}
             id="refresh-status-btn"
           >
@@ -89,10 +99,10 @@ function SignedInLayout({ user, onSignOut }) {
           <button
             type="button"
             onClick={handleSignOut}
-            className="btn btn-danger"
+            className="btn btn-danger btn-sm"
             id="bus-signout-btn"
           >
-            Sign Out
+            Sign out
           </button>
         </div>
       </header>
@@ -119,23 +129,20 @@ function SignedInLayout({ user, onSignOut }) {
         </div>
       ) : (
         <>
-          <nav className="bus-tabs-nav" aria-label="Pages">
-            {visiblePages.map((page) => (
-              <NavLink
-                key={page.path}
-                to={`/${page.path}`}
-                id={`nav-${page.path}`}
-                className={({ isActive }) => `bus-tab-btn ${isActive ? 'active' : ''}`}
-              >
-                {page.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          <div className="verification-status-banner">
-            <span className="status-dot-active"></span>
-            <span>{isGuest ? 'Browsing as a guest' : 'KU Student Verified — Email confirmed'}</span>
-          </div>
+          {currentSection && currentSection.pages.length > 1 && (
+            <nav className="bus-tabs-nav section-tabs" aria-label={`${currentSection.label} pages`}>
+              {currentSection.pages.map((page) => (
+                <NavLink
+                  key={page.path}
+                  to={`/${page.path}`}
+                  id={`nav-${page.path}`}
+                  className={({ isActive }) => `bus-tab-btn ${isActive ? 'active' : ''}`}
+                >
+                  {page.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
 
           {isStaff === null ? (
             <p>Loading…</p>
@@ -147,6 +154,21 @@ function SignedInLayout({ user, onSignOut }) {
               <Route path="*" element={<Navigate to={`/${firstPage}`} replace />} />
             </Routes>
           )}
+
+          <nav className="tabbar" aria-label="Main">
+            {visibleSections.map((section) => (
+              <NavLink
+                key={section.id}
+                to={`/${section.pages[0].path}`}
+                id={`tab-${section.id}`}
+                className={`tabbar-btn ${currentSection?.id === section.id ? 'active' : ''}`}
+                aria-current={currentSection?.id === section.id ? 'page' : undefined}
+              >
+                <TabIcon name={section.icon} />
+                <span>{section.label}</span>
+              </NavLink>
+            ))}
+          </nav>
         </>
       )}
     </div>

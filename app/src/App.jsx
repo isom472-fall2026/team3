@@ -43,19 +43,6 @@ function App() {
 
   return (
     <div className={`app-layout${user ? '' : ' app-layout--auth'}`}>
-      {user && (
-        <header className="app-navbar">
-          <div className="navbar-container">
-            <div className="brand">
-              <img className="brand-logo" src={`${import.meta.env.BASE_URL}ku-shield.png`} alt="Kuwait University logo" />
-              <div className="brand-text">
-                <span className="brand-title">KU Bus Tracker</span>
-                <span className="brand-subtitle">Kuwait University</span>
-              </div>
-            </div>
-          </div>
-        </header>
-      )}
 
       <main className="main-content">
         {user ? (
@@ -70,9 +57,11 @@ function App() {
         )}
       </main>
 
-      <footer className="app-footer">
-        <p>© 2026 Kuwait University — Student Bus Tracking System</p>
-      </footer>
+      {!user && (
+        <footer className="app-footer">
+          <p>© 2026 Kuwait University — Student Bus Tracking System</p>
+        </footer>
+      )}
     </div>
   )
 }
