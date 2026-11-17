@@ -21,7 +21,8 @@ export const sections = [
   { id: 'routes', label: 'Routes', icon: 'routes' },
   { id: 'map', label: 'Live map', icon: 'map' },
   { id: 'stops', label: 'Stops', icon: 'stops' },
-  { id: 'staff', label: 'Staff', icon: 'staff', staffOnly: true },
+  { id: 'trips', label: 'Trips', icon: 'trips', staffOnly: true },
+  { id: 'manage', label: 'Manage', icon: 'manage', staffOnly: true },
 ]
 
 // Every signed-in page. The first one is where a student lands after signing in, and
@@ -40,10 +41,10 @@ export const pages = [
 
   { path: 'stops', label: 'Stops', section: 'stops', component: StopsPage },
 
-  { path: 'start-trip', label: 'Start a trip', section: 'staff', component: StartTripPage, staffOnly: true },
-  { path: 'test-bus', label: 'Test bus', section: 'staff', component: TestBusPage, staffOnly: true },
-  { path: 'stopped-location', label: 'Stopped location', section: 'staff', component: StoppedLocationPage, staffOnly: true },
-  { path: 'history', label: 'Trip history', section: 'staff', component: HistoryPage, staffOnly: true },
-  { path: 'add-route', label: 'Add route', section: 'staff', component: AddRoutePage, staffOnly: true },
-  { path: 'add-stop', label: 'Add stop', section: 'staff', component: AddStopPage, staffOnly: true },
+  { path: 'start-trip', label: 'Start a trip', section: 'trips', component: StartTripPage, staffOnly: true },
+  { path: 'test-bus', label: 'Test bus', section: 'trips', component: TestBusPage, staffOnly: true },
+  { path: 'stopped-location', label: 'Stopped location', section: 'trips', component: StoppedLocationPage, staffOnly: true },
+  { path: 'history', label: 'Trip history', section: 'trips', component: HistoryPage, staffOnly: true },
+  { path: 'add-route', label: 'Add route', section: 'manage', component: AddRoutePage, staffOnly: true },
+  { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
 ]
