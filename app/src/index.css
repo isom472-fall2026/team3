@@ -12,6 +12,11 @@
   --ku-blue-100: #CFEFFA;
   --ku-blue-200: #9FDFF5;
 
+  /* Prototype v2: each route keeps one colour everywhere, and gold always means a bus. */
+  --route-south: var(--ku-blue);
+  --route-north: var(--ku-black);
+  --bus: var(--ku-gold);
+
   /* Gold text on white fails contrast; this darker gold passes (5.7:1). */
   --ku-gold-text: #7A6400;
   --ku-gold-light: #FDF7D7;
@@ -21,6 +26,7 @@
   --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
   --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
 
   --bg-main: var(--gray-100);
   --bg-card: var(--white);
@@ -28,7 +34,7 @@
   --text-secondary: #475569;
   --text-muted: #64748b;
   --border-color: #cbd5e1;
-  --focus-ring: rgba(14, 172, 227, 0.25);
+  --focus-ring: rgba(14, 172, 227, 0.35);
 
   --on-dark-10: rgba(255, 255, 255, 0.1);
   --on-dark-12: rgba(255, 255, 255, 0.12);
@@ -49,7 +55,7 @@
   --warning-text: #92400e;
   --warning-strong: #d97706;
 
-  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: 'Overpass', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --shadow-faint: rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
@@ -68,7 +74,25 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   min-height: 100vh;
+  /* Times line up in columns. */
+  font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ku-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 #root {

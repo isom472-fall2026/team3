@@ -16,7 +16,7 @@ function BusMarker({ bus, stale, isGuest }) {
       : ''
     return L.divIcon({
       className: `bus-marker${stale ? ' bus-marker--stale' : ''}`,
-      html: `<span class="bus-marker-inner"><span class="bus-marker-badge">🚌 ${escapeHtml(bus.busNumber)}</span>${note}</span>`,
+      html: `<span class="bus-marker-inner"><span class="bus-marker-badge">${escapeHtml(bus.busNumber)}</span>${note}</span>`,
       iconSize: null,
       iconAnchor: [0, 0],
       popupAnchor: [0, -18],

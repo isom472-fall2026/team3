@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import RouteDepartureForm from '../components/RouteDepartureForm.jsx'
 import { supabase } from '../lib/supabase.js'
+import { routeLine } from '../lib/routeLine.js'
 
 // Hours with no digit at all ("TBD", "-", only spaces) tell a student nothing, so they
 // are treated as missing. Anything else is shown exactly as stored.
@@ -107,7 +108,7 @@ function RoutesPage() {
           <h3>Route Operating Hours</h3>
           <div className="route-hours-grid">
             {routesInTab.map((route) => (
-              <div key={route.id} className="route-hours-card" data-route-id={route.id}>
+              <div key={route.id} className="route-hours-card" data-route-id={route.id} data-line={routeLine(route.name)}>
                 <div className="route-hours-name">{route.name}</div>
                 <div className="route-hours-value">
                   {hasHours(route.operating_hours)

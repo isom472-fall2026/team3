@@ -5,18 +5,20 @@ import L from 'leaflet'
 import { supabase } from '../lib/supabase.js'
 import BusMap from './BusMap.jsx'
 import { MAP_VIEWS, isInKuwait } from '../lib/mapViews.js'
+import { ROUTE_COLOURS, routeLine } from '../lib/routeLine.js'
 
 // #121: one route's stops on the campus map, joined by a line in routes_stops.sequence_order.
 // MapPage shows this instead of the live buses when the address has ?route=<id>.
 
 // Each pin shows its position on the route and the stop's name; the first stop
 // is labelled "Start" and the last "End".
-function pinIcon(position, name, endLabel) {
+function pinIcon(position, name, endLabel, line) {
+  const isNorth = line === 'north'
   const endHtml = endLabel ? `<span class="stop-pin-area">${endLabel}</span>` : ''
   return L.divIcon({
     className: 'stop-pin-marker',
     // The number sits centred on the stop itself, as a badge on the line; the label hangs below it.
-    html: `<div class="stop-pin-inner" style="transform: translate(-50%, -13px)"><span class="stop-pin-icon route-stop-number" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#0EACE3;color:#000;font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)">${position}</span><div class="stop-pin-label"><span class="stop-pin-name">${escapeHtml(name)}</span>${endHtml}</div></div>`,
+    html: `<div class="stop-pin-inner" style="transform: translate(-50%, -13px)"><span class="stop-pin-icon route-stop-number" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:${isNorth ? '#000' : '#0EACE3'};color:${isNorth ? '#fff' : '#000'};font-size:14px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)">${position}</span><div class="stop-pin-label"><span class="stop-pin-name">${escapeHtml(name)}</span>${endHtml}</div></div>`,
     iconSize: null,
     iconAnchor: [0, 0],
   })
@@ -141,7 +143,7 @@ function RouteMapView({ routeId }) {
         >
           <FitToStops points={points} />
           {points.length > 1 && (
-            <Polyline positions={points} pathOptions={{ color: '#0EACE3', weight: 5 }} />
+            <Polyline positions={points} pathOptions={{ color: ROUTE_COLOURS[routeLine(route?.name)], weight: 6 }} />
           )}
           {placed.map(({ stop, position }, i) => {
             const endLabel = position === 1 ? 'Start' : position === stops.length ? 'End' : null
@@ -149,7 +151,7 @@ function RouteMapView({ routeId }) {
               <Marker
                 key={stop.id}
                 position={points[i]}
-                icon={pinIcon(position, stopName(stop.name), endLabel)}
+                icon={pinIcon(position, stopName(stop.name), endLabel, routeLine(route?.name))}
                 title={`${position}. ${stopName(stop.name)}`}
               />
             )
