@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import AuthCrest from './AuthCrest.jsx'
 
 function SignUp({ onSwitchToSignIn }) {
   const [email, setEmail] = useState('')
@@ -66,13 +67,7 @@ function SignUp({ onSwitchToSignIn }) {
 
   return (
     <div className="auth-card">
-      <div className="auth-header">
-        <img className="auth-logo" src={`${import.meta.env.BASE_URL}ku-logo.png`} alt="Kuwait University logo" />
-        <h2>Student Sign Up</h2>
-        <p className="auth-subtitle">
-          Sign up to access the campus bus tracking system and live schedules.
-        </p>
-      </div>
+      <AuthCrest heading="Sign up with your KU email" />
 
       {error && (
         <div className="alert alert-error" role="alert" id="signup-error">
@@ -94,7 +89,7 @@ function SignUp({ onSwitchToSignIn }) {
 
       <form onSubmit={handleSignUp} className="auth-form" noValidate>
         <div className="form-group">
-          <label htmlFor="signup-email">KU Email Address</label>
+          <label htmlFor="signup-email">KU email</label>
           <input
             id="signup-email"
             type="email"
@@ -134,7 +129,7 @@ function SignUp({ onSwitchToSignIn }) {
           className="btn btn-primary"
           disabled={loading}
         >
-          {loading ? 'Creating account...' : 'Create Account'}
+          {loading ? 'Creating account...' : 'Create account'}
         </button>
       </form>
 
@@ -146,7 +141,7 @@ function SignUp({ onSwitchToSignIn }) {
           className="btn-link"
           id="switch-to-signin"
         >
-          Sign In
+          Sign in
         </button>
       </div>
     </div>

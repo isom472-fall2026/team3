@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import AuthCrest from './AuthCrest.jsx'
 
 function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
   const [email, setEmail] = useState('')
@@ -65,13 +66,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
 
   return (
     <div className="auth-card">
-      <div className="auth-header">
-        <img className="auth-logo" src={`${import.meta.env.BASE_URL}ku-logo.png`} alt="Kuwait University logo" />
-        <h2>Student Sign In</h2>
-        <p className="auth-subtitle">
-          Sign in with your registered KU email to view bus routes and tracking.
-        </p>
-      </div>
+      <AuthCrest heading="Where is my bus?" />
 
       {error && (
         <div className="alert alert-error" role="alert" id="signin-error">
@@ -84,7 +79,7 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
 
       <form onSubmit={handleSignIn} className="auth-form" noValidate>
         <div className="form-group">
-          <label htmlFor="signin-email">KU Email Address</label>
+          <label htmlFor="signin-email">KU email</label>
           <input
             id="signin-email"
             type="email"
@@ -117,30 +112,32 @@ function SignIn({ onSwitchToSignUp, onSignInSuccess }) {
           className="btn btn-primary"
           disabled={busy}
         >
-          {loading ? 'Signing in...' : 'Sign In'}
+          {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
+
+      <div className="auth-or">or</div>
 
       <button
         type="button"
         id="continue-as-guest"
-        className="btn btn-secondary"
-        style={{ width: '100%', marginTop: '0.75rem' }}
+        className="btn btn-secondary auth-wide"
         onClick={handleGuest}
         disabled={busy}
       >
-        {guestLoading ? 'Continuing as guest...' : 'Continue as guest'}
+        {guestLoading ? 'Continuing as guest...' : 'Continue as a guest'}
       </button>
+      <p className="auth-guest-note">Guests see routes, stops and live buses.</p>
 
       <div className="auth-footer">
-        <span>Don't have an account yet?</span>{' '}
+        <span>No account yet?</span>{' '}
         <button
           type="button"
           onClick={onSwitchToSignUp}
           className="btn-link"
           id="switch-to-signup"
         >
-          Sign Up
+          Sign up with your KU email
         </button>
       </div>
     </div>
