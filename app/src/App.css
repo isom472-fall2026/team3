@@ -2111,3 +2111,92 @@
     white-space: normal;
   }
 }
+
+/* =========================================================
+   Insights: trip times (#189)
+   ========================================================= */
+.insights-heading {
+  margin: 20px 0 10px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.insights-chart {
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--white);
+  border-radius: 14px;
+}
+
+.insights-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.insights-grid {
+  stroke: var(--gray-200);
+  stroke-width: 1;
+}
+
+.insights-axis {
+  font-size: 12px;
+  fill: var(--text-muted);
+}
+
+.insights-value {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+.insights-bar {
+  fill: var(--ku-blue);
+}
+
+.insights-planned {
+  stroke: var(--ku-black);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.insights-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.insights-key {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.insights-key-bar {
+  background: var(--ku-blue);
+  border-radius: 2px;
+}
+
+.insights-key-planned {
+  height: 0;
+  border-top: 2px dashed var(--ku-black);
+}
+
+.insights-over {
+  color: var(--error-text);
+  font-weight: 700;
+}
+
+.insights-under {
+  color: var(--success-text);
+  font-weight: 700;
+}
+
+.insights-not-enough {
+  color: var(--text-muted);
+}

@@ -13,6 +13,7 @@ import TestBusPage from './TestBusPage.jsx'
 import StoppedLocationPage from './StoppedLocationPage.jsx'
 import AddStopPage from './AddStopPage.jsx'
 import AddRoutePage from './AddRoutePage.jsx'
+import InsightsPage from './InsightsPage.jsx'
 
 // The tabs in the bottom bar (prototype v2), in order. Each page below names the tab it
 // sits under; a tab opens its first page, and the pages of a tab are switched at the top.
@@ -45,6 +46,7 @@ export const pages = [
   { path: 'test-bus', label: 'Test bus', section: 'trips', component: TestBusPage, staffOnly: true },
   { path: 'stopped-location', label: 'Stopped location', section: 'trips', component: StoppedLocationPage, staffOnly: true },
   { path: 'history', label: 'Trip history', section: 'trips', component: HistoryPage, staffOnly: true },
+  { path: 'insights', label: 'Insights', section: 'trips', component: InsightsPage, staffOnly: true },
   { path: 'add-route', label: 'Add route', section: 'manage', component: AddRoutePage, staffOnly: true },
   { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
 ]
