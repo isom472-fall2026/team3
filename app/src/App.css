@@ -2113,54 +2113,54 @@
 }
 
 /* =========================================================
-   Insights: trip times (#189)
+   Dashboard: trip times (#189)
    ========================================================= */
-.insights-heading {
+.dashboard-heading {
   margin: 20px 0 10px;
   font-size: 16px;
   color: var(--text-primary);
 }
 
-.insights-chart {
+.dashboard-chart {
   margin: 0 0 16px;
   padding: 12px;
   background: var(--white);
   border-radius: 14px;
 }
 
-.insights-chart svg {
+.dashboard-chart svg {
   display: block;
   width: 100%;
   height: auto;
 }
 
-.insights-grid {
+.dashboard-grid {
   stroke: var(--gray-200);
   stroke-width: 1;
 }
 
-.insights-axis {
+.dashboard-axis {
   font-size: 12px;
   fill: var(--text-muted);
 }
 
-.insights-value {
+.dashboard-value {
   font-size: 12px;
   font-weight: 700;
   fill: var(--text-primary);
 }
 
-.insights-bar {
+.dashboard-bar {
   fill: var(--ku-blue);
 }
 
-.insights-planned {
+.dashboard-planned {
   stroke: var(--ku-black);
   stroke-width: 2;
   stroke-dasharray: 6 4;
 }
 
-.insights-legend {
+.dashboard-legend {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
@@ -2169,7 +2169,7 @@
   color: var(--text-secondary);
 }
 
-.insights-key {
+.dashboard-key {
   display: inline-block;
   width: 14px;
   height: 10px;
@@ -2177,26 +2177,26 @@
   vertical-align: middle;
 }
 
-.insights-key-bar {
+.dashboard-key-bar {
   background: var(--ku-blue);
   border-radius: 2px;
 }
 
-.insights-key-planned {
+.dashboard-key-planned {
   height: 0;
   border-top: 2px dashed var(--ku-black);
 }
 
-.insights-over {
+.dashboard-over {
   color: var(--error-text);
   font-weight: 700;
 }
 
-.insights-under {
+.dashboard-under {
   color: var(--success-text);
   font-weight: 700;
 }
 
-.insights-not-enough {
+.dashboard-not-enough {
   color: var(--text-muted);
 }

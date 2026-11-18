@@ -98,12 +98,12 @@ function TripTimesChart({ departures }) {
   const ticks = [0, scaleMax / 2, scaleMax]
 
   return (
-    <figure className="insights-chart" id="trip-times-chart">
+    <figure className="dashboard-chart" id="trip-times-chart">
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Average actual trip time and planned trip time for each departure">
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={left} x2={width} y1={y(t)} y2={y(t)} className="insights-grid" />
-            <text x={left - 6} y={y(t) + 4} textAnchor="end" className="insights-axis">{t}</text>
+            <line x1={left} x2={width} y1={y(t)} y2={y(t)} className="dashboard-grid" />
+            <text x={left - 6} y={y(t) + 4} textAnchor="end" className="dashboard-axis">{t}</text>
           </g>
         ))}
         {departures.map((d, i) => {
@@ -113,32 +113,32 @@ function TripTimesChart({ departures }) {
               {d.enough ? (
                 <>
                   <rect x={centre - barWidth / 2} y={y(d.average)} width={barWidth}
-                    height={y(0) - y(d.average)} rx="3" className="insights-bar" />
-                  <text x={centre} y={y(d.average) - 5} textAnchor="middle" className="insights-value">
+                    height={y(0) - y(d.average)} rx="3" className="dashboard-bar" />
+                  <text x={centre} y={y(d.average) - 5} textAnchor="middle" className="dashboard-value">
                     {Math.round(d.average)}
                   </text>
                 </>
               ) : (
-                <text x={centre} y={y(0) - 8} textAnchor="middle" className="insights-axis">No data</text>
+                <text x={centre} y={y(0) - 8} textAnchor="middle" className="dashboard-axis">No data</text>
               )}
               {d.planned != null && (
                 <line x1={centre - slot / 2 + 4} x2={centre + slot / 2 - 4} y1={y(d.planned)} y2={y(d.planned)}
-                  className="insights-planned" />
+                  className="dashboard-planned" />
               )}
-              <text x={centre} y={height - 8} textAnchor="middle" className="insights-axis">{d.time}</text>
+              <text x={centre} y={height - 8} textAnchor="middle" className="dashboard-axis">{d.time}</text>
             </g>
           )
         })}
       </svg>
-      <figcaption className="insights-legend">
-        <span><span className="insights-key insights-key-bar" /> Average actual minutes</span>
-        <span><span className="insights-key insights-key-planned" /> Planned minutes</span>
+      <figcaption className="dashboard-legend">
+        <span><span className="dashboard-key dashboard-key-bar" /> Average actual minutes</span>
+        <span><span className="dashboard-key dashboard-key-planned" /> Planned minutes</span>
       </figcaption>
     </figure>
   )
 }
 
-function InsightsPage() {
+function DashboardPage() {
   const [routes, setRoutes] = useState([])
   const [routeId, setRouteId] = useState('')
   const [departures, setDepartures] = useState([])
@@ -180,34 +180,34 @@ function InsightsPage() {
   const hasTrips = departures.some((d) => d.trips > 0)
 
   return (
-    <div className="bus-confirmed-section" id="insights-page">
+    <div className="bus-confirmed-section" id="dashboard-page">
       <div className="bus-content-intro">
-        <h2>Insights</h2>
+        <h2>Dashboard</h2>
         <p>How long each departure really takes, compared with the timetable.</p>
       </div>
 
       {routes.length > 0 && (
         <div className="schedule-route-selector">
-          <label className="schedule-route-label" htmlFor="insights-route-select">Route</label>
-          <select id="insights-route-select" className="form-select schedule-route-select"
+          <label className="schedule-route-label" htmlFor="dashboard-route-select">Route</label>
+          <select id="dashboard-route-select" className="form-select schedule-route-select"
             value={routeId} onChange={(e) => chooseRoute(e.target.value)}>
             {routes.map((route) => <option key={route.id} value={route.id}>{route.name}</option>)}
           </select>
         </div>
       )}
 
-      <h3 className="insights-heading">Trip times</h3>
+      <h3 className="dashboard-heading">Trip times</h3>
 
       {loading && <p>Loading trip times…</p>}
 
       {loadError && (
-        <div className="alert alert-error" role="alert" id="insights-error">
+        <div className="alert alert-error" role="alert" id="dashboard-error">
           <div>Trip times could not be loaded.</div>
         </div>
       )}
 
       {!loading && !loadError && !hasTrips && (
-        <div className="schedule-empty-notice" id="insights-no-trips">No trips recorded yet.</div>
+        <div className="schedule-empty-notice" id="dashboard-no-trips">No trips recorded yet.</div>
       )}
 
       {!loading && !loadError && hasTrips && (
@@ -233,12 +233,12 @@ function InsightsPage() {
                       <>
                         <td>{Math.round(d.average * 10) / 10} min</td>
                         <td>{d.planned != null ? `${d.planned} min` : '—'}</td>
-                        <td className={d.planned != null && d.average > d.planned ? 'insights-over' : 'insights-under'}>
+                        <td className={d.planned != null && d.average > d.planned ? 'dashboard-over' : 'dashboard-under'}>
                           {d.planned != null ? `${signed(d.average - d.planned)} min` : '—'}
                         </td>
                       </>
                     ) : (
-                      <td colSpan="3" className="insights-not-enough">Not enough data</td>
+                      <td colSpan="3" className="dashboard-not-enough">Not enough data</td>
                     )}
                   </tr>
                 ))}
@@ -251,4 +251,4 @@ function InsightsPage() {
   )
 }
 
-export default InsightsPage
+export default DashboardPage
