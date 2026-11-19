@@ -144,6 +144,7 @@ function DashboardPage() {
   const [departures, setDepartures] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [slowest, setSlowest] = useState([])
 
   useEffect(() => {
     let isMounted = true
@@ -157,6 +158,28 @@ function DashboardPage() {
       setRoutes(data)
       if (data.length) setRouteId(data[0].id)
       else setLoading(false)
+
+      // Load departures for every route to find the three slowest.
+      if (data && data.length) {
+        Promise.allSettled(data.map((r) => loadDepartures(r.id).then((deps) => ({ routeId: r.id, routeName: r.name, deps }))))
+          .then((results) => {
+            if (!isMounted) return
+            const overPlan = []
+            for (const result of results) {
+              if (result.status !== 'fulfilled') continue
+              const { routeId: rId, routeName, deps } = result.value
+              for (const d of deps) {
+                if (!d.enough || d.planned == null) continue
+                const diff = d.average - d.planned
+                if (diff > 0) {
+                  overPlan.push({ routeId: rId, routeName, time: d.time, diff })
+                }
+              }
+            }
+            overPlan.sort((a, b) => b.diff - a.diff)
+            setSlowest(overPlan.slice(0, 3))
+          })
+      }
     })
     return () => { isMounted = false }
   }, [])
@@ -195,6 +218,26 @@ function DashboardPage() {
           </select>
         </div>
       )}
+
+      <div className="dashboard-slowest" id="slowest-departures">
+        {slowest.length > 0 ? (
+          slowest.map((s, i) => (
+            <button
+              key={`${s.routeId}-${s.time}`}
+              type="button"
+              className="dashboard-slowest-card"
+              id={`slowest-card-${i}`}
+              onClick={() => chooseRoute(s.routeId)}
+            >
+              <div className="dashboard-slowest-route">{s.routeName}</div>
+              <div className="dashboard-slowest-time">{s.time}</div>
+              <div className="dashboard-slowest-diff">+{Math.round(s.diff)} min over plan</div>
+            </button>
+          ))
+        ) : (
+          !loading && <div className="dashboard-slowest-card dashboard-slowest-ok" id="slowest-card-ok">All departures on time</div>
+        )}
+      </div>
 
       <h3 className="dashboard-heading">Trip times</h3>
 
