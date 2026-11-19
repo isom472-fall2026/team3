@@ -82,6 +82,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
+| [#90](https://github.com/isom472-fall2026/team3/issues/90) — Transportation coordinator puts stops on a route in order | Antigravity (Google) | 6 requests | The story and its 8 acceptance criteria, `app/src/pages/RouteStopsPage.jsx`, `app/src/pages/index.js`, `app/src/index.css`, and the `routes`, `stops`, and `routes_stops` tables. It added the staff-only stop ordering form to `RouteStopsPage.jsx`, immediate re-listing by `sequence_order` without reloading, missing field checks, positive whole number validation, database unique constraint refusal handling ("Another stop already has position N."), non-negative offset minutes validation, student hiding/RLS protection, and CSS variables styling. | Building criterion by criterion took 6 requests, staying right on our target limit of 6 requests per story. Next time, provide the initial form structure and missing field checks in a single prompt to save requests. |
 
 ## Phase 6
 
