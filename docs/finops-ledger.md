@@ -81,7 +81,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#188](https://github.com/isom472-fall2026/team3/issues/188) — Student sees whether today's departures have already left | Antigravity | 4 requests | The story and acceptance criteria for #188, app/src/pages/SchedulePage.jsx, and app/src/pages/index.js. Built criterion 1: checking if departures run today in Kuwait time, placing the status badge next to planned start time, and verifying SchedulePage was already registered in pages/index.js. | Check pages/index.js before prompting to avoid asking to add a line for a page that is already registered. |
 
 ## Phase 6
 
