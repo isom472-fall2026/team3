@@ -15,6 +15,15 @@ function formatTime(timeStr) {
   return timeStr.slice(0, 5)
 }
 
+function runsToday(daysOfWeek) {
+  if (!daysOfWeek) return false
+  const todayWeekday = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kuwait',
+    weekday: 'short',
+  }).format(new Date())
+  return daysOfWeek.split(',').map((d) => d.trim()).includes(todayWeekday)
+}
+
 import { kuwaitToday } from '../lib/kuwaitTime.js'
 
 function SchedulePage() {
@@ -262,29 +271,20 @@ function SchedulePage() {
                   data-time={dep.planned_start_time}
                 >
                   <span className="schedule-departure-time">
-                    {dep.isCancelled ? (
-                      <del>
-                        {formatTime(dep.planned_start_time)}
-                      </del>
-                    ) : (
-                      formatTime(dep.planned_start_time)
-                    )}
+                    {formatTime(dep.planned_start_time)}
                   </span>
-                  <span className="schedule-departure-sep" aria-hidden="true">—</span>
-                  <span className="schedule-departure-days">
-                    {dep.isCancelled ? (
-                      <del>
-                        {formatDays(dep.days_of_week)}
-                      </del>
-                    ) : (
-                      formatDays(dep.days_of_week)
-                    )}
-                  </span>
-                  {dep.isCancelled && (
-                    <span className="schedule-departure-status schedule-departure-cancelled-label">
-                      Cancelled today
+                  {runsToday(dep.days_of_week) && (
+                    <span
+                      className={`schedule-departure-status${dep.isCancelled ? ' schedule-departure-cancelled-label' : ''}`}
+                      style={{ marginLeft: 0 }}
+                    >
+                      {dep.isCancelled ? 'Cancelled' : 'Not started yet'}
                     </span>
                   )}
+                  <span className="schedule-departure-sep" aria-hidden="true">—</span>
+                  <span className="schedule-departure-days">
+                    {formatDays(dep.days_of_week)}
+                  </span>
                 </li>
               ))}
             </ul>
