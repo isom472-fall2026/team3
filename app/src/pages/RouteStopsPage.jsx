@@ -139,7 +139,10 @@ function RouteStopsPage({ user }) {
     if (!selectedRouteId) return
     let isMounted = true
 
-    fetchRouteStops(selectedRouteId)
+    // Ignore a slow answer for a route the user has already switched away from.
+    loadRouteStops(selectedRouteId).then((result) => {
+      if (isMounted) showRouteStops(result)
+    })
 
     return () => {
       isMounted = false
