@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { supabase } from '../lib/supabase.js'
 import { kuwaitClock } from '../lib/kuwaitTime.js'
@@ -8,6 +8,12 @@ function BusTripCard({ bus, isGuest }) {
   const [details, setDetails] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [version, setVersion] = useState(0)
+  const isInitialRef = useRef(true)
+
+  useEffect(() => {
+    isInitialRef.current = true
+  }, [bus.tripId])
 
   // Tapping anywhere outside the card closes it (#48 criterion 6)
   useEffect(() => {
@@ -33,8 +39,10 @@ function BusTripCard({ bus, isGuest }) {
 
     async function loadTripDetails() {
       try {
-        setLoading(true)
-        setError(false)
+        if (isInitialRef.current) {
+          setLoading(true)
+          setError(false)
+        }
 
         // Load the trip with bus number, route, and schedule IDs
         const { data: trip, error: tripError } = await supabase
@@ -198,6 +206,7 @@ function BusTripCard({ bus, isGuest }) {
             stops: stopsWithProgress,
           })
           setLoading(false)
+          isInitialRef.current = false
         }
       } catch {
         if (isMounted) {
@@ -212,7 +221,35 @@ function BusTripCard({ bus, isGuest }) {
     return () => {
       isMounted = false
     }
-  }, [bus.tripId, bus.busNumber, bus.routeName, isGuest])
+  }, [bus.tripId, bus.busNumber, bus.routeName, isGuest, version])
+
+  // #100 criterion 4: a new trip_stop_updates row marks its stop within 5 seconds without reloading
+  useEffect(() => {
+    if (!bus.tripId) return
+
+    const channel = supabase
+      .channel(`bus-trip-stops-${bus.tripId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'trip_stop_updates',
+          filter: `trips_id=eq.${bus.tripId}`,
+        },
+        () => setVersion((v) => v + 1)
+      )
+      .subscribe()
+
+    const pollId = setInterval(() => {
+      setVersion((v) => v + 1)
+    }, 4000)
+
+    return () => {
+      clearInterval(pollId)
+      supabase.removeChannel(channel)
+    }
+  }, [bus.tripId])
 
   const busNumber = details?.busNumber ?? bus.busNumber
   const routeName = details?.routeName ?? bus.routeName
