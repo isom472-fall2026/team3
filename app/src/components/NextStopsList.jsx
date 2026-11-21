@@ -64,15 +64,28 @@ async function loadNextStops(tripId) {
     })
 }
 
+// The geofence records an arrival as soon as the bus enters a stop (#79); reloading this
+// often keeps the list within 10 seconds of it, with later times recalculated.
+const REFRESH_MS = 5000
+
 function NextStopsList({ tripId }) {
   const [result, setResult] = useState({ tripId: null, stops: [] })
 
   useEffect(() => {
     let isMounted = true
-    loadNextStops(tripId)
-      .then((stops) => { if (isMounted) setResult({ tripId, stops }) })
-      .catch(() => { if (isMounted) setResult({ tripId, stops: [] }) })
-    return () => { isMounted = false }
+    const refresh = () =>
+      loadNextStops(tripId)
+        .then((stops) => { if (isMounted) setResult({ tripId, stops }) })
+        .catch(() => {
+          // A failed refresh keeps the last list instead of emptying the popup.
+          if (isMounted) setResult((prev) => (prev.tripId === tripId ? prev : { tripId, stops: [] }))
+        })
+    refresh()
+    const id = setInterval(refresh, REFRESH_MS)
+    return () => {
+      isMounted = false
+      clearInterval(id)
+    }
   }, [tripId])
 
   if (result.tripId !== tripId || result.stops.length === 0) return null
