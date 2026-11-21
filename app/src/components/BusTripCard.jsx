@@ -110,7 +110,7 @@ function BusTripCard({ bus, isGuest }) {
             : { data: [] },
           supabase
             .from('trip_stop_updates')
-            .select('routes_stop_id, actual_arrival_time, actual_departure_time')
+            .select('trips_id, routes_stop_id, actual_arrival_time, actual_departure_time')
             .eq('trips_id', trip.id),
           scheduleId
             ? supabase
@@ -129,7 +129,8 @@ function BusTripCard({ bus, isGuest }) {
         }
 
         const routeStops = stopsRes.data || []
-        const updates = updatesRes.data || []
+        // #100 criterion 7: rows from any other trip never mark a stop on this list
+        const updates = (updatesRes.data || []).filter((u) => u.trips_id === trip.id)
         const scheduledStopTimes = schedRes.data || []
 
         const updatesMap = new Map(updates.map((u) => [u.routes_stop_id, u]))
@@ -244,7 +245,13 @@ function BusTripCard({ bus, isGuest }) {
           table: 'trip_stop_updates',
           filter: `trips_id=eq.${bus.tripId}`,
         },
-        () => setVersion((v) => v + 1)
+        (payload) => {
+          // #100 criterion 7: rows from any other trip never mark a stop on this list
+          if (payload?.new && payload.new.trips_id && payload.new.trips_id !== bus.tripId) {
+            return
+          }
+          setVersion((v) => v + 1)
+        }
       )
       .subscribe()
 
