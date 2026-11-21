@@ -81,7 +81,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#32](https://github.com/isom472-fall2026/team3/issues/32) — Student can view estimated arrival time at a stop | Claude (claude-opus-5-5) | 6 requests (from `docs/usage/32.md`): 2 to build it, 1 to check it against all 11 criteria (nothing to fix), the rest to answer questions and write the usage log | The story and its 11 acceptance criteria (read from the issue), the team3 folder, `app/src/pages/DelaysPage.jsx`, `app/src/components/TripDelay.jsx` (to reuse the newest-delay rule), `app/src/lib/kuwaitTime.js`, `app/src/App.css`, and `db/schema.sql`. It added `TripArrivals.jsx` under the delay box on the Delays page: upcoming stops in route order with the timetable time plus the newest delay, "No estimate", "Running late", the bus-position warning, "Trip cancelled" / "Trip finished", and the error message, and tested all 11 criteria against fake data before it was committed. | Criteria 9 and 11 overlap (one says show no times for a cancelled trip, the other says show "Trip cancelled" in place of each time); fix the criteria before building next time. Connect the repo folder before starting, since the first files had to be sent by hand. |
 
 ## Phase 6
 
