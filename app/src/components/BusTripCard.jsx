@@ -259,11 +259,11 @@ function BusTripCard({ bus, isGuest }) {
               {stops.map((s) => (
                 <li key={s.id} className="bus-trip-stop-item">
                   <span className="bus-trip-stop-name">{s.stops?.name}</span>{' '}
-                  {s.actualArrivalTime && (
-                    <span className="bus-trip-stop-status">
-                      Reached {kuwaitClock(s.actualArrivalTime)}
-                    </span>
-                  )}
+                  <span className="bus-trip-stop-status">
+                    {s.actualArrivalTime
+                      ? `Reached ${kuwaitClock(s.actualArrivalTime)}`
+                      : 'Not reached yet'}
+                  </span>
                 </li>
               ))}
             </ol>
