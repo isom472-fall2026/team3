@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import { kuwaitSecondsOfDay, kuwaitToday, kuwaitWeekday } from '../lib/kuwaitTime.js'
+import { departureStatus } from '../lib/departureStatus.js'
 
 // Pattern from the schema constraint (same rule as the CHECK on days_of_week).
 const VALID_DOW_RE = /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)(,(Sun|Mon|Tue|Wed|Thu|Fri|Sat))*$/
@@ -15,7 +17,9 @@ function formatTime(timeStr) {
   return timeStr.slice(0, 5)
 }
 
-import { kuwaitToday } from '../lib/kuwaitTime.js'
+function runsOn(days_of_week, weekday) {
+  return Boolean(days_of_week) && VALID_DOW_RE.test(days_of_week) && days_of_week.split(',').includes(weekday)
+}
 
 function SchedulePage() {
   const [routes, setRoutes] = useState([])
@@ -28,6 +32,14 @@ function SchedulePage() {
   const [scheduleError, setScheduleError] = useState(false)
   const [scheduleLoading, setScheduleLoading] = useState(false)
   const [tripsError, setTripsError] = useState(false)
+
+  // "Not started yet" turns into "Did not start" with no trip change, so the clock re-renders the list.
+  const [now, setNow] = useState(() => new Date())
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 15000)
+    return () => clearInterval(id)
+  }, [])
 
   // Load active routes once on mount, sorted alphabetically by name.
   useEffect(() => {
@@ -51,7 +63,7 @@ function SchedulePage() {
     return () => { isMounted = false }
   }, [])
 
-  // Load schedules and today's cancelled trips whenever the selected route changes.
+  // Load schedules and today's trips whenever the selected route changes.
   useEffect(() => {
     if (!selectedRouteId) return
 
@@ -75,17 +87,17 @@ function SchedulePage() {
 
       const scheduleIds = (scheduleData || []).map((s) => s.id)
 
-      const fetchCancelledScheduleIds = async () => {
+      // Guests cannot read delay_logs (#131); RLS returns no rows for them, so they see "Running" without minutes.
+      const fetchTodaysTrips = async () => {
         if (scheduleIds.length === 0) {
           setTripsError(false)
-          return new Set()
+          return []
         }
 
         const { data: tripsData, error: tripsErr } = await supabase
           .from('trips')
-          .select('schedule_id')
+          .select('schedule_id, status, actual_start, delay_logs(delay_minutes, logged_at)')
           .in('schedule_id', scheduleIds)
-          .eq('status', 'cancelled')
           .eq('trip_date', kuwaitToday())
 
         if (tripsErr) {
@@ -94,33 +106,30 @@ function SchedulePage() {
         }
 
         setTripsError(false)
-        return new Set((tripsData || []).map((t) => t.schedule_id))
+        return tripsData || []
       }
 
-      const cancelledScheduleIds = (await fetchCancelledScheduleIds()) || new Set()
+      const tripsFor = (ids, trips) => trips.filter((t) => ids.includes(t.schedule_id))
+      const hasCancelled = (trips) => trips.some((t) => t.status === 'cancelled')
+
+      const todaysTrips = (await fetchTodaysTrips()) || []
       if (!isMounted) return
 
       // Deduplicate rows that share the same time and days string.
       const seen = new Map()
       for (const row of (scheduleData || [])) {
         const key = `${row.planned_start_time}|${row.days_of_week ?? ''}`
-        const isCancelled = cancelledScheduleIds.has(row.id)
         if (seen.has(key)) {
-          const existing = seen.get(key)
-          existing.scheduleIds.push(row.id)
-          if (isCancelled) {
-            existing.isCancelled = true
-          }
+          seen.get(key).scheduleIds.push(row.id)
         } else {
-          seen.set(key, {
-            ...row,
-            scheduleIds: [row.id],
-            isCancelled,
-          })
+          seen.set(key, { ...row, scheduleIds: [row.id] })
         }
       }
 
-      const unique = Array.from(seen.values())
+      const unique = Array.from(seen.values()).map((dep) => {
+        const todayTrips = tripsFor(dep.scheduleIds, todaysTrips)
+        return { ...dep, todayTrips, isCancelled: hasCancelled(todayTrips) }
+      })
 
       // Earliest departure first.
       unique.sort((a, b) => {
@@ -132,23 +141,21 @@ function SchedulePage() {
       setDepartures(unique)
       setScheduleLoading(false)
 
-      const refreshCancelledTrips = async () => {
+      const refreshTodaysTrips = async () => {
         if (!isMounted || scheduleIds.length === 0) return
-        const latestCancelledIds = await fetchCancelledScheduleIds()
-        if (!isMounted || !latestCancelledIds) return
+        const latestTrips = await fetchTodaysTrips()
+        if (!isMounted || !latestTrips) return
 
         setDepartures((prev) =>
           prev.map((dep) => {
-            const isCancelled = dep.scheduleIds
-              ? dep.scheduleIds.some((id) => latestCancelledIds.has(id))
-              : latestCancelledIds.has(dep.id)
-            if (dep.isCancelled === isCancelled) return dep
-            return { ...dep, isCancelled }
+            const todayTrips = tripsFor(dep.scheduleIds, latestTrips)
+            return { ...dep, todayTrips, isCancelled: hasCancelled(todayTrips) }
           })
         )
       }
 
-      // Realtime shows a cancellation straight away; the 5-second poll also runs in case the connection drops.
+      // Realtime shows a trip change straight away; the 5-second poll also runs in case the connection drops,
+      // and picks up new delay_logs rows, which realtime is not listening to here.
       if (scheduleIds.length > 0) {
         channel = supabase
           .channel(`trips-changes-${selectedRouteId}`)
@@ -160,12 +167,12 @@ function SchedulePage() {
               table: 'trips',
               filter: `schedule_id=in.(${scheduleIds.join(',')})`,
             },
-            refreshCancelledTrips
+            refreshTodaysTrips
           )
           .subscribe()
       }
 
-      intervalId = setInterval(refreshCancelledTrips, 5000)
+      intervalId = setInterval(refreshTodaysTrips, 5000)
     }
 
     loadSchedule()
@@ -178,6 +185,8 @@ function SchedulePage() {
   }, [selectedRouteId])
 
   const selectedRoute = routes.find((r) => r.id === selectedRouteId)
+  const todayWeekday = kuwaitWeekday(now)
+  const nowSeconds = kuwaitSecondsOfDay(now)
 
   return (
     <div className="bus-confirmed-section" id="schedule-page">
@@ -255,7 +264,11 @@ function SchedulePage() {
 
           {!scheduleLoading && !scheduleError && departures.length > 0 && (
             <ul className="schedule-departure-list" aria-label="Departure times">
-              {departures.map((dep, i) => (
+              {departures.map((dep, i) => {
+                const status = !dep.isCancelled && runsOn(dep.days_of_week, todayWeekday)
+                  ? departureStatus(dep.planned_start_time, dep.todayTrips, nowSeconds)
+                  : null
+                return (
                 <li
                   key={dep.id || i}
                   className={`schedule-departure-item${dep.isCancelled ? ' schedule-departure-cancelled' : ''}`}
@@ -285,8 +298,14 @@ function SchedulePage() {
                       Cancelled today
                     </span>
                   )}
+                  {status && (
+                    <span className={`schedule-departure-status schedule-departure-status-${status.kind}`}>
+                      {status.text}
+                    </span>
+                  )}
                 </li>
-              ))}
+                )
+              })}
             </ul>
           )}
         </div>
