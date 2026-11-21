@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { supabase } from '../lib/supabase.js'
+import { isInKuwait } from '../lib/mapViews.js'
 
 const EARTH_RADIUS_M = 6371000
 
@@ -15,12 +16,18 @@ function distanceInMetres(lat1, lng1, lat2, lng2) {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a))
 }
 
-// #78: criteria 1–4 so far — a failed load shows nothing yet.
+// #78: criteria 1–5 so far — a failed load shows nothing yet.
 function ArrivalsPage() {
   const [nearest, setNearest] = useState(null)
   const [locationOff, setLocationOff] = useState(false)
+  const [outsideKuwait, setOutsideKuwait] = useState(false)
 
   const showNearestStop = async ({ coords }) => {
+    if (!isInKuwait(coords.latitude, coords.longitude)) {
+      setOutsideKuwait(true)
+      return
+    }
+
     const { data, error } = await supabase
       .from('stops')
       .select('id, name, latitude, longitude')
@@ -39,6 +46,7 @@ function ArrivalsPage() {
 
   const askForLocation = () => {
     setLocationOff(false)
+    setOutsideKuwait(false)
     setNearest(null)
     if (!navigator.geolocation) {
       setLocationOff(true)
@@ -73,6 +81,12 @@ function ArrivalsPage() {
           <div>
             Location is off. <Link to="/stops">Search for a stop instead.</Link>
           </div>
+        </div>
+      )}
+
+      {outsideKuwait && (
+        <div className="alert alert-info" role="alert" id="nearest-stop-outside-kuwait">
+          <div>You seem to be outside Kuwait.</div>
         </div>
       )}
 
