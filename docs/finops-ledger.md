@@ -81,7 +81,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#189](https://github.com/isom472-fall2026/team3/issues/189) — Transportation coordinator sees how long each route really takes at each departure time | Claude (claude-opus-5-5) | 6 requests for the build (from `docs/usage/189.md`), after 19 planning requests in the same chat (stories, business justification, dashboard mockup); 1 was a change request (move the page to its own Dashboard tab) | The story and its acceptance criteria, `app/src/pages/` and `pages/index.js`, `components/TabIcon.jsx`, `lib/kuwaitTime.js`, `App.css`, `db/schema.sql`, `docs/proposal.md` and `docs/personas.md`. It added a staff-only Dashboard tab with `DashboardPage.jsx`: a route picker, a bar chart of average actual trip time against the planned time for each departure, and a table with completed trips, average, planned and difference, with "Not enough data" under 5 trips and "No trips recorded yet". It also wrote a seed script for test trips (bus SEED-TEST) so the chart has data. | Decide where the page lives before building: it was first built as Insights under Trips, then moved to its own tab. Keep the usage log from the start; this row and the log were written after the build. |
 
 ## Phase 6
 
