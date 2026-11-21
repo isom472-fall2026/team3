@@ -2160,6 +2160,9 @@
 .trip-arrivals-cancelled {
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* =========================================================
    Dashboard: trip times (#189)
    ========================================================= */
 .dashboard-heading {
