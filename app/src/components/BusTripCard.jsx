@@ -120,13 +120,8 @@ function BusTripCard({ bus, isGuest }) {
             : { data: [] },
         ])
 
-        if (stopsRes.error || updatesRes.error || schedRes.error) {
-          if (isMounted) {
-            setError(true)
-            setLoading(false)
-          }
-          return
-        }
+        // #100 criterion 8: flag if stop progress data cannot be loaded
+        const stopsLoadError = Boolean(stopsRes?.error || updatesRes?.error)
 
         const routeStops = stopsRes.data || []
         // #100 criterion 7: rows from any other trip never mark a stop on this list
@@ -212,6 +207,7 @@ function BusTripCard({ bus, isGuest }) {
             hasNextStop,
             scheduledTime: hasScheduledTime ? rawExpectedTime : null,
             stops: stopsWithProgress,
+            stopsLoadError,
           })
           setLoading(false)
           isInitialRef.current = false
@@ -271,6 +267,7 @@ function BusTripCard({ bus, isGuest }) {
   const scheduledTime = details?.scheduledTime
   const hasNextStop = details?.hasNextStop
   const stops = details?.stops || []
+  const stopsLoadError = details?.stopsLoadError
 
   return (
     <div className="bus-trip-card" id={`bus-trip-card-${bus.tripId}`}>
@@ -281,7 +278,12 @@ function BusTripCard({ bus, isGuest }) {
       {loading ? (
         <div className="bus-trip-card-status">Loading…</div>
       ) : error ? (
-        <div className="bus-trip-card-status">Trip details unavailable</div>
+        <div className="bus-trip-card-status">
+          <div>Trip details unavailable</div>
+          <div className="bus-trip-stops-error" id="bus-trip-stops-error">
+            Stop progress could not be loaded. Try again.
+          </div>
+        </div>
       ) : (
         <div className="bus-trip-card-body">
           {stopText && (
@@ -305,7 +307,11 @@ function BusTripCard({ bus, isGuest }) {
               )}
             </div>
           )}
-          {stops.length > 0 && (
+          {stopsLoadError ? (
+            <div className="bus-trip-stops-error" id="bus-trip-stops-error">
+              Stop progress could not be loaded. Try again.
+            </div>
+          ) : stops.length > 0 ? (
             <ol className="bus-trip-stops-list" id="bus-trip-stops-list">
               {stops.map((s) => (
                 <li key={s.id} className="bus-trip-stop-item">
@@ -318,7 +324,7 @@ function BusTripCard({ bus, isGuest }) {
                 </li>
               ))}
             </ol>
-          )}
+          ) : null}
         </div>
       )}
     </div>
