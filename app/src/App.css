@@ -2300,3 +2300,8 @@
   font-size: 13px;
   color: var(--text-primary);
 }
+
+.next-stops-time {
+  font-weight: 700;
+  white-space: nowrap;
+}

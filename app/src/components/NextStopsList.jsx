@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import { kuwaitClock } from '../lib/kuwaitTime.js'
 
-// Stops on the trip's route that the bus has not reached yet, in route order (#187).
+// Newest first; a row with no logged_at cannot be placed in time, so it goes last.
+function byNewest(a, b) {
+  if (!a.logged_at) return b.logged_at ? 1 : 0
+  if (!b.logged_at) return -1
+  return Date.parse(b.logged_at) - Date.parse(a.logged_at)
+}
+
+// Timetable times are Kuwait local time on the trip's date; Kuwait is UTC+3 all year.
+function kuwaitInstant(tripDate, time) {
+  return new Date(`${tripDate}T${String(time).slice(0, 8)}+03:00`)
+}
+
+// Stops on the trip's route that the bus has not reached yet, in route order (#187),
+// each with its timetable time plus the trip's latest delay.
 async function loadNextStops(tripId) {
   const { data: trip, error: tripError } = await supabase
     .from('trips')
-    .select('id, schedules(route_id)')
+    .select('id, trip_date, schedule_id, schedules(route_id)')
     .eq('id', tripId)
     .maybeSingle()
   if (tripError || !trip?.schedules?.route_id) throw tripError || new Error('No route')
 
-  const [stopsRes, updatesRes] = await Promise.all([
+  const [stopsRes, updatesRes, timesRes, delaysRes] = await Promise.all([
     supabase
       .from('routes_stops')
       .select('id, sequence_order, stops(name)')
@@ -20,17 +34,34 @@ async function loadNextStops(tripId) {
       .from('trip_stop_updates')
       .select('routes_stop_id, actual_arrival_time')
       .eq('trips_id', tripId),
+    supabase
+      .from('scheduled_stop_times')
+      .select('route_stop_id, expected_arrival_time')
+      .eq('schedule_id', trip.schedule_id),
+    supabase
+      .from('delay_logs')
+      .select('delay_minutes, logged_at')
+      .eq('trip_id', tripId),
   ])
-  if (stopsRes.error || updatesRes.error) throw stopsRes.error || updatesRes.error
+  const failed = [stopsRes, updatesRes, timesRes, delaysRes].find((r) => r.error)
+  if (failed) throw failed.error
 
   const reached = new Set(
     (updatesRes.data || []).filter((u) => u.actual_arrival_time).map((u) => u.routes_stop_id),
   )
+  const latestDelay = [...(delaysRes.data || [])].sort(byNewest)[0]
+  const delayMinutes = latestDelay?.delay_minutes > 0 ? latestDelay.delay_minutes : 0
 
   return (stopsRes.data || [])
     .filter((rs) => !reached.has(rs.id))
     .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order))
-    .map((rs) => ({ id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop' }))
+    .map((rs) => {
+      const scheduled = (timesRes.data || []).find((t) => t.route_stop_id === rs.id)?.expected_arrival_time
+      const expected = scheduled
+        ? new Date(kuwaitInstant(trip.trip_date, scheduled).getTime() + delayMinutes * 60000)
+        : null
+      return { id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop', expected }
+    })
 }
 
 function NextStopsList({ tripId }) {
@@ -53,6 +84,7 @@ function NextStopsList({ tripId }) {
         {result.stops.map((stop) => (
           <li key={stop.id} className="next-stops-item">
             <span className="next-stops-name">{stop.name}</span>
+            {stop.expected && <span className="next-stops-time">{kuwaitClock(stop.expected)}</span>}
           </li>
         ))}
       </ol>
