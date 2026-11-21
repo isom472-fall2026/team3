@@ -30,7 +30,7 @@ function formatOver(minutes) {
   return 'On plan'
 }
 
-function ArrivalsPage() {
+function SlowestDeparturesPage() {
   const [departures, setDepartures] = useState([])
   const [loaded, setLoaded] = useState(false)
   const [selectedRouteId, setSelectedRouteId] = useState('')
@@ -186,4 +186,4 @@ function ArrivalsPage() {
   )
 }
 
-export default ArrivalsPage
+export default SlowestDeparturesPage
