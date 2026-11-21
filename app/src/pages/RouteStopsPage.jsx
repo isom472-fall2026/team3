@@ -108,29 +108,8 @@ function RouteStopsPage({ user }) {
     }
   }, [isStaff])
 
-  const fetchRouteStops = async (routeId) => {
-    const { data, error } = await supabase
-      .from('routes_stops')
-      .select('id, sequence_order, offset_minutes, stops(name)')
-      .eq('route_id', routeId)
-      .order('sequence_order', { ascending: true })
-
-    if (error) {
-      setStopsError(true)
-      setStopsLoading(false)
-      return
-    }
-
-    const rows = (data || [])
-      .filter((row) => row.stops)
-      .map((row) => ({
-        id: row.id,
-        sequence: row.sequence_order,
-        name: stopName(row.stops.name),
-        offset: row.offset_minutes,
-      }))
-    rows.sort((a, b) => Number(a.sequence) - Number(b.sequence) || byName(a.name, b.name))
-
+  const showRouteStops = ({ rows, error }) => {
+    setStopsError(error)
     setStops(rows)
     setStopsLoading(false)
   }
