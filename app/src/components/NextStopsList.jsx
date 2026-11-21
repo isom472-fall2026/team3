@@ -57,7 +57,7 @@ async function loadNextStops(tripId) {
     .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order))
     .map((rs) => {
       const scheduled = (timesRes.data || []).find((t) => t.route_stop_id === rs.id)?.expected_arrival_time
-      const expected = scheduled
+      const expected = scheduled && String(scheduled).trim()
         ? new Date(kuwaitInstant(trip.trip_date, scheduled).getTime() + delayMinutes * 60000)
         : null
       return { id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop', expected, delayMinutes }
@@ -97,11 +97,13 @@ function NextStopsList({ tripId }) {
         {result.stops.map((stop) => (
           <li key={stop.id} className="next-stops-item">
             <span className="next-stops-name">{stop.name}</span>
-            {stop.expected && (
+            {stop.expected ? (
               <span className="next-stops-time">
                 {kuwaitClock(stop.expected)}
                 {stop.delayMinutes > 0 && <span className="next-stops-delay"> +{stop.delayMinutes} min</span>}
               </span>
+            ) : (
+              <span className="next-stops-no-time">No time set</span>
             )}
           </li>
         ))}

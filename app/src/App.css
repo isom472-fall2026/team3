@@ -2309,3 +2309,8 @@
 .next-stops-delay {
   color: var(--error-text);
 }
+
+.next-stops-no-time {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
