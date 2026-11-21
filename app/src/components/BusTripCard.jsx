@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { supabase } from '../lib/supabase.js'
+import { kuwaitClock } from '../lib/kuwaitTime.js'
 
 function BusTripCard({ bus, isGuest }) {
   const map = useMap()
@@ -174,6 +175,19 @@ function BusTripCard({ bus, isGuest }) {
         const rawExpectedTime = scheduledRow?.expected_arrival_time
         const hasScheduledTime = Boolean(rawExpectedTime && String(rawExpectedTime).trim())
 
+        // #100: attach each stop's actual_arrival_time from this trip's updates
+        const stopsWithProgress = sortedRouteStops.map((rs) => {
+          const update = updatesMap.get(rs.id)
+          const actualArrivalTime =
+            update?.actual_arrival_time && String(update.actual_arrival_time).trim() !== ''
+              ? update.actual_arrival_time
+              : null
+          return {
+            ...rs,
+            actualArrivalTime,
+          }
+        })
+
         if (isMounted) {
           setDetails({
             busNumber: trip.buses?.bus_number ?? bus.busNumber,
@@ -181,6 +195,7 @@ function BusTripCard({ bus, isGuest }) {
             stopText,
             hasNextStop,
             scheduledTime: hasScheduledTime ? rawExpectedTime : null,
+            stops: stopsWithProgress,
           })
           setLoading(false)
         }
@@ -204,6 +219,7 @@ function BusTripCard({ bus, isGuest }) {
   const stopText = details?.stopText
   const scheduledTime = details?.scheduledTime
   const hasNextStop = details?.hasNextStop
+  const stops = details?.stops || []
 
   return (
     <div className="bus-trip-card" id={`bus-trip-card-${bus.tripId}`}>
@@ -237,6 +253,20 @@ function BusTripCard({ bus, isGuest }) {
                 <span className="bus-trip-no-time">No scheduled time</span>
               )}
             </div>
+          )}
+          {stops.length > 0 && (
+            <ol className="bus-trip-stops-list" id="bus-trip-stops-list">
+              {stops.map((s) => (
+                <li key={s.id} className="bus-trip-stop-item">
+                  <span className="bus-trip-stop-name">{s.stops?.name}</span>{' '}
+                  {s.actualArrivalTime && (
+                    <span className="bus-trip-stop-status">
+                      Reached {kuwaitClock(s.actualArrivalTime)}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
           )}
         </div>
       )}
