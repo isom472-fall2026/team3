@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import TripDelay from '../components/TripDelay.jsx'
+import TripArrivals from '../components/TripArrivals.jsx'
 import { supabase } from '../lib/supabase.js'
 import { kuwaitToday } from '../lib/kuwaitTime.js'
 
@@ -101,6 +102,7 @@ function DelaysForSignedIn() {
       {selectedTripId && (
         <div className="schedule-departures-section" id="delays-trip-section">
           <TripDelay tripId={selectedTripId} />
+          <TripArrivals tripId={selectedTripId} />
         </div>
       )}
     </div>

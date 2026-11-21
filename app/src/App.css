@@ -2113,6 +2113,56 @@
 }
 
 /* =========================================================
+   Estimated arrival times (#32)
+   ========================================================= */
+.alert-warning {
+  background-color: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+}
+
+.trip-arrivals {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trip-arrivals-heading {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.trip-arrivals-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.trip-arrivals-stop {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.trip-arrivals-time {
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.trip-arrivals-late {
+  color: var(--error-text);
+}
+
+.trip-arrivals-none,
+.trip-arrivals-cancelled {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* =========================================================
    Dashboard: trip times (#189)
    ========================================================= */
 .dashboard-heading {
