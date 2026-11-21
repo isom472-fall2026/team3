@@ -44,10 +44,10 @@ function BusTripCard({ bus, isGuest }) {
           setError(false)
         }
 
-        // Load the trip with bus number, route, and schedule IDs
+        // Load the trip with bus number, route, schedule IDs, and actual_start
         const { data: trip, error: tripError } = await supabase
           .from('trips')
-          .select('id, schedule_id, bus_id, status, buses(bus_number), schedules(id, route_id, routes(id, name))')
+          .select('id, schedule_id, bus_id, status, actual_start, buses(bus_number), schedules(id, route_id, routes(id, name))')
           .eq('id', bus.tripId)
           .maybeSingle()
 
@@ -183,12 +183,20 @@ function BusTripCard({ bus, isGuest }) {
         const rawExpectedTime = scheduledRow?.expected_arrival_time
         const hasScheduledTime = Boolean(rawExpectedTime && String(rawExpectedTime).trim())
 
-        // #100 criterion 5: an empty actual_arrival_time leaves that stop as "Not reached yet"
+        const actualStartMs = trip.actual_start ? Date.parse(trip.actual_start) : NaN
+        const hasValidStart = Number.isFinite(actualStartMs)
+
+        // #100: attach each stop's actual_arrival_time; criterion 5 & 6 checks
         const stopsWithProgress = sortedRouteStops.map((rs) => {
           const update = updatesMap.get(rs.id)
           const raw = update?.actual_arrival_time
-          const hasTime = raw != null && String(raw).trim() !== '' && Number.isFinite(Date.parse(raw))
-          const actualArrivalTime = hasTime ? raw : null
+          const arrivalMs = raw != null && String(raw).trim() !== '' ? Date.parse(raw) : NaN
+          const isValidArrival = Number.isFinite(arrivalMs)
+
+          // #100 criterion 6: an actual_arrival_time earlier than trips.actual_start is ignored
+          const isEarlierThanStart = hasValidStart && isValidArrival && arrivalMs < actualStartMs
+
+          const actualArrivalTime = isValidArrival && !isEarlierThanStart ? raw : null
           return {
             ...rs,
             actualArrivalTime,
