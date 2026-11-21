@@ -2111,3 +2111,92 @@
     white-space: normal;
   }
 }
+
+/* =========================================================
+   Dashboard: trip times (#189)
+   ========================================================= */
+.dashboard-heading {
+  margin: 20px 0 10px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.dashboard-chart {
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--white);
+  border-radius: 14px;
+}
+
+.dashboard-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dashboard-grid {
+  stroke: var(--gray-200);
+  stroke-width: 1;
+}
+
+.dashboard-axis {
+  font-size: 12px;
+  fill: var(--text-muted);
+}
+
+.dashboard-value {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+.dashboard-bar {
+  fill: var(--ku-blue);
+}
+
+.dashboard-planned {
+  stroke: var(--ku-black);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.dashboard-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dashboard-key {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.dashboard-key-bar {
+  background: var(--ku-blue);
+  border-radius: 2px;
+}
+
+.dashboard-key-planned {
+  height: 0;
+  border-top: 2px dashed var(--ku-black);
+}
+
+.dashboard-over {
+  color: var(--error-text);
+  font-weight: 700;
+}
+
+.dashboard-under {
+  color: var(--success-text);
+  font-weight: 700;
+}
+
+.dashboard-not-enough {
+  color: var(--text-muted);
+}
