@@ -81,7 +81,7 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| [#188](https://github.com/isom472-fall2026/team3/issues/188) — Student sees whether today's departures have already left | Claude (claude-opus-5-5) | 1 request | The story, its 9 acceptance criteria and the decisions already made, pasted; `AGENTS.md`, `app/src/pages/SchedulePage.jsx`, `app/src/lib/kuwaitTime.js`, `app/src/App.css`, and the `schedules`, `trips` and `delay_logs` tables (read only) | Start the dev server before the run: without it the statuses could only be checked against invented test data, not on the real page. |
 
 ## Phase 6
 

@@ -1573,6 +1573,23 @@
   color: var(--error-text);
 }
 
+/* Story 188: today's departure status */
+.schedule-departure-status-running {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+}
+
+.schedule-departure-status-left,
+.schedule-departure-status-not-started {
+  background-color: var(--gray-100);
+  color: var(--text-secondary);
+}
+
+.schedule-departure-status-did-not-start {
+  background-color: var(--warning-bg);
+  color: var(--warning-text);
+}
+
 /* =========================================================
    Trip delay (Story 30)
    ========================================================= */
