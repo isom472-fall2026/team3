@@ -21,6 +21,7 @@ const PATHS = {
     </>
   ),
   manage: <path d="M12 5v14M5 12h14" />,
+  dashboard: <path d="M4 20h16M7 20v-6M12 20V6M17 20v-9" />,
 }
 
 function TabIcon({ name }) {
