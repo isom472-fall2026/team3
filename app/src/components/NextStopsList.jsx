@@ -14,6 +14,29 @@ function kuwaitInstant(tripDate, time) {
   return new Date(`${tripDate}T${String(time).slice(0, 8)}+03:00`)
 }
 
+// Guests (#131) cannot read arrivals, timetable times or delays, so they get the route's
+// stop names only.
+async function loadGuestStops(tripId) {
+  const { data: trip, error: tripError } = await supabase
+    .from('trips')
+    .select('id, schedules(route_id)')
+    .eq('id', tripId)
+    .maybeSingle()
+  if (tripError || !trip?.schedules?.route_id) throw tripError || new Error('No route')
+
+  const { data, error } = await supabase
+    .from('routes_stops')
+    .select('id, sequence_order, stops(name)')
+    .eq('route_id', trip.schedules.route_id)
+    .order('sequence_order', { ascending: true })
+  if (error) throw error
+
+  const stops = (data || [])
+    .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order))
+    .map((rs) => ({ id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop' }))
+  return { stops, allReached: false }
+}
+
 // Stops on the trip's route that the bus has not reached yet, in route order (#187),
 // each with its timetable time plus the trip's latest delay.
 async function loadNextStops(tripId) {
@@ -73,13 +96,14 @@ async function loadNextStops(tripId) {
 // often keeps the list within 10 seconds of it, with later times recalculated.
 const REFRESH_MS = 5000
 
-function NextStopsList({ tripId }) {
+function NextStopsList({ tripId, isGuest }) {
   const [result, setResult] = useState({ tripId: null, stops: [], allReached: false })
 
   useEffect(() => {
     let isMounted = true
+    const load = isGuest ? loadGuestStops : loadNextStops
     const refresh = () =>
-      loadNextStops(tripId)
+      load(tripId)
         .then((next) => { if (isMounted) setResult({ tripId, ...next }) })
         .catch(() => {
           // A failed refresh keeps the last list instead of emptying the popup.
@@ -91,7 +115,7 @@ function NextStopsList({ tripId }) {
       isMounted = false
       clearInterval(id)
     }
-  }, [tripId])
+  }, [tripId, isGuest])
 
   if (result.tripId !== tripId) return null
 
@@ -113,7 +137,7 @@ function NextStopsList({ tripId }) {
         {result.stops.map((stop) => (
           <li key={stop.id} className="next-stops-item">
             <span className="next-stops-name">{stop.name}</span>
-            {stop.expected ? (
+            {isGuest ? null : stop.expected ? (
               <span className="next-stops-time">
                 {stop.due ? 'Due now' : kuwaitClock(stop.expected)}
                 {stop.delayMinutes > 0 && <span className="next-stops-delay"> +{stop.delayMinutes} min</span>}
@@ -124,6 +148,11 @@ function NextStopsList({ tripId }) {
           </li>
         ))}
       </ol>
+      {isGuest && (
+        <div className="next-stops-no-time" id="bus-trip-next-stops-guest">
+          Sign in with your KU email to see arrival times.
+        </div>
+      )}
     </div>
   )
 }

@@ -239,7 +239,7 @@ function BusTripCard({ bus, isGuest }) {
               )}
             </div>
           )}
-          <NextStopsList tripId={bus.tripId} />
+          <NextStopsList tripId={bus.tripId} isGuest={isGuest} />
         </div>
       )}
     </div>
