@@ -49,7 +49,6 @@ export const pages = [
   { path: 'history', label: 'Trip history', section: 'trips', component: HistoryPage, staffOnly: true },
   { path: 'add-route', label: 'Add route', section: 'manage', component: AddRoutePage, staffOnly: true },
   { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
-  { path: 'add-route-stop', label: 'Route stops', section: 'manage', component: RouteStopsPage, staffOnly: true },
 
   { path: 'dashboard', label: 'Dashboard', section: 'dashboard', component: DashboardPage, staffOnly: true },
 ]
