@@ -12,7 +12,28 @@ function stopName(raw) {
   return name === '' ? 'Unnamed stop' : name
 }
 
-function RouteStopsPage() {
+async function loadRouteStops(routeId) {
+  const { data, error } = await supabase
+    .from('routes_stops')
+    .select('id, sequence_order, offset_minutes, stops(name)')
+    .eq('route_id', routeId)
+    .order('sequence_order', { ascending: true })
+
+  if (error) return { rows: [], error: true }
+
+  const rows = (data || [])
+    .filter((row) => row.stops)
+    .map((row) => ({
+      id: row.id,
+      sequence: row.sequence_order,
+      name: stopName(row.stops.name),
+      offset: row.offset_minutes,
+    }))
+  rows.sort((a, b) => Number(a.sequence) - Number(b.sequence) || byName(a.name, b.name))
+  return { rows, error: false }
+}
+
+function RouteStopsPage({ user }) {
   const [routes, setRoutes] = useState([])
   const [routesLoading, setRoutesLoading] = useState(true)
   const [routesError, setRoutesError] = useState(false)
@@ -21,6 +42,29 @@ function RouteStopsPage() {
   const [stops, setStops] = useState([])
   const [stopsLoading, setStopsLoading] = useState(false)
   const [stopsError, setStopsError] = useState(false)
+
+  const [isStaff, setIsStaff] = useState(false)
+  const [allStops, setAllStops] = useState([])
+
+  const [chosenStopId, setChosenStopId] = useState('')
+  const [sequenceOrder, setSequenceOrder] = useState('')
+  const [offsetMinutes, setOffsetMinutes] = useState('')
+  const [formSaving, setFormSaving] = useState(false)
+  const [formMessage, setFormMessage] = useState('')
+  const [formError, setFormError] = useState('')
+  const [errors, setErrors] = useState({})
+
+  useEffect(() => {
+    let isMounted = true
+    supabase.rpc('is_staff').then(({ data, error }) => {
+      if (isMounted) {
+        setIsStaff(!error && data === true)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [user])
 
   useEffect(() => {
     let isMounted = true
@@ -33,51 +77,126 @@ function RouteStopsPage() {
 
       if (!isMounted) return
       setRoutesError(Boolean(error))
-      // Sorted here, not in the query: the database's collation put lowercase names after "Z" (see #46).
       setRoutes(error ? [] : [...(data || [])].sort((a, b) => byName(a.name, b.name)))
       setRoutesLoading(false)
     }
 
     loadRoutes()
-    return () => { isMounted = false }
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   useEffect(() => {
-    if (!selectedRouteId) return
-
+    if (!isStaff) return
     let isMounted = true
 
-    const loadStops = async () => {
+    const loadAllStops = async () => {
       const { data, error } = await supabase
-        .from('routes_stops')
-        .select('id, sequence_order, stops(name)')
-        .eq('route_id', selectedRouteId)
+        .from('stops')
+        .select('id, name')
 
       if (!isMounted) return
-      if (error) {
-        setStopsError(true)
-        setStopsLoading(false)
+      if (!error && data) {
+        setAllStops([...data].sort((a, b) => byName(stopName(a.name), stopName(b.name))))
+      }
+    }
+
+    loadAllStops()
+    return () => {
+      isMounted = false
+    }
+  }, [isStaff])
+
+  const showRouteStops = ({ rows, error }) => {
+    setStopsError(error)
+    setStops(rows)
+    setStopsLoading(false)
+  }
+
+  useEffect(() => {
+    if (!selectedRouteId) return
+    let isMounted = true
+
+    // Ignore a slow answer for a route the user has already switched away from.
+    loadRouteStops(selectedRouteId).then((result) => {
+      if (isMounted) showRouteStops(result)
+    })
+
+    return () => {
+      isMounted = false
+    }
+  }, [selectedRouteId])
+
+  const handleAddStopToRoute = async (e) => {
+    e.preventDefault()
+    if (!isStaff) return
+    setFormMessage('')
+    setFormError('')
+
+    const newErrors = {}
+    if (!chosenStopId) {
+      newErrors.stop = 'Choose a stop.'
+    }
+    const trimmedOrder = String(sequenceOrder).trim()
+    if (!trimmedOrder) {
+      newErrors.order = "Enter the stop's position (1, 2, 3…)."
+    } else if (!/^\d+$/.test(trimmedOrder) || Number(trimmedOrder) <= 0) {
+      newErrors.order = 'Order must be 1, 2, 3…'
+    }
+
+    const trimmedOffset = String(offsetMinutes).trim()
+    if (trimmedOffset !== '') {
+      if (!/^\d+$/.test(trimmedOffset) || Number(trimmedOffset) < 0) {
+        newErrors.offset = 'Minutes must be 0 or more.'
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setErrors({})
+    setFormSaving(true)
+
+    const { error: insertError } = await supabase.from('routes_stops').insert([
+      {
+        route_id: selectedRouteId,
+        stop_id: chosenStopId,
+        sequence_order: Number(trimmedOrder),
+        offset_minutes: trimmedOffset !== '' ? Number(trimmedOffset) : 0,
+      },
+    ])
+
+    if (insertError) {
+      setFormSaving(false)
+      const isUniqueViolation =
+        insertError.code === '23505' ||
+        insertError.code === '409' ||
+        insertError.message?.toLowerCase().includes('unique') ||
+        insertError.message?.toLowerCase().includes('duplicate') ||
+        insertError.message?.toLowerCase().includes('already exists') ||
+        insertError.details?.toLowerCase().includes('already exists')
+
+      if (isUniqueViolation) {
+        setErrors({ order: `Another stop already has position ${Number(trimmedOrder)}.` })
         return
       }
 
-      // One entry per routes_stops row, so a stop the route visits twice is listed twice.
-      const rows = (data || [])
-        // A row whose stop_id matches no stop comes back with stops = null; skip it, keep the rest.
-        .filter((row) => row.stops)
-        .map((row) => ({
-          id: row.id,
-          sequence: row.sequence_order,
-          name: stopName(row.stops.name),
-        }))
-      rows.sort((a, b) => a.sequence - b.sequence || byName(a.name, b.name))
-
-      setStops(rows)
-      setStopsLoading(false)
+      setFormError(insertError.message)
+      return
     }
 
-    loadStops()
-    return () => { isMounted = false }
-  }, [selectedRouteId])
+    setFormMessage('Stop added to route.')
+    setChosenStopId('')
+    setSequenceOrder('')
+    setOffsetMinutes('')
+
+    // Update the route's stops without reloading the page
+    showRouteStops(await loadRouteStops(selectedRouteId))
+    setFormSaving(false)
+  }
 
   const selectedRoute = routes.find((r) => r.id === selectedRouteId)
 
@@ -116,6 +235,9 @@ function RouteStopsPage() {
               setStops([])
               setStopsError(false)
               setStopsLoading(Boolean(e.target.value))
+              setFormMessage('')
+              setFormError('')
+              setErrors({})
             }}
           >
             <option value="">— Select a route —</option>
@@ -156,6 +278,131 @@ function RouteStopsPage() {
                 </li>
               ))}
             </ol>
+          )}
+
+          {isStaff && (
+            <div
+              className="add-route-stop-card"
+              style={{
+                marginTop: '24px',
+                padding: '16px',
+                background: 'var(--white)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+              }}
+            >
+              <h4 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '12px', color: 'var(--text-primary)' }}>
+                Add stop to route
+              </h4>
+
+              {formMessage && (
+                <div className="alert alert-success" role="alert" id="add-route-stop-success" style={{ marginBottom: '14px' }}>
+                  <div>{formMessage}</div>
+                </div>
+              )}
+
+              {formError && (
+                <div className="alert alert-error" role="alert" id="add-route-stop-error" style={{ marginBottom: '14px' }}>
+                  <div>{formError}</div>
+                </div>
+              )}
+
+              <form id="f-route-stop" className="auth-form" onSubmit={handleAddStopToRoute} noValidate>
+                <div className={`form-group ${errors.stop ? 'bad' : ''}`} data-f="stop">
+                  <label htmlFor="rs-stop">Stop</label>
+                  <select
+                    id="rs-stop"
+                    className="form-select"
+                    value={chosenStopId}
+                    onChange={(e) => {
+                      setChosenStopId(e.target.value)
+                      if (errors.stop) setErrors((prev) => ({ ...prev, stop: '' }))
+                    }}
+                    style={{
+                      width: '100%',
+                      minHeight: '44px',
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      border: errors.stop ? '1.5px solid var(--error-text)' : '1.5px solid var(--border-color)',
+                      background: 'var(--white)',
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    <option value="">— Choose a stop —</option>
+                    {allStops.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {stopName(s.name)}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.stop && (
+                    <div
+                      className="field-error msg"
+                      id="rs-stop-error"
+                      style={{ color: 'var(--error-text)', fontSize: '13px', fontWeight: 600, marginTop: '4px' }}
+                    >
+                      {errors.stop}
+                    </div>
+                  )}
+                </div>
+
+                <div className={`form-group ${errors.order ? 'bad' : ''}`} data-f="order">
+                  <label htmlFor="rs-order">Position</label>
+                  <input
+                    id="rs-order"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="1, 2, 3…"
+                    value={sequenceOrder}
+                    style={{ borderColor: errors.order ? 'var(--error-text)' : undefined }}
+                    onChange={(e) => {
+                      setSequenceOrder(e.target.value)
+                      if (errors.order) setErrors((prev) => ({ ...prev, order: '' }))
+                    }}
+                  />
+                  {errors.order && (
+                    <div
+                      className="field-error msg"
+                      id="rs-order-error"
+                      style={{ color: 'var(--error-text)', fontSize: '13px', fontWeight: 600, marginTop: '4px' }}
+                    >
+                      {errors.order}
+                    </div>
+                  )}
+                </div>
+
+                <div className={`form-group ${errors.offset ? 'bad' : ''}`} data-f="offset">
+                  <label htmlFor="rs-offset">
+                    Offset minutes <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional)</span>
+                  </label>
+                  <input
+                    id="rs-offset"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={offsetMinutes}
+                    style={{ borderColor: errors.offset ? 'var(--error-text)' : undefined }}
+                    onChange={(e) => {
+                      setOffsetMinutes(e.target.value)
+                      if (errors.offset) setErrors((prev) => ({ ...prev, offset: '' }))
+                    }}
+                  />
+                  {errors.offset && (
+                    <div
+                      className="field-error msg"
+                      id="rs-offset-error"
+                      style={{ color: 'var(--error-text)', fontSize: '13px', fontWeight: 600, marginTop: '4px' }}
+                    >
+                      {errors.offset}
+                    </div>
+                  )}
+                </div>
+
+                <button type="submit" className="btn btn-primary" disabled={formSaving} id="add-route-stop-submit">
+                  {formSaving ? 'Saving…' : 'Add stop to route'}
+                </button>
+              </form>
+            </div>
           )}
         </div>
       )}
