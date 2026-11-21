@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { supabase } from '../lib/supabase.js'
 
 const EARTH_RADIUS_M = 6371000
@@ -14,7 +15,7 @@ function distanceInMetres(lat1, lng1, lat2, lng2) {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a))
 }
 
-// #78: criteria 1–2 so far — a refused location or a failed load shows nothing yet.
+// #78: criteria 1–3 so far — a refused location or a failed load shows nothing yet.
 function ArrivalsPage() {
   const [nearest, setNearest] = useState(null)
 
@@ -57,14 +58,22 @@ function ArrivalsPage() {
       </button>
 
       {nearest && (
-        <div className="stop-card" id="nearest-stop-result" data-stop-id={nearest.stop.id}>
+        <Link
+          to={`/map?stop=${nearest.stop.id}`}
+          state={{ stop: nearest.stop }}
+          className="stop-card"
+          id="nearest-stop-result"
+          data-stop-id={nearest.stop.id}
+          style={{ color: 'inherit', textDecoration: 'none' }}
+        >
           <div className="stop-info">
             <div className="stop-name">{nearest.stop.name}</div>
             <div className="stop-area" id="nearest-stop-distance">
               {Math.round(nearest.metres / 10) * 10} m away
             </div>
           </div>
-        </div>
+          <span className="btn btn-secondary stop-map-btn">Show on map</span>
+        </Link>
       )}
     </div>
   )
