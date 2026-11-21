@@ -15,9 +15,10 @@ function distanceInMetres(lat1, lng1, lat2, lng2) {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a))
 }
 
-// #78: criteria 1–3 so far — a refused location or a failed load shows nothing yet.
+// #78: criteria 1–4 so far — a failed load shows nothing yet.
 function ArrivalsPage() {
   const [nearest, setNearest] = useState(null)
+  const [locationOff, setLocationOff] = useState(false)
 
   const showNearestStop = async ({ coords }) => {
     const { data, error } = await supabase
@@ -37,8 +38,18 @@ function ArrivalsPage() {
   }
 
   const askForLocation = () => {
-    if (!navigator.geolocation) return
-    navigator.geolocation.getCurrentPosition(showNearestStop, () => {})
+    setLocationOff(false)
+    setNearest(null)
+    if (!navigator.geolocation) {
+      setLocationOff(true)
+      return
+    }
+    // The timeout makes "no position returned" end in the message instead of waiting forever.
+    navigator.geolocation.getCurrentPosition(
+      showNearestStop,
+      () => setLocationOff(true),
+      { timeout: 15000 }
+    )
   }
 
   return (
@@ -56,6 +67,14 @@ function ArrivalsPage() {
       >
         Nearest stop
       </button>
+
+      {locationOff && (
+        <div className="alert alert-info" role="alert" id="nearest-stop-location-off">
+          <div>
+            Location is off. <Link to="/stops">Search for a stop instead.</Link>
+          </div>
+        </div>
+      )}
 
       {nearest && (
         <Link
