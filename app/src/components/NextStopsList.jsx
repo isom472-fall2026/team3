@@ -53,6 +53,8 @@ async function loadNextStops(tripId) {
   const delayMinutes = latestDelay?.delay_minutes > 0 ? latestDelay.delay_minutes : 0
 
   const routeStops = stopsRes.data || []
+  // Checked on every refresh, so a time that passes while the popup is open turns into "Due now".
+  const now = Date.now()
   const stops = routeStops
     .filter((rs) => !reached.has(rs.id))
     .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order))
@@ -61,7 +63,8 @@ async function loadNextStops(tripId) {
       const expected = scheduled && String(scheduled).trim()
         ? new Date(kuwaitInstant(trip.trip_date, scheduled).getTime() + delayMinutes * 60000)
         : null
-      return { id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop', expected, delayMinutes }
+      const due = Boolean(expected) && expected.getTime() <= now
+      return { id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop', expected, delayMinutes, due }
     })
   return { stops, allReached: routeStops.length > 0 && stops.length === 0 }
 }
@@ -112,7 +115,7 @@ function NextStopsList({ tripId }) {
             <span className="next-stops-name">{stop.name}</span>
             {stop.expected ? (
               <span className="next-stops-time">
-                {kuwaitClock(stop.expected)}
+                {stop.due ? 'Due now' : kuwaitClock(stop.expected)}
                 {stop.delayMinutes > 0 && <span className="next-stops-delay"> +{stop.delayMinutes} min</span>}
               </span>
             ) : (
