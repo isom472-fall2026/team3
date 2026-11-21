@@ -16,11 +16,12 @@ function distanceInMetres(lat1, lng1, lat2, lng2) {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a))
 }
 
-// #78: criteria 1–5 so far — a failed load shows nothing yet.
 function ArrivalsPage() {
   const [nearest, setNearest] = useState(null)
   const [locationOff, setLocationOff] = useState(false)
   const [outsideKuwait, setOutsideKuwait] = useState(false)
+  const [loadError, setLoadError] = useState(false)
+  const [noStops, setNoStops] = useState(false)
 
   const showNearestStop = async ({ coords }) => {
     if (!isInKuwait(coords.latitude, coords.longitude)) {
@@ -28,25 +29,32 @@ function ArrivalsPage() {
       return
     }
 
+    // The same columns the map loads itself, so the stop opens there with its area and circle.
     const { data, error } = await supabase
       .from('stops')
-      .select('id, name, latitude, longitude')
-    if (error) return
+      .select('id, name, area, latitude, longitude, geofence_radius_m')
+    if (error) {
+      setLoadError(true)
+      return
+    }
 
     let best = null
     for (const stop of data || []) {
       const lat = Number(stop.latitude)
       const lng = Number(stop.longitude)
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue
+      if (!isInKuwait(lat, lng)) continue
       const metres = distanceInMetres(coords.latitude, coords.longitude, lat, lng)
       if (!best || metres < best.metres) best = { stop, metres }
     }
+    setNoStops(!best)
     setNearest(best)
   }
 
   const askForLocation = () => {
     setLocationOff(false)
     setOutsideKuwait(false)
+    setLoadError(false)
+    setNoStops(false)
     setNearest(null)
     if (!navigator.geolocation) {
       setLocationOff(true)
@@ -89,6 +97,14 @@ function ArrivalsPage() {
           <div>You seem to be outside Kuwait.</div>
         </div>
       )}
+
+      {loadError && (
+        <div className="alert alert-error" role="alert" id="nearest-stop-load-error">
+          <div>Stops could not be loaded. Try again.</div>
+        </div>
+      )}
+
+      {noStops && <p id="nearest-stop-none">No stops have a location yet.</p>}
 
       {nearest && (
         <Link
