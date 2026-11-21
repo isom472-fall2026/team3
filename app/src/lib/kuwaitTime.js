@@ -11,3 +11,16 @@ export function kuwaitClock(timestamp) {
     timeZone: 'Asia/Kuwait', hour: '2-digit', minute: '2-digit', hour12: false,
   }).format(new Date(timestamp))
 }
+
+// 'Sun'…'Sat', the same spelling schedules.days_of_week uses.
+export function kuwaitWeekday(date = new Date()) {
+  return new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kuwait', weekday: 'short' }).format(date)
+}
+
+export function kuwaitSecondsOfDay(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kuwait', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+  }).formatToParts(date)
+  const part = (type) => Number(parts.find((p) => p.type === type).value)
+  return part('hour') * 3600 + part('minute') * 60 + part('second')
+}
