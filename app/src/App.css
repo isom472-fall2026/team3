@@ -2305,3 +2305,7 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+.next-stops-delay {
+  color: var(--error-text);
+}
