@@ -52,7 +52,8 @@ async function loadNextStops(tripId) {
   const latestDelay = [...(delaysRes.data || [])].sort(byNewest)[0]
   const delayMinutes = latestDelay?.delay_minutes > 0 ? latestDelay.delay_minutes : 0
 
-  return (stopsRes.data || [])
+  const routeStops = stopsRes.data || []
+  const stops = routeStops
     .filter((rs) => !reached.has(rs.id))
     .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order))
     .map((rs) => {
@@ -62,6 +63,7 @@ async function loadNextStops(tripId) {
         : null
       return { id: rs.id, name: rs.stops?.name?.trim() || 'Unnamed stop', expected, delayMinutes }
     })
+  return { stops, allReached: routeStops.length > 0 && stops.length === 0 }
 }
 
 // The geofence records an arrival as soon as the bus enters a stop (#79); reloading this
@@ -69,16 +71,16 @@ async function loadNextStops(tripId) {
 const REFRESH_MS = 5000
 
 function NextStopsList({ tripId }) {
-  const [result, setResult] = useState({ tripId: null, stops: [] })
+  const [result, setResult] = useState({ tripId: null, stops: [], allReached: false })
 
   useEffect(() => {
     let isMounted = true
     const refresh = () =>
       loadNextStops(tripId)
-        .then((stops) => { if (isMounted) setResult({ tripId, stops }) })
+        .then((next) => { if (isMounted) setResult({ tripId, ...next }) })
         .catch(() => {
           // A failed refresh keeps the last list instead of emptying the popup.
-          if (isMounted) setResult((prev) => (prev.tripId === tripId ? prev : { tripId, stops: [] }))
+          if (isMounted) setResult((prev) => (prev.tripId === tripId ? prev : { tripId, stops: [], allReached: false }))
         })
     refresh()
     const id = setInterval(refresh, REFRESH_MS)
@@ -88,7 +90,18 @@ function NextStopsList({ tripId }) {
     }
   }, [tripId])
 
-  if (result.tripId !== tripId || result.stops.length === 0) return null
+  if (result.tripId !== tripId) return null
+
+  if (result.allReached) {
+    return (
+      <div className="next-stops" id="bus-trip-next-stops">
+        <div className="next-stops-heading">Next stops</div>
+        <div className="next-stops-done" id="bus-trip-last-stop-reached">Last stop reached.</div>
+      </div>
+    )
+  }
+
+  if (result.stops.length === 0) return null
 
   return (
     <div className="next-stops" id="bus-trip-next-stops">
