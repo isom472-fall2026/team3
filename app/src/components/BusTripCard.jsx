@@ -183,13 +183,12 @@ function BusTripCard({ bus, isGuest }) {
         const rawExpectedTime = scheduledRow?.expected_arrival_time
         const hasScheduledTime = Boolean(rawExpectedTime && String(rawExpectedTime).trim())
 
-        // #100: attach each stop's actual_arrival_time from this trip's updates
+        // #100 criterion 5: an empty actual_arrival_time leaves that stop as "Not reached yet"
         const stopsWithProgress = sortedRouteStops.map((rs) => {
           const update = updatesMap.get(rs.id)
-          const actualArrivalTime =
-            update?.actual_arrival_time && String(update.actual_arrival_time).trim() !== ''
-              ? update.actual_arrival_time
-              : null
+          const raw = update?.actual_arrival_time
+          const hasTime = raw != null && String(raw).trim() !== '' && Number.isFinite(Date.parse(raw))
+          const actualArrivalTime = hasTime ? raw : null
           return {
             ...rs,
             actualArrivalTime,
