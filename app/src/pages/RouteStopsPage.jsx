@@ -212,7 +212,7 @@ function RouteStopsPage({ user }) {
     setOffsetMinutes('')
 
     // Update the route's stops without reloading the page
-    await fetchRouteStops(selectedRouteId)
+    showRouteStops(await loadRouteStops(selectedRouteId))
     setFormSaving(false)
   }
 
