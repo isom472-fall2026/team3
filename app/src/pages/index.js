@@ -16,6 +16,7 @@ import AddRoutePage from './AddRoutePage.jsx'
 import SlowestDeparturesPage from './SlowestDeparturesPage.jsx'
 import ArrivalsPage from './ArrivalsPage.jsx'
 import DashboardPage from './DashboardPage.jsx'
+import NotStartedPage from './NotStartedPage.jsx'
 
 // The tabs in the bottom bar (prototype v2), in order. Each page below names the tab it
 // sits under; a tab opens its first page, and the pages of a tab are switched at the top.
@@ -55,4 +56,5 @@ export const pages = [
   { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
 
   { path: 'dashboard', label: 'Dashboard', section: 'dashboard', component: DashboardPage, staffOnly: true },
+  { path: 'not-started', label: 'Not started', section: 'dashboard', component: NotStartedPage, staffOnly: true },
 ]
