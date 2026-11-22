@@ -21,10 +21,16 @@ function hasUnreadableDays(schedule) {
   return !hasNoDays(schedule) && readDays(schedule).length === 0
 }
 
+// Only routes explicitly marked active run; a route with no flag set is treated as not running.
+function routeIsActive(schedule) {
+  return schedule.routes?.is_active === true
+}
+
 // Today's departures more than 10 minutes past their planned start with no trip today (#108).
 // Schedules with no days set, or days we cannot read, cannot be placed on a day, so they
 // are counted, not listed.
-export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) {
+export function findNotStarted(allSchedules, tripScheduleIds, weekday, nowSeconds) {
+  const schedules = allSchedules.filter(routeIsActive)
   const noDays = schedules.filter(hasNoDays).length
   const unreadableDays = schedules.filter(hasUnreadableDays).length
   const rows = schedules
