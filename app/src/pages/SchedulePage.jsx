@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { kuwaitSecondsOfDay, kuwaitToday, kuwaitWeekday } from '../lib/kuwaitTime.js'
 import { departureStatus } from '../lib/departureStatus.js'
+import { usualTripMinutes } from '../lib/usualTripTime.js'
 
 // Pattern from the schema constraint (same rule as the CHECK on days_of_week).
 const VALID_DOW_RE = /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)(,(Sun|Mon|Tue|Wed|Thu|Fri|Sat))*$/
@@ -32,6 +33,9 @@ function SchedulePage() {
   const [scheduleError, setScheduleError] = useState(false)
   const [scheduleLoading, setScheduleLoading] = useState(false)
   const [tripsError, setTripsError] = useState(false)
+
+  // Past trips of the selected route, for "Usually takes about X min" (#192).
+  const [pastTrips, setPastTrips] = useState({ routeId: null, trips: [] })
 
   // "Not started yet" turns into "Did not start" with no trip change, so the clock re-renders the list.
   const [now, setNow] = useState(() => new Date())
@@ -184,6 +188,33 @@ function SchedulePage() {
     }
   }, [selectedRouteId])
 
+  // Loaded once per route: past trips change slowly, so this does not need the 5-second refresh.
+  useEffect(() => {
+    if (!selectedRouteId) return
+    let isMounted = true
+
+    const loadPastTrips = async () => {
+      const { data: schedules, error: schedulesError } = await supabase
+        .from('schedules')
+        .select('id')
+        .eq('route_id', selectedRouteId)
+      const ids = (schedules || []).map((s) => s.id)
+      if (schedulesError || ids.length === 0) return []
+
+      const { data, error } = await supabase
+        .from('trips')
+        .select('schedule_id, status, actual_start, actual_completion')
+        .in('schedule_id', ids)
+        .eq('status', 'completed')
+      return error ? [] : data || []
+    }
+
+    loadPastTrips().then((trips) => {
+      if (isMounted) setPastTrips({ routeId: selectedRouteId, trips })
+    })
+    return () => { isMounted = false }
+  }, [selectedRouteId])
+
   const selectedRoute = routes.find((r) => r.id === selectedRouteId)
   const todayWeekday = kuwaitWeekday(now)
   const nowSeconds = kuwaitSecondsOfDay(now)
@@ -268,6 +299,9 @@ function SchedulePage() {
                 const status = !dep.isCancelled && runsOn(dep.days_of_week, todayWeekday)
                   ? departureStatus(dep.planned_start_time, dep.todayTrips, nowSeconds)
                   : null
+                const usual = pastTrips.routeId === selectedRouteId
+                  ? usualTripMinutes(pastTrips.trips, dep.scheduleIds)
+                  : null
                 return (
                 <li
                   key={dep.id || i}
@@ -293,6 +327,11 @@ function SchedulePage() {
                       formatDays(dep.days_of_week)
                     )}
                   </span>
+                  {usual && (
+                    <span className="schedule-departure-usual">
+                      · Usually takes about {usual.minutes} min
+                    </span>
+                  )}
                   {dep.isCancelled && (
                     <span className="schedule-departure-status schedule-departure-cancelled-label">
                       Cancelled today
