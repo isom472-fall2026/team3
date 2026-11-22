@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { supabase } from '../lib/supabase.js'
+import { kuwaitClock } from '../lib/kuwaitTime.js'
 import NextStopsList from './NextStopsList.jsx'
 
 function BusTripCard({ bus, isGuest }) {
@@ -8,6 +9,12 @@ function BusTripCard({ bus, isGuest }) {
   const [details, setDetails] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [version, setVersion] = useState(0)
+  const isInitialRef = useRef(true)
+
+  useEffect(() => {
+    isInitialRef.current = true
+  }, [bus.tripId])
 
   // Tapping anywhere outside the card closes it (#48 criterion 6)
   useEffect(() => {
@@ -33,13 +40,15 @@ function BusTripCard({ bus, isGuest }) {
 
     async function loadTripDetails() {
       try {
-        setLoading(true)
-        setError(false)
+        if (isInitialRef.current) {
+          setLoading(true)
+          setError(false)
+        }
 
-        // Load the trip with bus number, route, and schedule IDs
+        // Load the trip with bus number, route, schedule IDs, and actual_start
         const { data: trip, error: tripError } = await supabase
           .from('trips')
-          .select('id, schedule_id, bus_id, status, buses(bus_number), schedules(id, route_id, routes(id, name))')
+          .select('id, schedule_id, bus_id, status, actual_start, buses(bus_number), schedules(id, route_id, routes(id, name))')
           .eq('id', bus.tripId)
           .maybeSingle()
 
@@ -102,7 +111,7 @@ function BusTripCard({ bus, isGuest }) {
             : { data: [] },
           supabase
             .from('trip_stop_updates')
-            .select('routes_stop_id, actual_arrival_time, actual_departure_time')
+            .select('trips_id, routes_stop_id, actual_arrival_time, actual_departure_time')
             .eq('trips_id', trip.id),
           scheduleId
             ? supabase
@@ -112,16 +121,12 @@ function BusTripCard({ bus, isGuest }) {
             : { data: [] },
         ])
 
-        if (stopsRes.error || updatesRes.error || schedRes.error) {
-          if (isMounted) {
-            setError(true)
-            setLoading(false)
-          }
-          return
-        }
+        // #100 criterion 8: flag if stop progress data cannot be loaded
+        const stopsLoadError = Boolean(stopsRes?.error || updatesRes?.error)
 
         const routeStops = stopsRes.data || []
-        const updates = updatesRes.data || []
+        // #100 criterion 7: rows from any other trip never mark a stop on this list
+        const updates = (updatesRes.data || []).filter((u) => u.trips_id === trip.id)
         const scheduledStopTimes = schedRes.data || []
 
         const updatesMap = new Map(updates.map((u) => [u.routes_stop_id, u]))
@@ -175,6 +180,26 @@ function BusTripCard({ bus, isGuest }) {
         const rawExpectedTime = scheduledRow?.expected_arrival_time
         const hasScheduledTime = Boolean(rawExpectedTime && String(rawExpectedTime).trim())
 
+        const actualStartMs = trip.actual_start ? Date.parse(trip.actual_start) : NaN
+        const hasValidStart = Number.isFinite(actualStartMs)
+
+        // #100: attach each stop's actual_arrival_time; criterion 5 & 6 checks
+        const stopsWithProgress = sortedRouteStops.map((rs) => {
+          const update = updatesMap.get(rs.id)
+          const raw = update?.actual_arrival_time
+          const arrivalMs = raw != null && String(raw).trim() !== '' ? Date.parse(raw) : NaN
+          const isValidArrival = Number.isFinite(arrivalMs)
+
+          // #100 criterion 6: an actual_arrival_time earlier than trips.actual_start is ignored
+          const isEarlierThanStart = hasValidStart && isValidArrival && arrivalMs < actualStartMs
+
+          const actualArrivalTime = isValidArrival && !isEarlierThanStart ? raw : null
+          return {
+            ...rs,
+            actualArrivalTime,
+          }
+        })
+
         if (isMounted) {
           setDetails({
             busNumber: trip.buses?.bus_number ?? bus.busNumber,
@@ -182,8 +207,11 @@ function BusTripCard({ bus, isGuest }) {
             stopText,
             hasNextStop,
             scheduledTime: hasScheduledTime ? rawExpectedTime : null,
+            stops: stopsWithProgress,
+            stopsLoadError,
           })
           setLoading(false)
+          isInitialRef.current = false
         }
       } catch {
         if (isMounted) {
@@ -198,13 +226,49 @@ function BusTripCard({ bus, isGuest }) {
     return () => {
       isMounted = false
     }
-  }, [bus.tripId, bus.busNumber, bus.routeName, isGuest])
+  }, [bus.tripId, bus.busNumber, bus.routeName, isGuest, version])
+
+  // #100 criterion 4: a new trip_stop_updates row marks its stop within 5 seconds without reloading
+  useEffect(() => {
+    if (!bus.tripId) return
+
+    const channel = supabase
+      .channel(`bus-trip-stops-${bus.tripId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'trip_stop_updates',
+          filter: `trips_id=eq.${bus.tripId}`,
+        },
+        (payload) => {
+          // #100 criterion 7: rows from any other trip never mark a stop on this list
+          if (payload?.new && payload.new.trips_id && payload.new.trips_id !== bus.tripId) {
+            return
+          }
+          setVersion((v) => v + 1)
+        }
+      )
+      .subscribe()
+
+    const pollId = setInterval(() => {
+      setVersion((v) => v + 1)
+    }, 4000)
+
+    return () => {
+      clearInterval(pollId)
+      supabase.removeChannel(channel)
+    }
+  }, [bus.tripId])
 
   const busNumber = details?.busNumber ?? bus.busNumber
   const routeName = details?.routeName ?? bus.routeName
   const stopText = details?.stopText
   const scheduledTime = details?.scheduledTime
   const hasNextStop = details?.hasNextStop
+  const stops = details?.stops || []
+  const stopsLoadError = details?.stopsLoadError
 
   return (
     <div className="bus-trip-card" id={`bus-trip-card-${bus.tripId}`}>
@@ -215,7 +279,12 @@ function BusTripCard({ bus, isGuest }) {
       {loading ? (
         <div className="bus-trip-card-status">Loading…</div>
       ) : error ? (
-        <div className="bus-trip-card-status">Trip details unavailable</div>
+        <div className="bus-trip-card-status">
+          <div>Trip details unavailable</div>
+          <div className="bus-trip-stops-error" id="bus-trip-stops-error">
+            Stop progress could not be loaded. Try again.
+          </div>
+        </div>
       ) : (
         <div className="bus-trip-card-body">
           {stopText && (
@@ -239,6 +308,24 @@ function BusTripCard({ bus, isGuest }) {
               )}
             </div>
           )}
+          {stopsLoadError ? (
+            <div className="bus-trip-stops-error" id="bus-trip-stops-error">
+              Stop progress could not be loaded. Try again.
+            </div>
+          ) : stops.length > 0 ? (
+            <ol className="bus-trip-stops-list" id="bus-trip-stops-list">
+              {stops.map((s) => (
+                <li key={s.id} className="bus-trip-stop-item">
+                  <span className="bus-trip-stop-name">{s.stops?.name}</span>{' '}
+                  <span className="bus-trip-stop-status">
+                    {s.actualArrivalTime
+                      ? `Reached ${kuwaitClock(s.actualArrivalTime)}`
+                      : 'Not reached yet'}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : null}
           <NextStopsList tripId={bus.tripId} isGuest={isGuest} />
         </div>
       )}
