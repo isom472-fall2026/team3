@@ -2267,3 +2267,58 @@
 .dashboard-not-enough {
   color: var(--text-muted);
 }
+
+.dashboard-suggested {
+  font-weight: 700;
+}
+
+.dashboard-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+/* =========================================================
+   Next stops in the bus popup (#187)
+   ========================================================= */
+.next-stops {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.next-stops-heading {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.next-stops-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.next-stops-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.next-stops-time {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.next-stops-delay {
+  color: var(--error-text);
+}
+
+.next-stops-no-time {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
