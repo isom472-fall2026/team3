@@ -13,6 +13,7 @@ import TestBusPage from './TestBusPage.jsx'
 import StoppedLocationPage from './StoppedLocationPage.jsx'
 import AddStopPage from './AddStopPage.jsx'
 import AddRoutePage from './AddRoutePage.jsx'
+import SetStopTimesPage from './SetStopTimesPage.jsx'
 import SlowestDeparturesPage from './SlowestDeparturesPage.jsx'
 import ArrivalsPage from './ArrivalsPage.jsx'
 import DashboardPage from './DashboardPage.jsx'
@@ -54,6 +55,7 @@ export const pages = [
   { path: 'trip-times', label: 'Trip times', section: 'trips', component: SlowestDeparturesPage, staffOnly: true },
   { path: 'add-route', label: 'Add route', section: 'manage', component: AddRoutePage, staffOnly: true },
   { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
+  { path: 'set-stop-times', label: 'Set stop times', section: 'manage', component: SetStopTimesPage, staffOnly: true },
 
   { path: 'dashboard', label: 'Dashboard', section: 'dashboard', component: DashboardPage, staffOnly: true },
   { path: 'not-started', label: 'Not started', section: 'dashboard', component: NotStartedPage, staffOnly: true },
