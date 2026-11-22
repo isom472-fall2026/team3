@@ -156,6 +156,7 @@ function SetStopTimesPage({ user }) {
 
     // Validate stop order: each non-empty time must be >= the previous non-empty time
     let lastTime = null
+    let lastStopName = null
     const orderErrors = {}
 
     for (const stop of stops) {
