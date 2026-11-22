@@ -82,6 +82,8 @@ Our limit: Our limit: each member stays within their own free weekly quota on ea
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
 |---|---|---|---|---|
 |  |  |  |  |  |
+| #97 — Staff sets each stop's expected time on a departure | Antigravity (Claude Sonnet) | 11 requests | The story and its 7 acceptance criteria, db/schema.sql (scheduled_stop_times table and RLS policies), app/src/pages/index.js, app/src/index.css (CSS variables), StartTripPage.jsx and SchedulePage.jsx as patterns, and BusTripCard.jsx for schema usage. It created app/src/pages/SetStopTimesPage.jsx (schedule picker, stop list prefilled from planned_start_time + offset_minutes, upsert save, empty-offset hint, HH:MM format validation, stop-order validation) and added one line to pages/index.js. Two criteria (student protection and CSS colours) were already satisfied and needed no code. | 11 requests is over our target of 6. Building one criterion per prompt kept each step easy to verify, but grouping the two validation criteria (format and order) into one prompt, and skipping the two criteria that needed no code, would have brought the count down. |
+
 
 ## Phase 6
 
