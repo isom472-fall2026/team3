@@ -15,15 +15,28 @@ async function loadNotStarted() {
   return findNotStarted(schedulesRes.data || [], started, kuwaitWeekday(), kuwaitSecondsOfDay())
 }
 
+// A trip started from Start a trip (#105) must clear its row within 5 seconds, so reload
+// more often than that. Each reload also brings in departures that just became 10 minutes late.
+const REFRESH_MS = 3000
+
 function NotStartedPage() {
   const [state, setState] = useState({ loading: true, error: false, rows: [] })
 
   useEffect(() => {
     let isMounted = true
-    loadNotStarted()
-      .then((rows) => { if (isMounted) setState({ loading: false, error: false, rows }) })
-      .catch(() => { if (isMounted) setState({ loading: false, error: true, rows: [] }) })
-    return () => { isMounted = false }
+    const refresh = () =>
+      loadNotStarted()
+        .then((rows) => { if (isMounted) setState({ loading: false, error: false, rows }) })
+        .catch(() => {
+          // After the first load, a failed refresh keeps the last list on screen.
+          if (isMounted) setState((prev) => (prev.loading ? { loading: false, error: true, rows: [] } : prev))
+        })
+    refresh()
+    const id = setInterval(refresh, REFRESH_MS)
+    return () => {
+      isMounted = false
+      clearInterval(id)
+    }
   }, [])
 
   return (
