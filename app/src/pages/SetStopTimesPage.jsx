@@ -85,21 +85,12 @@ function SetStopTimesPage({ user }) {
 
   // When a schedule is chosen, load its route's stops in sequence_order
   useEffect(() => {
-    if (!selectedScheduleId) {
-      setStops([])
-      setStopTimes({})
-      return
-    }
+    if (!selectedScheduleId) return
 
     const schedule = schedules.find((s) => s.id === selectedScheduleId)
     if (!schedule || !schedule.route_id) return
 
     let isMounted = true
-    setStopsLoading(true)
-    setStopsError(false)
-    setMessage('')
-    setError('')
-    setFieldErrors({})
 
     const loadRouteStops = async () => {
       const { data, error: rsError } = await supabase
