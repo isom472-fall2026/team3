@@ -19,6 +19,7 @@ export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) 
       id: s.id,
       routeName: s.routes?.name?.trim() || 'Unnamed route',
       time: String(s.planned_start_time).slice(0, 5),
+      minutesLate: Math.floor((nowSeconds - secondsOfDay(s.planned_start_time)) / 60),
     }))
     .sort((a, b) => a.time.localeCompare(b.time) || a.routeName.localeCompare(b.routeName))
 }

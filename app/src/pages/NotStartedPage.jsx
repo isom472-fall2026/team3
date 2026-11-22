@@ -47,6 +47,7 @@ function NotStartedPage() {
             <li key={row.id} className="schedule-departure-item not-started-item">
               <span className="not-started-route">{row.routeName}</span>
               <span className="schedule-departure-time">{row.time}</span>
+              <span className="not-started-label">Not started · {row.minutesLate} min late</span>
             </li>
           ))}
         </ul>
