@@ -22,6 +22,32 @@ four lines. Revisit it in Phase 4 and say whether it held.*
 Our limit: Our limit: each member stays within their own free weekly quota on each tool. If a member runs out, they tell the team in the group chat and finish the story by hand or with the fast model.
 **How we count usage.** The free tiers we use do not show token counts, so we count **requests**: one request is one message we send to the assistant, including follow-ups and corrections. Each member counts their own requests while working on a story and writes the total in that story's row when its pull request is opened. If we lose count, we write an honest estimate and say so ("about 5"). Work that is not tied to a story (personas, schema, the proposal) gets its own row with "No issue —" and the file it produced. We aim for about 3 requests per story; a story that takes more than 6 gets a line in "What we would do differently" saying why.
 
+### Did our Phase 2 plan hold?
+
+*Reviewed and written by Roqaya Aldurai, FinOps Lead, in Phase 5.
+
+- **Which tool for which work — partly held.** Writing, brainstorming and summaries did stay in
+  Gemini / ChatGPT, as planned. Coding did not stay in Antigravity: Claude built about half the
+  stories in Phases 3–4 (#105, #29, #31, #30, #131, #106, #79, #98, #121, and #36 after
+  Antigravity), and in Phase 5 it built 6 of the 7 stories (#32, #78, #187, #188, #189, #190;
+  #90 used Antigravity). Antigravity itself sometimes ran a Claude model (#116, #107). In
+  practice Claude became our main coding tool, because members could attach the repository
+  folder and have it test each criterion before committing.
+- **About 3 requests per story — did not hold.** Phase 3: 4 of 13 stories stayed at about 3 and
+  3 went over 6 (#105, #31, #48). Phase 4: 1 of 11 stayed at about 3 and 6 went over 6, the
+  biggest being #107 (about 30–40) and #116 (about 15–20). Phase 5: only #188 (1 request) stayed
+  under 3; #32, #189 and #90 took 6, and #187 (9), #190 (about 14) and #78 (about 17) went over.
+  Most extra requests were not fixes but one request per criterion plus commit messages, PR text
+  and the usage log; #187 and #32 needed no fix requests at all.
+- **Our limit — held.** No story was left unfinished because a weekly quota ran out. The only
+  case was Phase 2, when one Antigravity story (#40) used a member's whole weekly quota in 3
+  requests. Where we recorded it in Phase 5, a story used little of the weekly limit (#187:
+  about 16% → 19% used).
+- **What we change for Phase 6:** Claude is now the plan for coding, not only for analysis. We keep
+  "about 3 requests" as the aim for a small page, but expect 6–10 for a story built one criterion
+  per commit, and we record the real numbers per story in `docs/usage/<story>.md` instead of
+  estimating them here.
+
 ## Phase 2
 
 | Story | Assistant used | What it used (tokens, requests, or your own estimate) | What we gave it (files, story, schema) | What we would do differently |
