@@ -54,6 +54,12 @@ function NotStartedPage() {
         </div>
       )}
 
+      {!state.loading && !state.error && state.rows.length === 0 && (
+        <div className="schedule-empty-notice" id="not-started-none">
+          Every departure so far has started.
+        </div>
+      )}
+
       {!state.loading && !state.error && state.rows.length > 0 && (
         <ul className="schedule-departure-list" id="not-started-list">
           {state.rows.map((row) => (
