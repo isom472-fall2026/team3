@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { supabase } from '../lib/supabase.js'
+import NextStopsList from './NextStopsList.jsx'
 
 function BusTripCard({ bus, isGuest }) {
   const map = useMap()
@@ -238,6 +239,7 @@ function BusTripCard({ bus, isGuest }) {
               )}
             </div>
           )}
+          <NextStopsList tripId={bus.tripId} isGuest={isGuest} />
         </div>
       )}
     </div>
