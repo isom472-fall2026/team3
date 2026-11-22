@@ -2268,6 +2268,29 @@
   color: var(--text-muted);
 }
 
+/* =========================================================
+   Not started departures (#108)
+   ========================================================= */
+.not-started-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.not-started-route {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.not-started-label {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
+  font-size: 13px;
 .dashboard-suggested {
   font-weight: 700;
 }
@@ -2314,6 +2337,10 @@
   white-space: nowrap;
 }
 
+.not-started-skipped {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
 .next-stops-delay {
   color: var(--error-text);
 }
