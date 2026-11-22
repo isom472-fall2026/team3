@@ -66,7 +66,7 @@ function NotStartedPage() {
             <li key={row.id} className="schedule-departure-item not-started-item">
               <span className="not-started-route">{row.routeName}</span>
               <span className="schedule-departure-time">{row.time}</span>
-              <span className="not-started-label">Not started · {row.minutesLate} min late</span>
+              <span className="not-started-label">Not started — {row.minutesLate} min</span>
             </li>
           ))}
         </ul>
@@ -75,16 +75,16 @@ function NotStartedPage() {
       {!state.loading && !state.error && state.noDays > 0 && (
         <p className="not-started-skipped" id="not-started-skipped-no-days">
           {state.noDays === 1
-            ? '1 departure was skipped because it has no days set.'
-            : `${state.noDays} departures were skipped because they have no days set.`}
+            ? '1 departure has no days set and was skipped.'
+            : `${state.noDays} departures have no days set and were skipped.`}
         </p>
       )}
 
       {!state.loading && !state.error && state.unreadableDays > 0 && (
         <p className="not-started-skipped" id="not-started-skipped-unreadable-days">
           {state.unreadableDays === 1
-            ? '1 departure was skipped because its days could not be read.'
-            : `${state.unreadableDays} departures were skipped because their days could not be read.`}
+            ? '1 departure has days that could not be read and was skipped.'
+            : `${state.unreadableDays} departures have days that could not be read and were skipped.`}
         </p>
       )}
     </div>
