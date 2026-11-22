@@ -6,11 +6,18 @@ function secondsOfDay(time) {
   return h * 3600 + m * 60 + (s || 0)
 }
 
+function hasNoDays(schedule) {
+  return String(schedule.days_of_week ?? '').trim() === ''
+}
+
 // Today's departures more than 10 minutes past their planned start with no trip today (#108).
+// Schedules with no days set cannot be placed on a day, so they are counted, not listed.
 export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) {
-  return schedules
+  const noDays = schedules.filter(hasNoDays).length
+  const rows = schedules
+    .filter((s) => !hasNoDays(s))
     .filter((s) => {
-      const days = String(s.days_of_week || '').split(',').map((d) => d.trim())
+      const days = String(s.days_of_week).split(',').map((d) => d.trim())
       return days.includes(weekday)
     })
     .filter((s) => nowSeconds - secondsOfDay(s.planned_start_time) > GRACE_SECONDS)
@@ -22,4 +29,5 @@ export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) 
       minutesLate: Math.floor((nowSeconds - secondsOfDay(s.planned_start_time)) / 60),
     }))
     .sort((a, b) => a.time.localeCompare(b.time) || a.routeName.localeCompare(b.routeName))
+  return { rows, noDays }
 }

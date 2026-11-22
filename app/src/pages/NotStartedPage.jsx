@@ -20,16 +20,16 @@ async function loadNotStarted() {
 const REFRESH_MS = 3000
 
 function NotStartedPage() {
-  const [state, setState] = useState({ loading: true, error: false, rows: [] })
+  const [state, setState] = useState({ loading: true, error: false, rows: [], noDays: 0 })
 
   useEffect(() => {
     let isMounted = true
     const refresh = () =>
       loadNotStarted()
-        .then((rows) => { if (isMounted) setState({ loading: false, error: false, rows }) })
+        .then((result) => { if (isMounted) setState({ loading: false, error: false, ...result }) })
         .catch(() => {
           // After the first load, a failed refresh keeps the last list on screen.
-          if (isMounted) setState((prev) => (prev.loading ? { loading: false, error: true, rows: [] } : prev))
+          if (isMounted) setState((prev) => (prev.loading ? { loading: false, error: true, rows: [], noDays: 0 } : prev))
         })
     refresh()
     const id = setInterval(refresh, REFRESH_MS)
@@ -64,6 +64,14 @@ function NotStartedPage() {
             </li>
           ))}
         </ul>
+      )}
+
+      {!state.loading && !state.error && state.noDays > 0 && (
+        <p className="not-started-skipped" id="not-started-skipped-no-days">
+          {state.noDays === 1
+            ? '1 departure was skipped because it has no days set.'
+            : `${state.noDays} departures were skipped because they have no days set.`}
+        </p>
       )}
     </div>
   )

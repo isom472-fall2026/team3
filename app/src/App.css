@@ -2294,3 +2294,9 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+.not-started-skipped {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
