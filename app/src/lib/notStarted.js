@@ -6,20 +6,30 @@ function secondsOfDay(time) {
   return h * 3600 + m * 60 + (s || 0)
 }
 
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
 function hasNoDays(schedule) {
   return String(schedule.days_of_week ?? '').trim() === ''
 }
 
+function readDays(schedule) {
+  return String(schedule.days_of_week).split(',').map((d) => d.trim()).filter((d) => WEEKDAYS.includes(d))
+}
+
+// Days set, but none of them is a weekday we can read (e.g. "Weekdays").
+function hasUnreadableDays(schedule) {
+  return !hasNoDays(schedule) && readDays(schedule).length === 0
+}
+
 // Today's departures more than 10 minutes past their planned start with no trip today (#108).
-// Schedules with no days set cannot be placed on a day, so they are counted, not listed.
+// Schedules with no days set, or days we cannot read, cannot be placed on a day, so they
+// are counted, not listed.
 export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) {
   const noDays = schedules.filter(hasNoDays).length
+  const unreadableDays = schedules.filter(hasUnreadableDays).length
   const rows = schedules
-    .filter((s) => !hasNoDays(s))
-    .filter((s) => {
-      const days = String(s.days_of_week).split(',').map((d) => d.trim())
-      return days.includes(weekday)
-    })
+    .filter((s) => !hasNoDays(s) && !hasUnreadableDays(s))
+    .filter((s) => readDays(s).includes(weekday))
     .filter((s) => nowSeconds - secondsOfDay(s.planned_start_time) > GRACE_SECONDS)
     .filter((s) => !tripScheduleIds.has(s.id))
     .map((s) => ({
@@ -29,5 +39,5 @@ export function findNotStarted(schedules, tripScheduleIds, weekday, nowSeconds) 
       minutesLate: Math.floor((nowSeconds - secondsOfDay(s.planned_start_time)) / 60),
     }))
     .sort((a, b) => a.time.localeCompare(b.time) || a.routeName.localeCompare(b.routeName))
-  return { rows, noDays }
+  return { rows, noDays, unreadableDays }
 }

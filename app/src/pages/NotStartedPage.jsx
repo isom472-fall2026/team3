@@ -20,7 +20,7 @@ async function loadNotStarted() {
 const REFRESH_MS = 3000
 
 function NotStartedPage() {
-  const [state, setState] = useState({ loading: true, error: false, rows: [], noDays: 0 })
+  const [state, setState] = useState({ loading: true, error: false, rows: [], noDays: 0, unreadableDays: 0 })
 
   useEffect(() => {
     let isMounted = true
@@ -29,7 +29,7 @@ function NotStartedPage() {
         .then((result) => { if (isMounted) setState({ loading: false, error: false, ...result }) })
         .catch(() => {
           // After the first load, a failed refresh keeps the last list on screen.
-          if (isMounted) setState((prev) => (prev.loading ? { loading: false, error: true, rows: [], noDays: 0 } : prev))
+          if (isMounted) setState((prev) => (prev.loading ? { loading: false, error: true, rows: [], noDays: 0, unreadableDays: 0 } : prev))
         })
     refresh()
     const id = setInterval(refresh, REFRESH_MS)
@@ -71,6 +71,14 @@ function NotStartedPage() {
           {state.noDays === 1
             ? '1 departure was skipped because it has no days set.'
             : `${state.noDays} departures were skipped because they have no days set.`}
+        </p>
+      )}
+
+      {!state.loading && !state.error && state.unreadableDays > 0 && (
+        <p className="not-started-skipped" id="not-started-skipped-unreadable-days">
+          {state.unreadableDays === 1
+            ? '1 departure was skipped because its days could not be read.'
+            : `${state.unreadableDays} departures were skipped because their days could not be read.`}
         </p>
       )}
     </div>
