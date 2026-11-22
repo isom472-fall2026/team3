@@ -277,7 +277,16 @@ function SetStopTimesPage({ user }) {
             id="schedule-select"
             className="form-select schedule-route-select"
             value={selectedScheduleId}
-            onChange={(e) => setSelectedScheduleId(e.target.value)}
+            onChange={(e) => {
+              setSelectedScheduleId(e.target.value)
+              setStops([])
+              setStopTimes({})
+              setStopsLoading(e.target.value !== '')
+              setStopsError(false)
+              setMessage('')
+              setError('')
+              setFieldErrors({})
+            }}
           >
             <option value="">— Select a departure —</option>
             {schedules.map((s) => {
