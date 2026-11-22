@@ -1573,6 +1573,23 @@
   color: var(--error-text);
 }
 
+/* Story 188: today's departure status */
+.schedule-departure-status-running {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+}
+
+.schedule-departure-status-left,
+.schedule-departure-status-not-started {
+  background-color: var(--gray-100);
+  color: var(--text-secondary);
+}
+
+.schedule-departure-status-did-not-start {
+  background-color: var(--warning-bg);
+  color: var(--warning-text);
+}
+
 /* =========================================================
    Trip delay (Story 30)
    ========================================================= */
@@ -2110,4 +2127,198 @@
   .bus-tab-btn {
     white-space: normal;
   }
+}
+
+/* =========================================================
+   Estimated arrival times (#32)
+   ========================================================= */
+.alert-warning {
+  background-color: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+}
+
+.trip-arrivals {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trip-arrivals-heading {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.trip-arrivals-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.trip-arrivals-stop {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.trip-arrivals-time {
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.trip-arrivals-late {
+  color: var(--error-text);
+}
+
+.trip-arrivals-none,
+.trip-arrivals-cancelled {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Dashboard: trip times (#189)
+   ========================================================= */
+.dashboard-heading {
+  margin: 20px 0 10px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.dashboard-chart {
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--white);
+  border-radius: 14px;
+}
+
+.dashboard-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dashboard-grid {
+  stroke: var(--gray-200);
+  stroke-width: 1;
+}
+
+.dashboard-axis {
+  font-size: 12px;
+  fill: var(--text-muted);
+}
+
+.dashboard-value {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+.dashboard-bar {
+  fill: var(--ku-blue);
+}
+
+.dashboard-planned {
+  stroke: var(--ku-black);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.dashboard-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dashboard-key {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.dashboard-key-bar {
+  background: var(--ku-blue);
+  border-radius: 2px;
+}
+
+.dashboard-key-planned {
+  height: 0;
+  border-top: 2px dashed var(--ku-black);
+}
+
+.dashboard-over {
+  color: var(--error-text);
+  font-weight: 700;
+}
+
+.dashboard-under {
+  color: var(--success-text);
+  font-weight: 700;
+}
+
+.dashboard-not-enough {
+  color: var(--text-muted);
+}
+
+.dashboard-suggested {
+  font-weight: 700;
+}
+
+.dashboard-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+/* =========================================================
+   Next stops in the bus popup (#187)
+   ========================================================= */
+.next-stops {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.next-stops-heading {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.next-stops-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.next-stops-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.next-stops-time {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.next-stops-delay {
+  color: var(--error-text);
+}
+
+.next-stops-no-time {
+  color: var(--text-muted);
+  white-space: nowrap;
 }

@@ -14,6 +14,9 @@ import StoppedLocationPage from './StoppedLocationPage.jsx'
 import AddStopPage from './AddStopPage.jsx'
 import AddRoutePage from './AddRoutePage.jsx'
 import SetStopTimesPage from './SetStopTimesPage.jsx'
+import SlowestDeparturesPage from './SlowestDeparturesPage.jsx'
+import ArrivalsPage from './ArrivalsPage.jsx'
+import DashboardPage from './DashboardPage.jsx'
 
 // The tabs in the bottom bar (prototype v2), in order. Each page below names the tab it
 // sits under; a tab opens its first page, and the pages of a tab are switched at the top.
@@ -24,6 +27,7 @@ export const sections = [
   { id: 'stops', label: 'Stops', icon: 'stops' },
   { id: 'trips', label: 'Trips', icon: 'trips', staffOnly: true },
   { id: 'manage', label: 'Manage', icon: 'manage', staffOnly: true },
+  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', staffOnly: true },
 ]
 
 // Every signed-in page. The first one is where a student lands after signing in, and
@@ -41,12 +45,16 @@ export const pages = [
   { path: 'last-location-update', label: 'Last update', section: 'map', component: LastLocationUpdatePage },
 
   { path: 'stops', label: 'Stops', section: 'stops', component: StopsPage },
+  { path: 'nearest-stop', label: 'Near me', section: 'stops', component: ArrivalsPage },
 
   { path: 'start-trip', label: 'Start a trip', section: 'trips', component: StartTripPage, staffOnly: true },
   { path: 'test-bus', label: 'Test bus', section: 'trips', component: TestBusPage, staffOnly: true },
   { path: 'stopped-location', label: 'Stopped location', section: 'trips', component: StoppedLocationPage, staffOnly: true },
   { path: 'history', label: 'Trip history', section: 'trips', component: HistoryPage, staffOnly: true },
+  { path: 'trip-times', label: 'Trip times', section: 'trips', component: SlowestDeparturesPage, staffOnly: true },
   { path: 'add-route', label: 'Add route', section: 'manage', component: AddRoutePage, staffOnly: true },
   { path: 'add-stop', label: 'Add stop', section: 'manage', component: AddStopPage, staffOnly: true },
   { path: 'set-stop-times', label: 'Set stop times', section: 'manage', component: SetStopTimesPage, staffOnly: true },
+
+  { path: 'dashboard', label: 'Dashboard', section: 'dashboard', component: DashboardPage, staffOnly: true },
 ]
