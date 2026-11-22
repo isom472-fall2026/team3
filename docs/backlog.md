@@ -127,11 +127,35 @@ the story ID, the title, who built it, and what happened to it.
 | [#93](https://github.com/isom472-fall2026/team3/issues/93) | Receive an alert when the bus is approaching the stop | Roqaya | dropped — §6 rules out push notifications |
 | [#94](https://github.com/isom472-fall2026/team3/issues/94) | View turn-by-turn route directions and stop sequence | Roqaya | dropped |
 | [#95](https://github.com/isom472-fall2026/team3/issues/95) | View real-time bus passenger capacity status | Roqaya | dropped — §6 rules out automated passenger counting |
-## Phase 5 — saved 18 November
+## Phase 5 — saved 22 November
 
 | Story | Title | Who | State at the tag |
 |---|---|---|---|
-|  |  |  |  |
+| [#32](https://github.com/isom472-fall2026/team3/issues/32) | Student can view estimated arrival time at a stop | Abdulrahman | done — includes "Trip cancelled" (moved from #116) |
+| [#187](https://github.com/isom472-fall2026/team3/issues/187) | Student sees when a running bus will reach each of its next stops | Abdulrahman | done |
+| [#78](https://github.com/isom472-fall2026/team3/issues/78) | Student sees the nearest stop to them | Sara | done |
+| [#190](https://github.com/isom472-fall2026/team3/issues/190) | Transportation coordinator sees the three slowest departures at a glance | Sara | done |
+| [#90](https://github.com/isom472-fall2026/team3/issues/90) | Transportation coordinator puts stops on a route in order | Zeinab | done |
+| [#97](https://github.com/isom472-fall2026/team3/issues/97) | Staff sets each stop's expected time on a departure | Zeinab | In Progress |
+| [#189](https://github.com/isom472-fall2026/team3/issues/189) | Transportation coordinator sees how long each route really takes at each departure time | Jumana | done |
+| [#100](https://github.com/isom472-fall2026/team3/issues/100) | Student sees which stops a bus has reached | Jumana | In Review |
+| [#188](https://github.com/isom472-fall2026/team3/issues/188) | Student sees whether today's departures have already left | Roqaya | done |
+| [#191](https://github.com/isom472-fall2026/team3/issues/191) | Transportation coordinator suggests a realistic planned time for a departure | Roqaya | In Review |
+| [#108](https://github.com/isom472-fall2026/team3/issues/108) | Transportation coordinator sees today's departures that never started | Ayah | In Review |
+| [#192](https://github.com/isom472-fall2026/team3/issues/192) | Student sees how long a trip usually takes at their departure time | Ayah | In Review |
+| [#81](https://github.com/isom472-fall2026/team3/issues/81) | A trip finishes automatically at its last stop | Sara | planned for phase 6 |
+| [#77](https://github.com/isom472-fall2026/team3/issues/77) | Student finds routes between two stops | Sara | planned for phase 6 |
+| [#83](https://github.com/isom472-fall2026/team3/issues/83) | Staff sees how far each running trip has got | Ayah | planned for phase 6 |
+| [#85](https://github.com/isom472-fall2026/team3/issues/85) | Staff compares scheduled and actual arrival times on a trip | Ayah | planned for phase 6 |
+| [#88](https://github.com/isom472-fall2026/team3/issues/88) | Transportation coordinator adds a bus | Zeinab | planned for phase 6 |
+| [#119](https://github.com/isom472-fall2026/team3/issues/119) | Staff switches a route off and on | Zeinab | planned for phase 6 |
+| [#101](https://github.com/isom472-fall2026/team3/issues/101) | Staff sees a trip's delay history | Jumana | planned for phase 6 |
+| [#102](https://github.com/isom472-fall2026/team3/issues/102) | Staff records a reason for a delay | Jumana | planned for phase 6 |
+| [#103](https://github.com/isom472-fall2026/team3/issues/103) | Transportation staff can view completed trip durations | Jumana | planned for phase 6 |
+| [#91](https://github.com/isom472-fall2026/team3/issues/91) | Staff sees every running bus on one map, coloured by delay | Roqaya | planned for phase 6 |
+| [#92](https://github.com/isom472-fall2026/team3/issues/92) | Staff sees trips running 10 or more minutes late | Roqaya | planned for phase 6 |
+| [#109](https://github.com/isom472-fall2026/team3/issues/109) | Student sees every bus on its way to a stop | Roqaya | planned for phase 6 |
+| [#111](https://github.com/isom472-fall2026/team3/issues/111) | Staff sees each route's average delay for the last 7 days | Roqaya | planned for phase 6 |
 
 ## Phase 6 — saved 9 December
 
