@@ -163,9 +163,10 @@ function SetStopTimesPage({ user }) {
       const timeVal = raw && String(raw).trim() !== '' ? String(raw).trim() : null
       if (timeVal === null) continue
       if (lastTime !== null && timeVal < lastTime) {
-        orderErrors[stop.id] = `Must be after ${lastTime}.`
+        orderErrors[stop.id] = `Must be after ${lastStopName}.`
       } else {
         lastTime = timeVal
+        lastStopName = stop.stops?.name || 'the previous stop'
       }
     }
 
