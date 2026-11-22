@@ -10,7 +10,7 @@ Department.
 
 ## Stories outside §6
 
-| Date | Issue | Who needs it | What value it adds | Replaces |
+| Date | Issue | Who needs it | Business Justification | Replaces |
 |---|---|---|---|---|
 | 2026-10-25 | [#105](https://github.com/isom472-fall2026/team3/issues/105) — Transportation coordinator starts a trip for a bus (the staff role replaces drivers) | Noura, Transportation Coordinator ([personas.md](personas.md)). | The proposal rules out a driver screen, so without this no trip can start and nothing in the system can be tracked. Letting staff start the trip keeps tracking possible with the roles the department already has. | [#59](https://github.com/isom472-fall2026/team3/issues/59) — Driver starts a trip for their bus (closed as not planned; the proposal rules out a driver screen) |
 | 2026-10-25 | [#106](https://github.com/isom472-fall2026/team3/issues/106) — A test bus plays back fake locations along its route (the staff role replaces drivers) | Noura, and the team for testing and the demo. | During the semester a phone stands in for the bus (§6). Playing back a route lets staff and the team test arrivals, delays and the live map without a real bus driving the route. | [#60](https://github.com/isom472-fall2026/team3/issues/60) — Driver's phone sends the bus location during a trip (closed as not planned; the proposal rules out a driver screen) |
