@@ -2268,6 +2268,14 @@
   color: var(--text-muted);
 }
 
+.dashboard-suggested {
+  font-weight: 700;
+}
+
+.dashboard-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
 /* =========================================================
    Next stops in the bus popup (#187)
    ========================================================= */
