@@ -9,6 +9,15 @@ function minutesOfDay(time) {
   return h * 60 + m
 }
 
+// Nearest-rank: the shortest trip time that at least 85% of the trips finished within,
+// so the coordinator can check it by sorting the trips and counting down the list.
+function suggestedMinutes(durations) {
+  if (durations.length < MIN_TRIPS) return null
+  const sorted = [...durations].sort((a, b) => a - b)
+  const rank = Math.ceil(0.85 * sorted.length)
+  return Math.ceil(sorted[rank - 1])
+}
+
 function signed(value) {
   const rounded = Math.round(value * 10) / 10
   return `${rounded > 0 ? '+' : ''}${rounded}`
@@ -78,6 +87,7 @@ async function loadDepartures(routeId) {
       trips: durations.length,
       average,
       planned,
+      suggested: suggestedMinutes(durations),
       enough: durations.length >= MIN_TRIPS,
     }
   })
@@ -222,6 +232,7 @@ function DashboardPage() {
                   <th scope="col">Average actual</th>
                   <th scope="col">Planned</th>
                   <th scope="col">Difference</th>
+                  <th scope="col">Suggested time</th>
                 </tr>
               </thead>
               <tbody>
@@ -240,11 +251,21 @@ function DashboardPage() {
                     ) : (
                       <td colSpan="3" className="dashboard-not-enough">Not enough data</td>
                     )}
+                    {d.suggested != null ? (
+                      <td className="dashboard-suggested">{d.suggested} min</td>
+                    ) : (
+                      <td className="dashboard-not-enough">Not enough data</td>
+                    )}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <p className="dashboard-note" id="suggested-time-note">
+            Suggested time: sort a departure's completed trips from shortest to longest and
+            take the trip time that 85% of them finished within, rounded up to the next
+            minute. Departures with fewer than {MIN_TRIPS} completed trips show "Not enough data".
+          </p>
         </>
       )}
     </div>
